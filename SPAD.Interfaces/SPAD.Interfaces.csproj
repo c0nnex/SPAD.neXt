@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A05FDEAB-7AE3-4DA9-B584-1AA95B426579}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SPAD.neXt.Interfaces</RootNamespace>
+    <AssemblyName>SPAD.Interfaces</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <DocumentationFile>bin\Debug\SPAD.Interfaces.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Beta\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public Beta|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Public Beta\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\Comparators\ComparatorBase.cs" />
+    <Compile Include="Base\Comparators\ComparatorEqual.cs" />
+    <Compile Include="Base\Comparators\ComparatorLess.cs" />
+    <Compile Include="Base\ILocalizable.cs" />
+    <Compile Include="Base\IArchive.cs" />
+    <Compile Include="Base\IObservableProvider.cs" />
+    <Compile Include="Base\ISerializableOption.cs" />
+    <Compile Include="Base\ISPADBackgroundWorker.cs" />
+    <Compile Include="Base\IValueNormalizer.cs" />
+    <Compile Include="Callout\ICalloutManager.cs" />
+    <Compile Include="Configuration\IDataDefinition.cs" />
+    <Compile Include="Configuration\ILocalVariable.cs" />
+    <Compile Include="Configuration\IProfileOptionsProvider.cs" />
+    <Compile Include="DevicesConfiguration\IKnownDevices.cs" />
+    <Compile Include="DevicesConfiguration\IDeviceSwitchesType.cs" />
+    <Compile Include="DevicesConfiguration\IDeviceSwitch.cs" />
+    <Compile Include="DevicesConfiguration\IDeviceConfiguration.cs" />
+    <Compile Include="DevicesConfiguration\IDeviceSwitchConfiguration.cs" />
+    <Compile Include="DevicesConfiguration\IDeviceVendor.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="EventArgs.cs" />
+    <Compile Include="Events\AxisEventValue.cs" />
+    <Compile Include="Events\EventSystem\ActionTargets\IActionTargets.cs" />
+    <Compile Include="Events\EventSystem\IEventDefinition.cs" />
+    <Compile Include="Events\IEventSystem.cs" />
+    <Compile Include="Events\IEventManager.cs" />
+    <Compile Include="Events\ISPADBaseEvent.cs" />
+    <Compile Include="Events\ISPADEventArgs.cs" />
+    <Compile Include="Events\ISPADEventValue.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FSUIPC\IFSUIPCController.cs" />
+    <Compile Include="FSUIPC\IFSUIPCPropertyChangedEventArgs.cs" />
+    <Compile Include="Gauges\IOnlineGaugeData.cs" />
+    <Compile Include="Gauges\IOnlineGauge.cs" />
+    <Compile Include="HID\IHidDevice.cs" />
+    <Compile Include="HID\IHidDeviceAttributes.cs" />
+    <Compile Include="HID\IHidEnumerator.cs" />
+    <Compile Include="HID\IUSBDevice.cs" />
+    <Compile Include="IApplication.cs" />
+    <Compile Include="ICloneable.cs" />
+    <Compile Include="IExtension.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="ILogManager.cs" />
+    <Compile Include="IPanelControl.cs" />
+    <Compile Include="IPanelDevice.cs" />
+    <Compile Include="IPanelDeviceEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPanelDeviceReport.cs" />
+    <Compile Include="PerformanceChecker.cs" />
+    <Compile Include="Profile\IDeviceProfile.cs" />
+    <Compile Include="Profile\IProfile.cs" />
+    <Compile Include="Profile\IProfileManager.cs" />
+    <Compile Include="Profile\IProfileOption.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripting\IScriptValueProvider.cs" />
+    <Compile Include="SimConnect\DataItemAttributeBase.cs" />
+    <Compile Include="SimConnect\ISimConnectDynamic.cs" />
+    <Compile Include="SPADCommands.cs" />
+    <Compile Include="UI\IConfigurationDialog.cs" />
+    <Compile Include="UI\IDialConfigurationDialog.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

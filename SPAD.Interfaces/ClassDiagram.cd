@@ -1,0 +1,1353 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SPAD.neXt.Comparators.ComparatorBase" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAEAEAAAAAAAQAAARAAAAAAEAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorEqual" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorUnequal" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorEqual.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorLess" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorLessOrEqual" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorGreater" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorGreaterOrEqual" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorRange" Collapsed="true">
+    <Position X="15.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorAnyBitSet" Collapsed="true">
+    <Position X="17.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorMask" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorNot" Collapsed="true">
+    <Position X="22" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorIgnore" Collapsed="true">
+    <Position X="24.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Comparators.ComparatorAlways" Collapsed="true">
+    <Position X="26.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorLess.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.InternalEvents" Collapsed="true">
+    <Position X="38.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAgACIUBAAAAAAEAAQAQAAEAAAFQAAMAABAAABAQA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.OptionNames" Collapsed="true">
+    <Position X="43.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.LOCALVARIABLE" Collapsed="true">
+    <Position X="40" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAACAAAQA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.Constants" Collapsed="true">
+    <Position X="38.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAQAgAAAAAACAAAAAAAAIIAAEAEAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.VendorIDs" Collapsed="true">
+    <Position X="45.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.ProductIDs" Collapsed="true">
+    <Position X="36.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.BooleanEventArgs" Collapsed="true">
+    <Position X="36.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.ValidationEventArgs" Collapsed="true">
+    <Position X="43.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.SPADExtensions" Collapsed="true">
+    <Position X="41.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAQAABAAAAAAAAAAAAKAAAgAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.MathExtensions" Collapsed="true">
+    <Position X="41.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.InputEventArgs" Collapsed="true">
+    <Position X="34.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBACAAAAAAAACAAGAAAAAAQAEAAAAAAAAABgAABAQEA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.PanelDeviceReport" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="47" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAIAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAEAAIAQIA=</HashCode>
+      <FileName>IPanelDeviceEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.PanelDeviceEventArgs" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="45.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>IPanelDeviceEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.PerformanceChecker" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="34.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACBAAAAAAAAAAAQAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>PerformanceChecker.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.SPADCommands" Collapsed="true">
+    <Position X="38.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQRsZKCISRiAYQACAAKkLgSAAwJoBERAQxAxCQNCEA=</HashCode>
+      <FileName>SPADCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.EnvironmentEx" Collapsed="true">
+    <Position X="41.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAABAAAAAAAQAAAAAAAAAAAAACABAA=</HashCode>
+      <FileName>Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.IntegerValue" Collapsed="true">
+    <Position X="36.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.DoubleValue" Collapsed="true">
+    <Position X="40" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.Events.AxisEventValue" Collapsed="true">
+    <Position X="34.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAAAAEIAAAAQAMAAAAAAAAAAAAABAAAAACgAAAAEI=</HashCode>
+      <FileName>Events\AxisEventValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.Events.EventSystem" Collapsed="true">
+    <Position X="43.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAUAAAAAAIAEASAAAACAAAAkAFAAAIAgogAAAAA=</HashCode>
+      <FileName>Events\IEventSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.Events.SPADEventArgs" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="40" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQQEEAAEAAACAIjEAACAkQAAAIAAAIABAEAggAIIRNA=</HashCode>
+      <FileName>Events\ISPADEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.HID.IHidDeviceAttributes" Collapsed="true">
+    <Position X="45.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAAAIAAA=</HashCode>
+      <FileName>HID\IHidDeviceAttributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SPAD.neXt.Interfaces.HID.IHidDeviceCapabilities" Collapsed="true">
+    <Position X="47" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAQACEAAAAAAAACgAAAAAAkAAQACAAAQEwAAAEAAAA=</HashCode>
+      <FileName>HID\IHidDeviceAttributes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IArchive" Collapsed="true">
+    <Position X="34.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAABAgAAAAAAAAAAAAAACAEAAgAAAA=</HashCode>
+      <FileName>Base\IArchive.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IArchiveEntry" Collapsed="true">
+    <Position X="36.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAIAAAAIAAAAAAAARAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\IArchive.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ILocalizable" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEACAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\ILocalizable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IObservableProvider&lt;T&gt;" Collapsed="true">
+    <Position X="7" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Base\IObservableProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ISerializableOptionBase" Collapsed="true">
+    <Position X="0.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\ISerializableOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ISerializableOption" Collapsed="true">
+    <Position X="0.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAQAAAAAAAAAAAAAAAABAAAAAAAAg=</HashCode>
+      <FileName>Base\ISerializableOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IOptionsProvider" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAACAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\ISerializableOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ISerializableList" Collapsed="true">
+    <Position X="38.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAEAACACAgABAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\ISerializableOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ISPADBackgroundThread" Collapsed="true">
+    <Position X="43.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAgKAAAECAAICAAEIAAQAAAQAMAACAAIAAgAAQAAAA=</HashCode>
+      <FileName>Base\ISPADBackgroundWorker.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.ISPADBackgroundWorker" Collapsed="true">
+    <Position X="45.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAIAgAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\ISPADBackgroundWorker.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IValueNormalizer" Collapsed="true">
+    <Position X="3.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAACgAAAAAACgAAAAAAAAAAAAAQAACACAAEAAEAAAAA=</HashCode>
+      <FileName>Base\IValueNormalizer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Base.IDynamicNormalizer" Collapsed="true">
+    <Position X="3.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAgAQAAACAAAQAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\IValueNormalizer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Callout.ICallout" Collapsed="true">
+    <Position X="40" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAFAAACAACAAAAACAAAAAAAAAAAYAEBAAAAAAAAAAAA=</HashCode>
+      <FileName>Callout\ICalloutManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Callout.ICalloutManager" Collapsed="true">
+    <Position X="21.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAQAAAAAQAA=</HashCode>
+      <FileName>Callout\ICalloutManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.IDataDefinition" Collapsed="true">
+    <Position X="45.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EUIAkIgAIhAAwkVUAAAAkAQGKABQABAQFAABwCYQmRE=</HashCode>
+      <FileName>Configuration\IDataDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.IDataDefinitions" Collapsed="true">
+    <Position X="47" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAIAAACAAAAAAAAAAAAAAAAAABAAAAAABAAAAAAA=</HashCode>
+      <FileName>Configuration\IDataDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.ILocalVariable" Collapsed="true">
+    <Position X="41.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAACAQAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Configuration\ILocalVariable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.ISettingsProvider" Collapsed="true">
+    <Position X="3.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\IProfileOptionsProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.IProfileOptionsProvider" Collapsed="true">
+    <Position X="3.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAgAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\IProfileOptionsProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.IWindowPlacementProvider" Collapsed="true">
+    <Position X="11.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\IProfileOptionsProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Configuration.IWindowPlacement" Collapsed="true">
+    <Position X="38.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAABAAAAASAAAgAAEAAAAAIAAAACCAAAAAAAAA=</HashCode>
+      <FileName>Configuration\IProfileOptionsProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceConfiguration" Collapsed="true">
+    <Position X="36.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAEAEAACAAIAAAAAAAAAAEQAAAAAAABBBAAAACBAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceCalibration" Collapsed="true">
+    <Position X="34.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAIAAAAEAAQAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IAxisCalibration" Collapsed="true">
+    <Position X="38.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAEECAAAAAAAAAAAAAAAQAIAAAAAEAgAAAoAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IGameDeviceInput" Collapsed="true">
+    <Position X="3" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAgAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceConfigValue" Collapsed="true">
+    <Position X="0.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAEAAAABAYAAEAACCCIIAAAIBYAAAAggCtAoBAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceSwitch" Collapsed="true">
+    <Position X="4" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAEAAAAACAQAACBARAAAAIAAAACAAIACAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.ISimpleSwitch" Collapsed="true">
+    <Position X="5.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IRotarySwitch" Collapsed="true">
+    <Position X="3" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceSwitchConfiguration" Collapsed="true">
+    <Position X="38.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAggAGQAAIAAAQEAAAAAAAAAIAAAAAAAIA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitchConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceSwitchesType" Collapsed="true">
+    <Position X="40" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceSwitchesType.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IDeviceVendor" Collapsed="true">
+    <Position X="41.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAgAAQAQgAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IDeviceVendor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.DevicesConfiguration.IKnownDevices" Collapsed="true">
+    <Position X="40" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DevicesConfiguration\IKnownDevices.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IApplication" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABgEAFEAACCgBAASAEgBAiARgoACAARkQAAEAQYYQk=</HashCode>
+      <FileName>IApplication.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IXmlAnyObject" Collapsed="true">
+    <Position X="18.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>IApplication.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.ICloneableWithID&lt;T&gt;" Collapsed="true">
+    <Position X="17.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>ICloneable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.ICloneable&lt;T&gt;" Collapsed="true">
+    <Position X="15.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>ICloneable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IObservableList&lt;T&gt;" Collapsed="true">
+    <Position X="20.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>ICloneable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IExtension" Collapsed="true">
+    <Position X="36.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAABAAEQAAAAAAAgAAAAAAAQAAAAAA=</HashCode>
+      <FileName>IExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IExtensionPanel" Collapsed="true">
+    <Position X="0.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAgAAAAAAEAAQAAAAAAAAAAAAAAAABAAE=</HashCode>
+      <FileName>IExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IExtensionDevice" Collapsed="true">
+    <Position X="0.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IExtensionDynamic" Collapsed="true">
+    <Position X="38.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IExtensionInfo" Collapsed="true">
+    <Position X="40" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAAAAAAAiAAAAAggABAAAQAQCAAAAABCAAAAAAACAA=</HashCode>
+      <FileName>IExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IPanelHost" Collapsed="true">
+    <Position X="43.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iiAAAAAAQAgAAAgAAAAQEQMAAIAIAAAAAAAACAAAAIA=</HashCode>
+      <FileName>IPanelControl.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IPanelControl" Collapsed="true">
+    <Position X="38.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAoAAAMQAAAAAAQAACAARFAADAAAAAAQEABAAA=</HashCode>
+      <FileName>IPanelControl.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IProfileEventProvider" Collapsed="true">
+    <Position X="4.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAACAAAAAgBAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPanelControl.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IPanelDevice" Collapsed="true">
+    <Position X="11.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>VAQAFAAAEEAEAANAAEAoAAQAAIEIIAgAACAAEAEAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputDevice" Collapsed="true">
+    <Position X="16.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAIAAAQQBAAAAAAAAIAAAAQCEAEAAAAAAAIIRABAIEQ=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInput" Collapsed="true">
+    <Position X="7.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABYCFEAEFAQAigAAOIiAAARCACAAAIAAwAOsAABAIAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputAxis" Collapsed="true">
+    <Position X="6.5" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAACAAAAAAAAAAAAEAABABAQAAIAAAAAAACgAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputAxisConfiguration" Collapsed="true">
+    <Position X="34.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAACAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputRange" Collapsed="true">
+    <Position X="36.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputButton" Collapsed="true">
+    <Position X="8.75" Y="13.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IInputHatswitchButton" Collapsed="true">
+    <Position X="8.75" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IGameDevice" Collapsed="true">
+    <Position X="11.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAACAAAAABAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IControllableDevice" Collapsed="true">
+    <Position X="43.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAIAAAAAECAAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IPanelDeviceEventArgs" Collapsed="true">
+    <Position X="40" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>IPanelDeviceEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.IPanelDeviceReport" Collapsed="true">
+    <Position X="41.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAIAQAA=</HashCode>
+      <FileName>IPanelDeviceReport.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionRangedAxis" Collapsed="true">
+    <Position X="21" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAOAQAAAAAAAAAIA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionCustomAxis" Collapsed="true">
+    <Position X="22" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEQAAAAAAAAIAAAAAAAEAAAhBAAgAAAAAAAAAAIA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionMonitor" Collapsed="true">
+    <Position X="11" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIAAAAAAAAAAAAAAQAABAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionChangeValue" Collapsed="true">
+    <Position X="22" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAAEIAAAAAAAAAAAAAAAAgAAQAABA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionObserve" Collapsed="true">
+    <Position X="25.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAABAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionSingleton" Collapsed="true">
+    <Position X="27.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionCommand" Collapsed="true">
+    <Position X="30" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionPlaySound" Collapsed="true">
+    <Position X="32.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAg=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionDisplayValue" Collapsed="true">
+    <Position X="25.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionKeyboard" Collapsed="true">
+    <Position X="14.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAIAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IKeyMacro" Collapsed="true">
+    <Position X="38.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAACAIAACAAAAAAAAAAAAAAAEAIAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionJoystick" Collapsed="true">
+    <Position X="16.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActionDelay" Collapsed="true">
+    <Position X="18.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\ActionTargets\IActionTargets.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventDefinitions" Collapsed="true">
+    <Position X="17.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAACAABAAARAAABAAAQAAAAAAAAABIAAgAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventDefinition" Collapsed="true">
+    <Position X="9.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAEAAGIABQQBTEABBAAAAAgKAAAAAUAAABAAAgAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventCondition" Collapsed="true">
+    <Position X="12" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAACAAgAAAACAAAEBgAAAAACgIAAEgAAIAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventConditions" Collapsed="true">
+    <Position X="24.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventActions" Collapsed="true">
+    <Position X="26.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventAction" Collapsed="true">
+    <Position X="22" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AghAAABCEAAgAASAgCgAAEAAACAAAAAgCkABAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventContext" Collapsed="true">
+    <Position X="45.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIIAAFAAAAAAAAAABAAAEIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventSystem\IEventDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventManager" Collapsed="true">
+    <Position X="8" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCCAAAAEAACAIAAAAAAAAAAAAAAgAAAAAAAASAAQAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventHandler" Collapsed="true">
+    <Position X="47" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IObserverTicket" Collapsed="true">
+    <Position X="47" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IValueProvider" Collapsed="true">
+    <Position X="36.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIgCAAAIAAAAwAAAAAACAAQAAAAAAAAQAAgBAABQAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.ISimulationController" Collapsed="true">
+    <Position X="41.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAACEAABAQAAIAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IMonitorableValue" Collapsed="true">
+    <Position X="45.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAICgADAAAAXw6lFMgAAABQCAAAKABEDAECAQAAQQIg=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IEventSystemHandler" Collapsed="true">
+    <Position X="34.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAUAAAAAAAAEASAAAACAAAAkAFAAAIAgoAAAAAA=</HashCode>
+      <FileName>Events\IEventSystem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.ISPADBaseEvent" Collapsed="true">
+    <Position X="15.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAIACUEAABQCAIQBAhAACgAAACAAQAAAAAGAAIAA=</HashCode>
+      <FileName>Events\ISPADBaseEvent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.ISPADEventArgs" Collapsed="true">
+    <Position X="14.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQQEAAAAAAACAIjAAACAkQAAAIAAAAABAAAggAIIRNA=</HashCode>
+      <FileName>Events\ISPADEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.IHandledEventArgs" Collapsed="true">
+    <Position X="14.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ISPADEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.ISPADEventDelegate" Collapsed="true">
+    <Position X="34.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ISPADEventValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Events.ISPADComparator" Collapsed="true">
+    <Position X="47" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAQAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ISPADEventValue.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.FSUIPC.IFSUIPCController" Collapsed="true">
+    <Position X="3.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAABBAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>FSUIPC\IFSUIPCController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.FSUIPC.IFSUIPCPropertyChangedEventArgs" Collapsed="true">
+    <Position X="41.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAIAAAAAAAAAAAEAAAAAAAAAAAAAAAAABAgAA=</HashCode>
+      <FileName>FSUIPC\IFSUIPCPropertyChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Gauges.IOnlineGauge" Collapsed="true">
+    <Position X="34.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAQgggAAAigAABAQgCAAAAIQiAAQAQAAAAAA=</HashCode>
+      <FileName>Gauges\IOnlineGauge.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Gauges.IOnlineGaugeData" Collapsed="true">
+    <Position X="36.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAwAAAAAAAAAAAAAAAABAKAAAAAABAAAA=</HashCode>
+      <FileName>Gauges\IOnlineGaugeData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IHidDeviceData" Collapsed="true">
+    <Position X="43.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IHidReport" Collapsed="true">
+    <Position X="47" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EACAAAAIAAAAAAAAAAAAAAAAAAAAABAAAAAAAAMAQAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IHidDevice" Collapsed="true">
+    <Position X="11.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAgAAAEAAMAEdAAEAAQAAwAAAAAAIBACEAAAEAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IPololuServoController" Collapsed="true">
+    <Position X="45.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAEAAACCAAAAgAAAAAQAAAAAACIAARAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IHidEnumerator" Collapsed="true">
+    <Position X="45.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAEAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidEnumerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.HID.IUSBDevice" Collapsed="true">
+    <Position X="11.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>cAAAAAAAAAAgIAAAAhAIAgBAAIGAAAEAEAAAAAAIQAA=</HashCode>
+      <FileName>HID\IUSBDevice.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Logging.ILogger" Collapsed="true">
+    <Position X="43.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAACAAbAAAAAAAAgAwCAAABEAAAAAAEAAAAg=</HashCode>
+      <FileName>ILogger.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Profile.IDeviceProfile" Collapsed="true">
+    <Position X="8.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>cCgAAAAABAAAIAAIAACoAQAAAiAAAAMBAIAIEAAAAAQ=</HashCode>
+      <FileName>Profile\IDeviceProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Profile.IProfile" Collapsed="true">
+    <Position X="47" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAARACAAAAAAAQAQAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Profile\IProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Profile.IProfileManager" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQFAAAAMAAAAAAAAAAAACAAAAAAAAAIAIA=</HashCode>
+      <FileName>Profile\IProfileManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Profile.IProfileOption" Collapsed="true">
+    <Position X="0.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profile\IProfileOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Profile.IExtensionProfileOption" Collapsed="true">
+    <Position X="3.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQEAAAAAAAAABAQABAAAAAAAAEAAAAAAAAAAAAEEAAA=</HashCode>
+      <FileName>Profile\IProfileOption.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Scripting.IScript" Collapsed="true">
+    <Position X="14.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripting\IScriptValueProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Scripting.IScriptValueProvider" Collapsed="true">
+    <Position X="14.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripting\IScriptValueProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Scripting.IScriptActivation" Collapsed="true">
+    <Position X="34.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripting\IScriptValueProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.Scripting.IScriptCreation" Collapsed="true">
+    <Position X="36.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Scripting\IScriptValueProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.SimConnect.IDataItemAttributeBase" Collapsed="true">
+    <Position X="8.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAUAEAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>SimConnect\DataItemAttributeBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.SimConnect.IDataItemBoundBase" Collapsed="true">
+    <Position X="13.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimConnect\DataItemAttributeBase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.SimConnect.ISimConnectDynamicObject" Collapsed="true">
+    <Position X="40" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAATIAJAAARgQAQAIAgAAAgAAIABgAAAEBAAAAAEA=</HashCode>
+      <FileName>SimConnect\ISimConnectDynamic.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.SimConnect.IDynamicSimConnectDataItem" Collapsed="true">
+    <Position X="8.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQIAAhAAAAACAAEIAAAQAAAgAgAAAAAAAAgAAAAQAA=</HashCode>
+      <FileName>SimConnect\ISimConnectDynamic.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.UI.IConfigurationDialog" Collapsed="true">
+    <Position X="41.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UI\IConfigurationDialog.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SPAD.neXt.Interfaces.UI.IDialConfigurationDialog" Collapsed="true">
+    <Position X="43.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>UI\IDialConfigurationDialog.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SPAD.neXt.Interfaces.PanelDevicReadStatus" Collapsed="true">
+    <Position X="38.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAgAAAAAChAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SimulationTypes" Collapsed="true">
+    <Position X="47" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAIAAAAAgAgAAAAAAAAAgAQAAAAQAAAAgA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADDefinitionTypes" Collapsed="true">
+    <Position X="41.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADEventActions" Collapsed="true">
+    <Position X="43.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAADFICAAAAACAAAAFAIAACAAQABRAAAAASAE=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADEventValueComparator" Collapsed="true">
+    <Position X="45.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAACAAAgAAAAAAAACAAAEAAQQCgAQkAAAE=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.EventOperations" Collapsed="true">
+    <Position X="40" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAIAAAAAAQAAAAAAQAABAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADValueOperation" Collapsed="true">
+    <Position X="38.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAIAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADSoundOperation" Collapsed="true">
+    <Position X="36.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAoAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADBooleanValue" Collapsed="true">
+    <Position X="34.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADConditionBinding" Collapsed="true">
+    <Position X="40" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADColors" Collapsed="true">
+    <Position X="38.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAQAAAAQgAAIAAAAAAAgAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADKeyboardOption" Collapsed="true">
+    <Position X="47" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEEAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.SPADButtonLight" Collapsed="true">
+    <Position X="36.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAgAAAAAACAgAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.JoystickAxis" Collapsed="true">
+    <Position X="45.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAEAAAAAAACEAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.JoystickInputTypes" Collapsed="true">
+    <Position X="34.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAQAAAAAAAAAAAAAAABQAACAAAAAIAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.JoystickHatDirection" Collapsed="true">
+    <Position X="47" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCCABABAAAAAAAAAAAAAAAAEAAAIAAAAAAAAAABAAQ=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.PanelOptions" Collapsed="true">
+    <Position X="40" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAIAQAAAAAAAAAAABAAABAABAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.GaugePowerMode" Collapsed="true">
+    <Position X="41.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.VARIABLE_SCOPE" Collapsed="true">
+    <Position X="41.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAgAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.APPLICATION_DIRECTORY" Collapsed="true">
+    <Position X="34.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgAAQIAQAAiAQAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.PANEL_BUTTONPOSITION" Collapsed="true">
+    <Position X="36.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.CustomExpressionTypes" Collapsed="true">
+    <Position X="36.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.InputModifier" Collapsed="true">
+    <Position X="43.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAMCAAEAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.XmlSerilizationPurpose" Collapsed="true">
+    <Position X="43.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAABAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.Events.ValueDataTypes" Collapsed="true">
+    <Position X="40" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgAAAAAAIAAAABAQSAAAAACAZAACAAAAEEAAAAAIAAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.HID.DeviceMode" Collapsed="true">
+    <Position X="38.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.HID.ShareMode" Collapsed="true">
+    <Position X="45.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.HID.ReadStatus" Collapsed="true">
+    <Position X="43.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAgAAAAAChAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.Logging.SPADLogLevel" Collapsed="true">
+    <Position X="34.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAYAAAAAAAAAAAAAAABEAAIAAAEEAAAA=</HashCode>
+      <FileName>ILogger.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SPAD.neXt.Interfaces.Profile.ProfileOptionTypes" Collapsed="true">
+    <Position X="41.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAQAAAAAAAAAAACgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profile\IProfileManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="SPAD.neXt.Comparators.ComparatorGetValueDelegate" Collapsed="true">
+    <Position X="36.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Base\Comparators\ComparatorBase.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.InputEventhandler" Collapsed="true">
+    <Position X="40" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.AxisEventHandler" Collapsed="true">
+    <Position X="34.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>IPanelDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.Events.SPADEventHandler" Collapsed="true">
+    <Position X="34.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\IEventManager.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.FSUIPC.FSUIPCPropertyChangedEventHandler" Collapsed="true">
+    <Position X="38.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FSUIPC\IFSUIPCController.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.HID.InsertedEventHandler" Collapsed="true">
+    <Position X="41.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.HID.RemovedEventHandler" Collapsed="true">
+    <Position X="47" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.HID.ReadCallback" Collapsed="true">
+    <Position X="43.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.HID.ReadReportCallback" Collapsed="true">
+    <Position X="45.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="SPAD.neXt.Interfaces.HID.WriteCallback" Collapsed="true">
+    <Position X="36.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HID\IHidDevice.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
