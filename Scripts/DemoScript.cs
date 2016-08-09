@@ -21,4 +21,13 @@ namespace myScript
             return (sourceVal?.GetValue()).GetValueOrDefault(0) * 100;
         }
     }
+
+    public class myActionDemo : IScriptAction
+    {
+        public void Execute(IApplication app, ISPADEventArgs eventArgs)
+        {
+            var lg = app.GetLogger("EXT");
+            lg.Warn(eventArgs.ToString());
+        }
+    }
 }
