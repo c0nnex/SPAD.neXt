@@ -111,4 +111,9 @@ namespace SPAD.neXt.Interfaces.Events
     {
         uint Delay { get; set; }
     }
+
+    public interface IEventActionScript : IEventAction
+    {
+        string ScriptName { get; set; }
+    }
 }
