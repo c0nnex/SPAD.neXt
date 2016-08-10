@@ -36,8 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>c0nnex.SignKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -60,7 +59,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -132,6 +131,7 @@
     <Compile Include="Profile\IProfileManager.cs" />
     <Compile Include="Profile\IProfileOption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripting\IScriptManager.cs" />
     <Compile Include="Scripting\IScriptValueProvider.cs" />
     <Compile Include="SimConnect\DataItemAttributeBase.cs" />
     <Compile Include="SimConnect\ISimConnectDynamic.cs" />
@@ -141,6 +141,7 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="c0nnex.SignKey.snk" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup />
