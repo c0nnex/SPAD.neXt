@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
-    public interface IDataDefinition
+    public interface IDataDefinition : IIsMonitorable
     {
         string Access { get; set; }
         string AlternateNormalizer { get; set; }
@@ -45,7 +45,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string WriteParameters { get; set; }
         SPADDefinitionTypes DefinitionType { get; set; }
         int DefinitionKey { get; }
-        IMonitorableValue Monitorable { get; }
+        
         IValueProvider ValueProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
 
@@ -71,5 +71,9 @@ namespace SPAD.neXt.Interfaces.Configuration
         void Save(string filename);
     }
 
+    public interface IIsMonitorable
+    {
+        IMonitorableValue Monitorable { get; }
+    }
 
 }

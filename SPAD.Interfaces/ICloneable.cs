@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface ICloneableWithID<T> : IDisposable,ICloneable<T> where T : class
+    public interface ICloneableWithID<T> : IDisposable,IHasID, ICloneable<T> where T : class
+    {
+    }
+
+    public interface IHasID 
     {
         Guid ID { get; }
         void ChangeID(Guid newID);

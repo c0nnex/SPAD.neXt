@@ -55,10 +55,25 @@ namespace SPAD.neXt.Interfaces.Events
         IEventAction CreateCommandAction(string command, string parameter = null);
     }
 
-    public interface IEventCondition : ICloneableWithID<IEventCondition>
+    public interface IEventCondition : IHasID
     {
         IEventDefinition ParentEventDefinition { get; }
+        string ConfigString { get; }
+        bool IsConfigured { get; }
 
+        void Activate();
+        void Deactivate();
+        bool CheckConfiguration(List<string> tmpError);
+        bool Evaluate(ISPADEventArgs e);
+    }
+
+    public interface IEventConditionExpression : ICloneable<IEventConditionExpression>,IEventCondition,IIsMonitorable
+    {
+        string Expression { get; set; }
+    }
+
+    public interface IEventConditionSimple : ICloneableWithID<IEventConditionSimple>, IEventCondition
+    {
         SPADEventValueComparator ConditionComparator { get; set; }
 
         bool ConditionValueSourceEnabled { get; }
@@ -69,11 +84,9 @@ namespace SPAD.neXt.Interfaces.Events
         string ConditionTargetValue { get; set; }
         IDataDefinition ConditionTargetValueSource { get; set; }
         string ConditionTargetValueID { get; set; }
-        string ConfigString { get; }
-        bool IsConfigured { get; }
-        IEventCondition SelfProperty { get; }
+        
+        IEventConditionSimple SelfProperty { get; }
 
-        bool Evaluate(ISPADEventArgs e);
         void UpdateSelfProperty();
     }
 

@@ -15,8 +15,8 @@ namespace SPAD.neXt.Interfaces.Events
         IEventDefinition CreateEvent(string boundTo,string trigger);
         IEventAction CreateAction(SPADEventActions action);
         IEventAction CreateAction(string action);
-        IEventCondition CreateCondition();
-        IEventCondition CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue);
+        IEventConditionSimple CreateCondition();
+        IEventConditionSimple CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue);
         IEventDefinitions CreateEventDefinitions(string boundTo);
 
         Type[] GetExtraSerializationTypes();
@@ -42,7 +42,7 @@ namespace SPAD.neXt.Interfaces.Events
             EventSystemHandler = handler;
         }
 
-        public static IEventCondition CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue)
+        public static IEventConditionSimple CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue)
         {
             return EventSystemHandler.CreateCondition(dataSource, comparator, targetValue);
         }
@@ -71,7 +71,7 @@ namespace SPAD.neXt.Interfaces.Events
             return EventSystemHandler.CreateEvent(boundTo, trigger);
         }
 
-        public static IEventCondition CreateCondition()
+        public static IEventConditionSimple CreateCondition()
         {
             return EventSystemHandler.CreateCondition();
         }
