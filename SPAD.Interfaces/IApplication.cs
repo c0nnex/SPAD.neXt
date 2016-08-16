@@ -3,7 +3,6 @@ using SPAD.neXt.Interfaces.Callout;
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.DevicesConfiguration;
 using SPAD.neXt.Interfaces.Events;
-using SPAD.neXt.Interfaces.FSUIPC;
 using SPAD.neXt.Interfaces.Gauges;
 using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
@@ -15,7 +14,7 @@ using System.IO;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface IApplication : ILocalizable, IFSUIPCController, IProfileManager, IEventManager, ICalloutManager
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }
