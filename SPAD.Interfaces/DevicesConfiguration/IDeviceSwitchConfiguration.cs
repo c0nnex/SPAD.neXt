@@ -10,6 +10,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string ID { get; }
         string Name { get; }
         string Connection { get; }
+        string MasterKey { get; }
         bool MultiAction { get; }
         bool HasMinMax { get; }
         SPADEventActions ActionID { get; }

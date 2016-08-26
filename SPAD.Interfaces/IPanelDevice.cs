@@ -173,7 +173,7 @@ namespace SPAD.neXt.Interfaces
         int AxisMinimumDelta { get; set; }
         float NormalizedValue { get; }
         int AxisValue { get; }
-       
+        bool AntiJitterActivated { get; set; }
        
     }
 

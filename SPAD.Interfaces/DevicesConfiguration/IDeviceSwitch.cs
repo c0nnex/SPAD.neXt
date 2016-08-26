@@ -8,6 +8,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string InputName { get; }
         uint InputID { get; }
         JoystickInputTypes InputType { get; }
+        bool NoCalibration { get; }
         
     }
 
