@@ -39,6 +39,9 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand _PublishSnippetCommand = new RoutedCommand("SPAD_neXt.PublishSnippet", typeof(SPADCommands));
 
         private static RoutedCommand _ShowNotificationsCommand = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
+
+        
+
         /*  private static RoutedCommand editActionCommand = new RoutedCommand("SPAD_neXt.EditAction", typeof(SPADCommands));
           private static RoutedCommand delActionCommand = new RoutedCommand("SPAD_neXt.DelAction", typeof(SPADCommands));
           private static RoutedCommand moveActionUpCommand = new RoutedCommand("SPAD_neXt.MoveActionUP", typeof(SPADCommands));
@@ -52,6 +55,7 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand gaugePrevCommand = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
         private static RoutedCommand _CommandChangeDigitmark = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
         private static RoutedCommand _CommandPlaySound = new RoutedCommand("SPAD_neXt.PlaySound", typeof(SPADCommands));
+        private static RoutedCommand _EmulateCommand = new RoutedCommand("SPAD_neXt.Emulate", typeof(SPADCommands));
 
         public static RoutedCommand CommandDevicePowerON { get { return devicePowerONCommand; } }
         public static RoutedCommand CommandDevicePowerOFF { get { return devicePowerOFFCommand; } }
@@ -59,6 +63,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandGaugePrev { get { return gaugePrevCommand; } }
         public static RoutedCommand CommandChangeDigitmark { get { return _CommandChangeDigitmark; } }
         public static RoutedCommand CommandPlaySound { get { return _CommandPlaySound; } }
+        public static RoutedCommand CommandEmulate { get { return _EmulateCommand; } }
 
         private static List<RoutedCommand> _ExposedCommands = new List<RoutedCommand>();
         public static IEnumerable<RoutedCommand> ExposedCommands
@@ -73,7 +78,7 @@ namespace SPAD.neXt.Interfaces
             _ExposedCommands.Add(CommandGaugeNext);
             _ExposedCommands.Add(CommandGaugePrev);
             _ExposedCommands.Add(CommandChangeDigitmark);
-            //_ExposedCommands.Add(CommandPlaySound);
+            _ExposedCommands.Add(CommandEmulate);
         }
 
         /// <summary>

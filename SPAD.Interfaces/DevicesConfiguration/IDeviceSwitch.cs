@@ -53,6 +53,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string ConfigurationMode { get; }
         bool HasSettings { get; }
         bool CanRename { get; }
+        bool Selectable { get; }
 
         int InputSubPanel { get; }
         int InputMode { get; }

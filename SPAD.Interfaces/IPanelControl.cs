@@ -41,7 +41,7 @@ namespace SPAD.neXt.Interfaces
     public interface IPanelControl
     {
         
-        void InitializePanel(IPanelHost hostControl);
+        void InitializePanel(IPanelHost hostControl, string panelLabel);
         void DeinitializePanel();
         void SetExtension(IExtensionPanel ctrl);
         void PanelGotFocus();

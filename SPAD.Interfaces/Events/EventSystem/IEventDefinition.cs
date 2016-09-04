@@ -124,7 +124,7 @@ namespace SPAD.neXt.Interfaces.Events
         void Execute(IEventDefinition definition, ISPADEventArgs e);
         bool Equals(IEventAction other);
         bool CheckConfiguration(List<string> errorContainer);
-
+        
         IDeviceProfile GetTargetDevice(IEventDefinition def);
     }
 
