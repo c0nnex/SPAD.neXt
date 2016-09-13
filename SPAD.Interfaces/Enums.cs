@@ -294,6 +294,12 @@ namespace SPAD.neXt.Interfaces
         public const string ModeReport = "__MODEREPORT__";
     }
 
+    public static class SPADSystemEvents
+    {
+        public const string AircraftChanged = "SPAD.Aircraft";
+        public const string FSUIPCChanged = "FSUIPC.Status";
+        public const string SimConnectChanged = "SimConnect.Status";
+    }
     public static class OptionNames
     {
         public const string Sensitivity = "SENSITIVITY";

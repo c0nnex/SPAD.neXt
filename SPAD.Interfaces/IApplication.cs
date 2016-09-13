@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Base;
+﻿using SPAD.neXt.Interfaces.Aircraft;
+using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Callout;
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.DevicesConfiguration;
@@ -19,7 +20,13 @@ namespace SPAD.neXt.Interfaces
         Guid ConsumerID { get; }
         bool DebugMode { get; }
         CultureInfo DefaultOSCulture { get; }
-        
+
+        /// <summary>
+        /// Currently loaded Aircraft
+        /// NULL if none loaded
+        /// </summary>
+        IAircraft CurrentAircraft { get; }
+
         bool IsLicenseValid { get; }
         bool IsFeatureLicensed(string feature);
         string ApplicationVersion { get; }
@@ -71,6 +78,8 @@ namespace SPAD.neXt.Interfaces
         void Broadcast(string eventName, string eventTrigger = null, object eventValue = null);
 
         void RegisterProfileExtension(string name, Type type);
+
+        
     }
 
     public interface IXmlAnyObject

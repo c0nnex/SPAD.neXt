@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.neXt.Interfaces.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace SPAD.neXt.Interfaces
 {
     public delegate void SPADEventHandler<TSender,TArgument>(TSender sender, TArgument e);
+    public delegate void SPADEventHandler(object sender, ISPADEventArgs e);
 
     public sealed class BooleanEventArgs : EventArgs
     {

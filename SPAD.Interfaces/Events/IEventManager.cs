@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Events
 {
-    public delegate void SPADEventHandler(object sender, ISPADEventArgs e);
-   
 
     public interface IEventManager
     {
