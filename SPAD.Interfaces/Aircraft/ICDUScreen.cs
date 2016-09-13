@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SPAD.neXt.Interfaces.Gauges
+namespace SPAD.neXt.Interfaces.Aircraft.CDU
 {
     /// <summary>
     /// CDU cell color
@@ -82,6 +82,14 @@ namespace SPAD.neXt.Interfaces.Gauges
         /// </summary>
         bool Powered { get; }
 
+        /// <summary>
+        /// Subscribable event if content of CDU screen changed
+        /// </summary>
+        event SPADEventHandler<ICDUScreen,IAircraft> CDUChanged;
+
+        /// <summary>
+        /// Identifier of this CDU
+        /// </summary>
         CDU_NUMBER CDUNumber { get; }
 
         /// <summary>

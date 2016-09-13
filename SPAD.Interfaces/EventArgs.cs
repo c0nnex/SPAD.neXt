@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public delegate void SPADEventHandler<TSender,TArgument>(TSender sender, TArgument e);
+
     public sealed class BooleanEventArgs : EventArgs
     {
         public bool Value { get; }
