@@ -30,6 +30,7 @@ namespace SPAD.neXt.Interfaces.Base
         void SetContinousMode(bool mode);
         void SetIntervall(TimeSpan newInterval);
         void SetScheduleOnTimeout(bool mode);
+        void SetPriority(ThreadPriority priority);
     }
 
     public interface ISPADBackgroundWorker
