@@ -20,6 +20,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
             set;
         }
         int ItemOffset { get; set; }
+        bool IsFixedSize { get; set; }
     }
     public interface IDataItemBoundBase
     {
