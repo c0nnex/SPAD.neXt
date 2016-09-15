@@ -11,9 +11,6 @@ namespace SPAD.neXt.Interfaces.Aircraft
     {
         string Name { get; }
 
-        ICDUScreen CDU_0 { get; }
-        ICDUScreen CDU_1 { get; }
-        ICDUScreen CDU_2 { get; }
-
+        ICDUScreen GetCDU(CDU_NUMBER cduNumber);
     }
 }

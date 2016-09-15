@@ -12,7 +12,7 @@ namespace SPAD.neXt.Interfaces.Events
         string EventName { get; set; }
         string EventTrigger { get; set; }
         string NewValueFormatted { get; }
-        object NewValue { get; }        
+        object NewValue { get;  }        
         object OldValue { get; }       
         string   TargetDevice { get; }
         IDeviceProfile DeviceProfile { get; set; }

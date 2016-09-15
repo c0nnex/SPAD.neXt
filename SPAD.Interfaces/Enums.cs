@@ -299,6 +299,7 @@ namespace SPAD.neXt.Interfaces
         public const string AircraftChanged = "SPAD.Aircraft";
         public const string FSUIPCChanged = "FSUIPC.Status";
         public const string SimConnectChanged = "SimConnect.Status";
+        public const string CDUAvailable = "SPAD.CDUAvailable";
     }
     public static class OptionNames
     {

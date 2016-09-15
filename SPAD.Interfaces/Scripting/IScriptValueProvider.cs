@@ -33,7 +33,7 @@ namespace SPAD.neXt.Interfaces.Scripting
         void Deactivate();
     }
 
-    public interface IScriptCreation
+    public interface IScriptCreation : IScript
     {
         void Initialize(IApplication app);
         void Deinitialize();

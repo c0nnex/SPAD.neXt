@@ -115,5 +115,6 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventActionScript : IEventAction
     {
         string ScriptName { get; set; }
+        int ScriptArgument { get; set; }
     }
 }
