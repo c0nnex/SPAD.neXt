@@ -31,6 +31,8 @@ namespace SPAD.neXt.Interfaces.Events
         IReadOnlyList<IDataDefinition> BrowseDataDefinitonMulti(string curOffset, string titleName, string rootName, bool bWriteOperation, object parentWindow = null);
         void StartRecording();
         IEnumerable<IMonitorableValue> StopRecording();
+
+        void RaiseEvent(string eventName, ISPADEventArgs e);
     }
 
     public sealed class EventSystem 
@@ -130,5 +132,11 @@ namespace SPAD.neXt.Interfaces.Events
         {
             return EventSystemHandler.StopRecording();
         }
+
+        public static void RaiseEvent(string eventName, ISPADEventArgs e)
+        {
+            EventSystemHandler.RaiseEvent(eventName, e);
+        }
+
     }
 }
