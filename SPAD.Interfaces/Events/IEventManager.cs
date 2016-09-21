@@ -40,6 +40,15 @@ namespace SPAD.neXt.Interfaces.Events
         void Dispose();
     }
 
+    public sealed class ValueProviderInfomation
+    {
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Information { get; set; }
+        public IValueProvider Provider { get; set; }
+    }
+
+
     public interface IValueProvider
     {
         object GetValue(IMonitorableValue value);
@@ -52,7 +61,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         bool IsInitialized { get; }
         bool IsPaused { get; }
-        
+        string Name { get; }
+
         void Initialize();
         void Pause();
         void Continue();
@@ -124,7 +134,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsActive { get; }
         bool IsUndefined();
 
-        IObserverTicket Subscribe(string subscriptionID,string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
+        IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
         void Raise(string eventName, object sender, ISPADEventArgs eventArgs);
 

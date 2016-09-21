@@ -69,8 +69,12 @@ namespace SPAD.neXt.Interfaces
         bool RegisterValueProvider(string tag, IValueProvider provider);
         bool RegisterExternalValueProvider(IValueProvider provider);
         bool UnregisterValueProvider(IValueProvider provider);
+        IEnumerable<ValueProviderInfomation> GetRegisteredValueProviders();
+        IValueProvider GetValueProvider(string tag);
 
         IDataDefinition CreateDataDefinition(string provider, string name, string key, string access, string normalizer, string description, string category, string subcategory, bool selectable, double correctionFactor, float espilon);
+        IDataDefinition CreateDataDefinition(IValueProvider provider, string name, string globalName);
+
         IDataDefinitions CreateDataDefinitions(SPADDefinitionTypes id, StreamReader inputReader);
         void AddDataDefinition(SPADDefinitionTypes definitionType, IDataDefinition item, bool batch = false);
         void AddDataDefinitions(IDataDefinitions data);
