@@ -80,11 +80,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 {
                     case "getvalue":
                         {
-                            string varName;
-                            if (!textValues.TryGetValue("snVariableName", out varName) || string.IsNullOrEmpty(varName))
+                            string varName = decimalValues.Keys.FirstOrDefault();
+                            if (!string.IsNullOrEmpty(varName))
                             {
                                 textValues["snSTATUS"] = "ERROR";
-                                textValues["snMESSAGE"] = "GetValue: snVariableName not set";
+                                textValues["snMESSAGE"] = "GetValue: no decimal given";
                                 return;
                             }
                             var result = proxy.GetValue(varName);
@@ -100,12 +100,12 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                         }
                     case "setvalue":
                         {
-                            string varName;
+                            string varName = decimalValues.Keys.FirstOrDefault(); ;
                             decimal? newValue;
-                            if (!textValues.TryGetValue("snVariableName", out varName) || string.IsNullOrEmpty(varName))
+                            if (string.IsNullOrEmpty(varName))
                             {
                                 textValues["snSTATUS"] = "ERROR";
-                                textValues["snMESSAGE"] = "SetValue: snVariableName not set";
+                                textValues["snMESSAGE"] = "SetValue: no decimal given";
                                 return;
                             }
                             if (!decimalValues.TryGetValue(varName, out newValue) || !newValue.HasValue)
