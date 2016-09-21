@@ -18,6 +18,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string DefaultValue { get; set; }
         string DisplayName { get; set; }
         string DisplayString { get; }
+        string GlobalName { get; set; }
         bool Disposable { get; set; }
         float Epsilon { get; set; }
         Type EventValueType { get; }
