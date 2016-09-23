@@ -28,9 +28,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             return new Guid("{B8FC149B-3107-4411-AC46-E0E20BC93460}");
         }
 
+        private static ServiceProxy proxy = new ServiceProxy("localhost");
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+
             textValues["snHostname"] = "localhost";
             textValues["snSTATUS"] = "OK";
             textValues["snMESSAGE"] = String.Empty;
@@ -53,21 +55,12 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             try
             {
                 object tmp;
-                ServiceProxy proxy = null;
 
                 textValues["snSTATUS"] = "OK";
                 textValues["snMESSAGE"] = String.Empty;
-                if (!state.ContainsKey("snRemoteService"))
+                if ((proxy != null) && (!proxy.TryToConnect()))
                 {
-                    state["snRemoteService"] = new ServiceProxy("localhost"); // textValues["snHostname"]);
-                }
-                if (state.TryGetValue("snRemoteService", out tmp))
-                {
-                    proxy = tmp as ServiceProxy;
-                    if ((proxy != null) && (!proxy.TryToConnect()))
-                    {
-                        proxy = null;
-                    }
+                    proxy = null;
                 }
                 if (proxy == null)
                 {
@@ -81,7 +74,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                     case "getvalue":
                         {
                             string varName = decimalValues.Keys.FirstOrDefault();
-                            if (!string.IsNullOrEmpty(varName))
+                            if (string.IsNullOrEmpty(varName))
                             {
                                 textValues["snSTATUS"] = "ERROR";
                                 textValues["snMESSAGE"] = "GetValue: no decimal given";
@@ -153,9 +146,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                     default:
                         break;
                 }
-            } 
+            }
             catch (Exception ex)
             {
+                textValues["snSTATUS"] = "ERROR";
+                textValues["snMESSAGE"] = $"FATAL: {ex.Message}";
                 Debug.WriteLine(ex.ToString());
             }
         }

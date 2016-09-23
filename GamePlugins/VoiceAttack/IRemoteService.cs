@@ -20,6 +20,9 @@ namespace SPAD.neXt.Interfaces.ServiceContract
     public interface IRemoteService
     {
         [OperationContract]
+        bool IsSupported(Version remoteServiceVersion);
+
+        [OperationContract]
         RemoteServiceResponse GetValue(string variableName);
 
         [OperationContract]

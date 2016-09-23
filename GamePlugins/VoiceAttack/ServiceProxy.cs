@@ -5,16 +5,18 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SPAD.neXt.GamePlugins.VoiceAttack
 {
     class ServiceProxy : ClientBase<IRemoteService>, IRemoteService
     {
+        static Version CurrentRemoteServiceVersion = new Version("1.1.0.0");
         public ServiceProxy(string hostname) : base(new ServiceEndpoint(ContractDescription.GetContract(typeof(IRemoteService)),
             new NetNamedPipeBinding(), new EndpointAddress($"net.pipe://{hostname}/SPAD.neXt/RemoteService")))
         {
-
+           
         }
 
         public bool IsConnected
@@ -44,7 +46,13 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 case CommunicationState.Created:
                 case CommunicationState.Closed:
                     {
-                        Open();
+                        int tries = 0;
+                        while ((State != CommunicationState.Opened) && (tries < 50))
+                        {
+                            Open();
+                            Thread.Sleep(100);
+                            tries++;
+                        }
                         return State == CommunicationState.Opened;
                     }
                 case CommunicationState.Closing:
@@ -92,6 +100,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             {
                 return new RemoteServiceResponse { HasError = true, Error = ex.Message };
             }
+        }
+
+        public bool IsSupported(Version remoteServiceVersion)
+        {
+            return Channel.IsSupported(CurrentRemoteServiceVersion);
         }
     }
 }
