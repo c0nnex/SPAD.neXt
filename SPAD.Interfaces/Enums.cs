@@ -271,6 +271,7 @@ namespace SPAD.neXt.Interfaces
         Cloning
     }
 
+
     public static class InternalEvents
     {
         public const string UpdateDisplay = "__UPDATEDISPLAY__";

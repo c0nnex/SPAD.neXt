@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,30 @@ namespace SPAD.neXt.Interfaces
         public static long TickCountLong
         {
             get { return (long)GetTickCount64(); }
+        }
+
+        public static string WindowsVersion
+        {
+            get
+            {
+                try
+                {
+                    using (var mainKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                    {
+                        var val = mainKey.GetValue("ProductName");
+                        if (val != null)
+                            return val.ToString();
+                    }
+                    return "Unknown";
+                }
+                catch (Exception ex)
+                { return "Unknown"; }
+            }
+        }
+
+        public static bool IsWindows10
+        {
+            get { return WindowsVersion.ToLowerInvariant().StartsWith("windows 10"); }
         }
     }
 

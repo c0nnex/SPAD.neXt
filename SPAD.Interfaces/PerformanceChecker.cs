@@ -16,7 +16,7 @@ namespace SPAD.neXt.Interfaces
 
         static PerformanceChecker()
         {
-            DoLogPerformance = System.Environment.MachineName == "DESKTOP-40RM7LC";
+            // DoLogPerformance = System.Environment.MachineName == "DESKTOP-40RM7LC";
         }
         public PerformanceChecker(string name)
         {
@@ -33,7 +33,7 @@ namespace SPAD.neXt.Interfaces
             {
                 if (disposing)
                 {
-                     Debug.WriteLine($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
+                    if (DoLogPerformance) Debug.WriteLine($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
