@@ -63,6 +63,8 @@ namespace SPAD.neXt.Interfaces
         IDeviceSwitchConfiguration GetSwitchConfiguration(string key);
         string GetFilename(APPLICATION_DIRECTORY scope, string filename);
         string GetDirectory(APPLICATION_DIRECTORY scope, string subDir = null);
+        IDirectoryModel DirectoryModel { get; }
+
         void WarnWithNotification(string LoggerName, string message, params object[] args);
         void ErrorWithNotification(string LoggerName, string message, params object[] args);
 

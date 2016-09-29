@@ -271,6 +271,14 @@ namespace SPAD.neXt.Interfaces
         Cloning
     }
 
+    public enum GaugeLicenseModel
+    {
+        NONE,
+        FREE,
+        LICENSE,
+        PROTECT,
+        
+    }
 
     public static class InternalEvents
     {
