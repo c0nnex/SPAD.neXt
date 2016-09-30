@@ -13,7 +13,7 @@ namespace SPAD.neXt.Interfaces.Configuration
 
     public interface IProfileOptionsProvider
     {
-        IProfileOption AddOption(string key, Interfaces.Profile.ProfileOptionTypes type, string defaultValue, bool needrestart = false, bool editable = false, bool hidden = false);
+        IProfileOption AddOption(string key, Interfaces.Profile.ProfileOptionTypes type, string defaultValue, bool needrestart = false, bool editable = false, bool hidden = false,string groupName="Other");
         IProfileOption GetOption(string key);
         void SetOption(string key, string value);
     }
