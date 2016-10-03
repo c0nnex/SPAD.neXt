@@ -15,10 +15,12 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool ProcessDeviceData { get; }
         string DeviceType { get; }
         string DeviceMenu { get; }
-
+        bool NoEventsAutoRemove { get; }
         bool ContainsSwitch(string name);
-        void CreateVirtualInputs(IInputDevice gameDevice);
 
+        void CreateVirtualInputs(IInputDevice gameDevice);
+        void Clear();
+        bool AddDeviceSwitch(string xmlSwitchFragment);
 
     }
 

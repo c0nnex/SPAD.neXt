@@ -89,6 +89,7 @@
     <Compile Include="Base\ISerializableOption.cs" />
     <Compile Include="Base\ISPADBackgroundWorker.cs" />
     <Compile Include="Base\IValueNormalizer.cs" />
+    <Compile Include="Base\IXmlPersistance.cs" />
     <Compile Include="Callout\ICalloutManager.cs" />
     <Compile Include="Configuration\IDataDefinition.cs" />
     <Compile Include="Configuration\ILocalVariable.cs" />

@@ -32,6 +32,7 @@ namespace SPAD.neXt.Interfaces
         void NavigateToSettings();
         void DevicePowerChanged(bool newPowerState);
 
+        void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void AddPanelCheckbox(string buttonName, string buttonTag, ICommand command, bool bIsChecked, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void SetEventContext(string eventName, Point targetPoint, IInput input);

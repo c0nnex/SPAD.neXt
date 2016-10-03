@@ -342,6 +342,7 @@ namespace SPAD.neXt.Interfaces
     {
         public const string Saitek = "0x06A3";
         public const int iSaitek = 0x06A3;
+        public const int iUltimarc = 0xD209;
     }
 
     public class ProductIDs

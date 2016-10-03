@@ -41,8 +41,8 @@ namespace SPAD.neXt.Interfaces.Profile
 
         ISPADBaseEvent CreateEvent(string tag);
         ISPADBaseEvent CreateEvent(string tag, string xmldata);
-        
 
+        bool UpdateEventConfiguration(bool ignoreNoAutoRemove);
         bool UpdateEventConfiguration(ISPADBaseEvent evt);
         void UpdateEventTarget(ISPADBaseEvent evt);
         

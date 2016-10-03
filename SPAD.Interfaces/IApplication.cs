@@ -88,8 +88,5 @@ namespace SPAD.neXt.Interfaces
         
     }
 
-    public interface IXmlAnyObject
-    {
-        bool ShouldSerializeThis();
-    }
+    
 }
