@@ -29,7 +29,8 @@ namespace TestRemoteService
                 var ret = proxy.SetValue(tmp,2);
                 Console.WriteLine($"Getting {tmp}");
                 Console.WriteLine($"HasError: {ret.HasError} Message {ret.Error} Value {ret.Value}");
-                proxy.Close();
+
+                Console.ReadLine();
             }
             catch (Exception ex)
             {

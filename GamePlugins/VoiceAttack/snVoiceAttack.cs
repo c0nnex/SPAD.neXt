@@ -28,47 +28,37 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             return new Guid("{B8FC149B-3107-4411-AC46-E0E20BC93460}");
         }
 
-        private static ServiceProxy proxy = new ServiceProxy("localhost");
-
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-
-            textValues["snHostname"] = "localhost";
-            textValues["snSTATUS"] = "OK";
-            textValues["snMESSAGE"] = String.Empty;
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
         {
-            object tmp;
-            if (state.TryGetValue("snRemoteService", out tmp))
-            {
-                ServiceProxy proxy = tmp as ServiceProxy;
-                if ((proxy != null) && (proxy.IsConnected))
-                    proxy.Close();
-                state["snRemoteService"] = null;
-            }
         }
+
+        public static void VA_StopCommand()
+        { }
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+            bool bDebug = vaProxy.IsDebug;
+           
             try
             {
                 object tmp;
 
                 textValues["snSTATUS"] = "OK";
                 textValues["snMESSAGE"] = String.Empty;
-                if ((proxy != null) && (!proxy.TryToConnect()))
-                {
-                    proxy = null;
-                }
-                if (proxy == null)
+                if (bDebug) vaProxy.WriteToLog("Command '{context}'");
+                var proxy = snVoiceAttackCommandInterface.GetServiceProxy();
+                if ((proxy == null) || !proxy.IsConnected)
                 {
                     textValues["snSTATUS"] = "ERROR";
-                    textValues["snMESSAGE"] = "Not Connected";
+                    textValues["snMESSAGE"] = "No Connection";
                     return;
                 }
 
+               
                 switch (context.ToLowerInvariant())
                 {
                     case "getvalue":
@@ -87,7 +77,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                                 textValues["snMESSAGE"] = $"GetValue: Failed to get {varName} : {result.Error}";
                                 return;
                             }
-                            Debug.WriteLine("GotValue: {0} {1}", result.Value, Convert.ToDecimal(result.Value));
+                            if (bDebug) vaProxy.WriteToLog( String.Format("GotValue: {0} {1}", result.Value, Convert.ToDecimal(result.Value)));
                             decimalValues[varName] = Convert.ToDecimal(result.Value);
                             return;
                         }
@@ -151,7 +141,14 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             {
                 textValues["snSTATUS"] = "ERROR";
                 textValues["snMESSAGE"] = $"FATAL: {ex.Message}";
-                Debug.WriteLine(ex.ToString());
+                if (bDebug) vaProxy.WriteToLog(ex.ToString());
+            }
+            finally
+            {
+                if (bDebug)
+                {
+                    vaProxy.WriteToLog($"snStaus='{textValues["snSTATUS"]}' snMessage='{textValues["snMESSAGE"]}' ");
+                }
             }
         }
     }

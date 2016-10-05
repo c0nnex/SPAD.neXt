@@ -44,11 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\GamePlugins\VoiceAttack\IRemoteService.cs">
-      <Link>IRemoteService.cs</Link>
-    </Compile>
     <Compile Include="..\..\GamePlugins\VoiceAttack\ServiceProxy.cs">
       <Link>ServiceProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SPAD.Interfaces\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SPAD.Interfaces\ServiceContract\IRemoteService.cs">
+      <Link>IRemoteService.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

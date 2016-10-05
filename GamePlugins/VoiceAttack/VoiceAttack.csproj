@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>S:\VoiceAttack\Apps\SPAD.neXt\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,9 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRemoteService.cs" />
+    <Compile Include="..\..\SPAD.Interfaces\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SPAD.Interfaces\ServiceContract\IRemoteService.cs">
+      <Link>IRemoteService.cs</Link>
+    </Compile>
+    <Compile Include="IVAProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceProxy.cs" />
+    <Compile Include="snCommandInterface.cs" />
     <Compile Include="snVoiceAttack.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
