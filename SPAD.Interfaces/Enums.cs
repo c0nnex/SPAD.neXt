@@ -92,7 +92,10 @@ namespace SPAD.neXt.Interfaces
     {
         Set,
         Increment,
-        Decrement
+        Decrement,
+        SetBit,
+        ClearBit,
+        ToggleBit
     }
 
     public enum SPADSoundOperation
@@ -216,6 +219,14 @@ namespace SPAD.neXt.Interfaces
     {
         FIRST = 0,
         LAST = -1
+    }
+
+    public enum DEVICEPOWER
+    {
+        Enable,
+        Disable,
+        On,
+        Off
     }
 
     public enum CustomExpressionTypes

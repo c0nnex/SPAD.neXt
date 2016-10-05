@@ -30,7 +30,7 @@ namespace SPAD.neXt.Interfaces
         double GetPanelVariable(string name);
 
         void NavigateToSettings();
-        void DevicePowerChanged(bool newPowerState);
+        void DevicePowerChanged(DEVICEPOWER newPowerState);
 
         void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
