@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.ServiceContract
 {
+    public static class RemoteServiceContract
+    {
+        public static readonly Uri ServiceUrl  = new Uri("net.pipe://localhost/SPAD.neXt");
+        public static readonly string ServiceEndpoint = "RemoteService";
+    }
 
     public sealed class RemoteServiceResponse
     {
@@ -15,8 +20,15 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         public double Value { get; set; }
     }
 
-    [ServiceContract]
+    public sealed class RemoteEventTarget
+    {
+        public string Name { get; set; }
+        public HashSet<string> EventNames { get; set; }
+    }
+
+    [ServiceContract( Namespace = Constants.Namespace , CallbackContract = typeof(IRemoteServiceCallback))]
     [ServiceKnownType(typeof(RemoteServiceResponse))]
+    [ServiceKnownType(typeof(RemoteEventTarget))]
     public interface IRemoteService
     {
         [OperationContract]
@@ -27,5 +39,17 @@ namespace SPAD.neXt.Interfaces.ServiceContract
 
         [OperationContract]
         RemoteServiceResponse EmulateEvent(string eventTarget, string eventName, string eventParameter);
+
+        [OperationContract]
+        List<RemoteEventTarget> GetEventTargets();
+
+        [OperationContract]
+        string GetVersion();
+    }
+
+    public interface IRemoteServiceCallback
+    {
+        [OperationContract(IsOneWay = true)]
+        void RemoteEvent(string eventName);
     }
 }
