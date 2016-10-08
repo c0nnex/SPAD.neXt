@@ -45,11 +45,13 @@ namespace SPAD.neXt.Interfaces.Events
         InputModifier InputBehavior { get; set; }
 
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
+        void ForceEvaluation();
         bool Activate(ISPADBaseEvent baseEvent);
         void Deactivate(ISPADBaseEvent baseEvent);
         void Execute(ISPADEventArgs e, bool force = false);
         void SetBinding(string boundTo);
         void SetDisplayName(string displayNameResource);
+
         // Creating new actions
         void AddAction(IEventAction action, bool singleton = true);
         IEventAction CreateCommandAction(string command, string parameter = null);

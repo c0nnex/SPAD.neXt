@@ -1,4 +1,5 @@
 ﻿using SPAD.neXt.Interfaces;
+using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,8 @@ namespace SPAD.neXt.Interfaces
 {
     public class PerformanceChecker : IDisposable
     {
-        static bool DoLogPerformance = false;
+        public static ILogger logger { get; set; }
+        public static bool DoLogPerformance { get; set; } = false;
         ulong stTicks;
         string Name;
 
@@ -33,7 +35,7 @@ namespace SPAD.neXt.Interfaces
             {
                 if (disposing)
                 {
-                    if (DoLogPerformance) Debug.WriteLine($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
+                    if (DoLogPerformance) logger?.Info($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

@@ -24,8 +24,9 @@ namespace SPAD.neXt.Interfaces.Base
 
         UInt16 SetBCDValue(object value, bool fractional);
         Double GetBCDValue(object value);
-       
-        
+
+        void SetExpressionFrom(string expression);
+        void SetExpressionTo(string expression);
     }
 
     public interface IDynamicNormalizer : IValueNormalizer

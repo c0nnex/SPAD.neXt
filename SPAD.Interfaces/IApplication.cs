@@ -88,5 +88,10 @@ namespace SPAD.neXt.Interfaces
         
     }
 
-    
+    public interface IApplicationConfiguration
+    {
+        bool ExecuteConfiguration(IApplication app);
+    }
+
+
 }
