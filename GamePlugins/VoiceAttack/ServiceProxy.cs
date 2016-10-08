@@ -96,13 +96,13 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
         }
 
-        public RemoteServiceResponse EmulateEvent(string eventTarget, string eventName, string eventParameter)
+        public RemoteServiceResponse EmulateEvent(string targetDevice, string targetEvent, string eventTrigger, string eventParameter)
         {
             try
             {
                 if ( ! TryToConnect() )
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
-                return prxy.RemoteChannel.EmulateEvent(eventTarget, eventName, eventParameter);
+                return prxy.RemoteChannel.EmulateEvent(targetDevice, targetEvent, eventTrigger, eventParameter);
             }
             catch (Exception ex)
             {

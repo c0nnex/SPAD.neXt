@@ -26,11 +26,11 @@ namespace TestRemoteService
                 string tmp = "LOCAL!SYSTEM READY";
                 if (args.Length > 0)
                     tmp = args[0];
-                var ret = proxy.SetValue(tmp,2);
+                var ret = proxy.GetValue(tmp);
                 Console.WriteLine($"Getting {tmp}");
                 Console.WriteLine($"HasError: {ret.HasError} Message {ret.Error} Value {ret.Value}");
 
-                Console.ReadLine();
+                
             }
             catch (Exception ex)
             {

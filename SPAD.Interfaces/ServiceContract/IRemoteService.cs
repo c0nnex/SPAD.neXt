@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.ServiceContract
 
     public sealed class RemoteServiceResponse
     {
-        public bool HasError { get; set; }
+        public bool HasError { get; set; } = false;
         public string Error { get; set; }
         public double Value { get; set; }
     }
@@ -38,10 +38,7 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         RemoteServiceResponse SetValue(string variableName, double newValue);
 
         [OperationContract]
-        RemoteServiceResponse EmulateEvent(string eventTarget, string eventName, string eventParameter);
-
-        [OperationContract]
-        List<RemoteEventTarget> GetEventTargets();
+        RemoteServiceResponse EmulateEvent(string targetDevice,string targetEvent, string eventTrigger, string eventParameter);
 
         [OperationContract]
         string GetVersion();

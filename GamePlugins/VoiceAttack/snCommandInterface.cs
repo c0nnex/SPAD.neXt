@@ -9,8 +9,9 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
     /// <summary>
     /// VoiceAttack SPAD.neXt command interface
     /// </summary>
-    static class snVoiceAttackCommandInterface
+    internal static class snVoiceAttackCommandInterface
     {
+#if OLD_V4
         public static string VA_DisplayName()
         {
             return "SPAD.neXt command interface (DO NOT USE)";
@@ -25,6 +26,44 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         {
             return new Guid("{52AAC086-D5E5-4655-8873-805454C4EE23}");
         }
+
+        public static void VA_Invoke1(dynamic vaproxy)
+        { }
+#endif
+
+        public static void VA_StopCommand()
+        {
+            isStopped = true;
+            proxy?.Close();
+            proxy = null;
+            vaProxy.SetVAProxy(null);
+        }
+
+
+
+        public static void VA_Init1(dynamic vaproxy)
+        {
+            vaProxy.SetVAProxy(vaproxy);
+            vaProxy.WriteToLog($"SPAD.neXt command interface initialize", "blank");
+            InitProxy();
+
+            vaProxy.SetText("snHostname", "localhost");
+            vaProxy.SetText("snSTATUS", "OK");
+            vaProxy.SetText("snMESSAGE", String.Empty);
+        }
+
+        public static void VA_Exit1(dynamic vaproxy)
+        {
+            if ((proxy != null) && (proxy.IsConnected))
+            {
+                proxy.RemoteEventReceived -= Proxy_RemoteEventReceived;
+                proxy.Close();
+                proxy = null;
+            }
+            vaProxy.SetVAProxy(null);
+        }
+
+        
 
         private static ServiceProxy proxy = null;
 
@@ -57,44 +96,12 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 vaProxy.ExecuteCommand(eventName);
         }
 
-        public static void VA_StopCommand()
-        {
-            isStopped = true;
-            proxy?.Close();
-            proxy = null;
-            vaProxy.SetVAProxy(null);
-        }
-
         public static ServiceProxy GetServiceProxy()
         {
             InitProxy();
             return proxy;
         }
 
-
-        public static void VA_Init1(dynamic vaproxy)
-        {
-            vaProxy.SetVAProxy(vaproxy);
-            vaProxy.WriteToLog($"SPAD.neXt command interface initialize", "blank");
-            InitProxy();
-
-            vaProxy.SetText("snHostname", "localhost");
-            vaProxy.SetText("snSTATUS", "OK");
-            vaProxy.SetText("snMESSAGE", String.Empty);
-        }
-
-        public static void VA_Exit1(dynamic vaproxy)
-        {
-            if ((proxy != null) && (proxy.IsConnected)) 
-            {
-                proxy.RemoteEventReceived -= Proxy_RemoteEventReceived;
-                proxy.Close();
-                proxy = null;
-            }
-            vaProxy.SetVAProxy(null);
-        }
-
-        public static void VA_Invoke1(dynamic vaproxy)
-        { }
+ 
     }
 }

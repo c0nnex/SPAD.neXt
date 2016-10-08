@@ -30,14 +30,22 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+            if (state.ContainsKey("VA_PROXY"))
+            {
+                dynamic vaproxy = state["VA_PROXY"];
+                snVoiceAttackCommandInterface.VA_Init1(vaproxy);
+            }
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
         {
+            snVoiceAttackCommandInterface.VA_Exit1(null);
         }
 
         public static void VA_StopCommand()
-        { }
+        {
+            snVoiceAttackCommandInterface.VA_StopCommand();
+        }
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
@@ -49,7 +57,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
                 textValues["snSTATUS"] = "OK";
                 textValues["snMESSAGE"] = String.Empty;
-                if (bDebug) vaProxy.WriteToLog("Command '{context}'");
+                if (bDebug) vaProxy.WriteToLog($"Command '{context}'");
                 var proxy = snVoiceAttackCommandInterface.GetServiceProxy();
                 if ((proxy == null) || !proxy.IsConnected)
                 {
@@ -57,8 +65,6 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                     textValues["snMESSAGE"] = "No Connection";
                     return;
                 }
-
-               
                 switch (context.ToLowerInvariant())
                 {
                     case "getvalue":
@@ -109,23 +115,29 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                     case "executecommand": break;
                     case "emulateevent":
                         {
-                            string eventName, eventTarget, eventParameter;
+                            string snDevice, snSwitch, snEvent, snParameter;
 
-                            if (!textValues.TryGetValue("snEventTarget", out eventTarget) || string.IsNullOrEmpty(eventTarget))
+                            if (!textValues.TryGetValue("snDevice", out snDevice) || string.IsNullOrEmpty(snDevice))
                             {
                                 textValues["snSTATUS"] = "ERROR";
-                                textValues["snMESSAGE"] = "EmulateEvent: snEventTarget not set";
+                                textValues["snMESSAGE"] = "EmulateEvent: snDevice not set";
                                 return;
                             }
-                            if (!textValues.TryGetValue("snEventName", out eventName) || string.IsNullOrEmpty(eventName))
+                            if (!textValues.TryGetValue("snSwitch", out snSwitch) || string.IsNullOrEmpty(snSwitch))
                             {
                                 textValues["snSTATUS"] = "ERROR";
-                                textValues["snMESSAGE"] = "EmulateEvent: snEventName not set";
+                                textValues["snMESSAGE"] = "EmulateEvent: snSwitch not set";
                                 return;
                             }
-                            textValues.TryGetValue("snEventParameter", out eventParameter);
+                            if (!textValues.TryGetValue("snEvent", out snEvent) || string.IsNullOrEmpty(snEvent))
+                            {
+                                textValues["snSTATUS"] = "ERROR";
+                                textValues["snMESSAGE"] = "EmulateEvent: snEvent not set";
+                                return;
+                            }
+                            textValues.TryGetValue("snEventParameter", out snParameter);
 
-                            var result = proxy.EmulateEvent(eventTarget, eventName, eventParameter);
+                            var result = proxy.EmulateEvent(snDevice, snSwitch, snEvent, snParameter);
                             if (result.HasError)
                             {
                                 textValues["snSTATUS"] = "ERROR";
