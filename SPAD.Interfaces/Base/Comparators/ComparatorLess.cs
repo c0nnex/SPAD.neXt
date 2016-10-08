@@ -60,8 +60,8 @@ namespace SPAD.neXt.Comparators
     {               
         protected override bool DoesMatch(IComparable testValue)
         {           
-            Int64 a3 = Convert.ToInt64(compareValueLeft);
-            Int64 a4 = Convert.ToInt64(testValue);
+            UInt64 a3 = Convert.ToUInt64(compareValueLeft);
+            UInt64 a4 = Convert.ToUInt64(testValue);
             return (a3 & a4) != 0;
         }
     }
@@ -70,8 +70,28 @@ namespace SPAD.neXt.Comparators
     {
         protected override bool DoesMatch(IComparable testValue)
         {
-            Int64 a3 = Convert.ToInt64(compareValueLeft);
-            Int64 a4 = Convert.ToInt64(testValue);
+            UInt64 a3 = Convert.ToUInt64(compareValueLeft);
+            UInt64 a4 = Convert.ToUInt64(testValue);
+            return (a3 & a4) == a3;
+        }
+    }
+
+    public class ComparatorIsBitSet : ComparatorBase
+    {
+        protected override bool DoesMatch(IComparable testValue)
+        {
+
+            UInt64 a3 = 1UL << Convert.ToInt32(compareValueLeft);
+            UInt64 a4 = Convert.ToUInt64(testValue);
+            return (a3 & a4) == a3;
+        }
+    }
+    public class ComparatorIsBitNotSet : ComparatorBase
+    {
+        protected override bool DoesMatch(IComparable testValue)
+        {
+            UInt64 a3 = 1UL << Convert.ToInt32(compareValueLeft);
+            UInt64 a4 = Convert.ToUInt64(testValue);
             return (a3 & a4) == a3;
         }
     }
@@ -80,8 +100,8 @@ namespace SPAD.neXt.Comparators
     {
         protected override bool DoesMatch(IComparable testValue)
         {
-            Int64 a3 = Convert.ToInt64(compareValueLeft);
-            Int64 a4 = Convert.ToInt64(testValue);
+            UInt64 a3 = Convert.ToUInt64(compareValueLeft);
+            UInt64 a4 = Convert.ToUInt64(testValue);
             return (a3 & a4) != a3;
         }
     }

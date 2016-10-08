@@ -64,6 +64,10 @@ namespace SPAD.neXt.Comparators
                     return IgnoreComparator;
                 case SPADEventValueComparator.Range:
                     b = new ComparatorRange(); break;
+                case SPADEventValueComparator.IsBitSet:
+                    b = new ComparatorIsBitSet(); break;
+                case SPADEventValueComparator.IsBitNotSet:
+                    b = new ComparatorIsBitNotSet(); break;
                 default:
                     b = new ComparatorAlways(); break;
             }

@@ -72,6 +72,8 @@ namespace SPAD.neXt.Interfaces
         Mask,
         Not,
         AnyBitSet,
+        IsBitSet,
+        IsBitNotSet,
         Ignore,
         Always,
         Range,
