@@ -18,5 +18,7 @@ namespace SPAD.neXt.Interfaces.Profile
         void DeleteOption(string key);
 
         IReadOnlyList<IDeviceProfile> Devices { get; }
+
+        void Save(bool IncrementVersion = true);
     }
 }

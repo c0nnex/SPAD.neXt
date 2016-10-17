@@ -215,6 +215,7 @@ namespace SPAD.neXt.Interfaces
         DIRECTORY_GAUGES,
         DIRECTORY_PROFILES,
         DIRECTORY_SCRIPTS,
+        DIRECTORY_CACHE,
     }
 
     public enum PANEL_BUTTONPOSITION

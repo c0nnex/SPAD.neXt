@@ -67,7 +67,6 @@ namespace SPAD.neXt.Interfaces.Events
         void Pause();
         void Continue();
 
-        void SendControl(UInt32 control, UInt32 parameter);
         void SendControl(IDataDefinition control, UInt32 parameter);
         void EventCallback(object callbackvalue);
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SCOPE_SESSION, double defaultValue = 0);
@@ -85,6 +84,14 @@ namespace SPAD.neXt.Interfaces.Events
 
         bool IsConnected { get; }
         bool HasConnectionStatusChanged { get; }
+    }
+
+    public interface ISimulationController2 : ISimulationController
+    {
+        event EventHandler Connected;
+        event EventHandler Disconnected;
+        event EventHandler AircraftLoaded;
+        event EventHandler<SPADEventArgs> ClientEvent;
     }
 
     public interface IMonitorableValue : IDisposable

@@ -164,5 +164,26 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 return null;
             }
         }
+
+        public void Ping(uint tick)
+        {
+            try
+            {
+                if (!TryToConnect())
+                    return;
+                uint x = (uint)Environment.TickCount;
+                prxy.RemoteChannel.Ping(x);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        public void Pong(uint tick)
+        {
+            uint x = (uint)Environment.TickCount;
+            vaProxy.WriteToLog($"PingPong Out={tick} In={x} RoundTrip={x - tick}");
+        }
     }
 }

@@ -105,6 +105,7 @@
     <Compile Include="Events\AxisEventValue.cs" />
     <Compile Include="Events\EventSystem\ActionTargets\IActionTargets.cs" />
     <Compile Include="Events\EventSystem\IEventDefinition.cs" />
+    <Compile Include="Events\IEventProvider.cs" />
     <Compile Include="Events\IEventSystem.cs" />
     <Compile Include="Events\IEventManager.cs" />
     <Compile Include="Events\ISPADBaseEvent.cs" />

@@ -17,12 +17,16 @@ namespace SPAD.neXt.Interfaces.Base
         string ProfilesDirectory { get; }
         string GaugesDirectory { get; }
         string ScriptsDirectory { get; }
+        string CacheDirectory { get; }
 
         string ParseName(string nameIn, Dictionary<string, string> additionalValues = null);
+        string TokenizeName(string nameIn, Dictionary<string, string> additionalValues = null);
 
         void RevertChanges();
         void SetupDirectories();
+        
         string GetDirectory(APPLICATION_DIRECTORY scope, string subDir = null);
+
         string GetFilename(APPLICATION_DIRECTORY scope, string filename);
         string GetFilename(APPLICATION_DIRECTORY scope, string subDir, string filename);
     }

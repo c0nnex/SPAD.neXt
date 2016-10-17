@@ -48,5 +48,8 @@ namespace SPAD.neXt.Interfaces.ServiceContract
     {
         [OperationContract(IsOneWay = true)]
         void RemoteEvent(string eventName);
+
+        [OperationContract]
+        void Pong(uint tick);
     }
 }

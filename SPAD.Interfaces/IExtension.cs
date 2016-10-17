@@ -18,7 +18,8 @@ namespace SPAD.neXt.Interfaces
         bool IsExtensionEnabled(IApplication app);
         IExtensionInfo GetExtensionInformation();
         IPanelControl CreateControl(IExtensionPanel ctrl);
-        
+        IApplicationConfiguration CreateConfiguration(string ctrl);
+        Guid ID { get; }
     }
 
     public interface IExtensionPanel

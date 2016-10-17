@@ -4,7 +4,35 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
-    public interface IDataDefinition : IIsMonitorable
+    public interface IDataDefinitionProperties
+    {
+        string Access { get; }
+        string Category { get; }
+        double CorrectionFactor { get; }
+        string Information { get; }
+        float Epsilon { get; }
+        string ID { get; }
+        string AlternateID { get; }
+        string PrimaryKey { get; }
+        bool IsReadOnly { get; }
+        string Key { get; }
+        string LinkedEntry { get; }
+        string Name { get; }
+        string OffsetMode { get; }
+        string ProviderName { get; }
+        bool Selectable { get; }
+        int Size { get; }
+        string SubCategory { get; }
+        string TypeName { get; }
+        string UnitsName { get; }
+        string Usage { get; }
+        string ValueType { get; }
+        string WriteMode { get; }
+        string WriteParameters { get; }
+        int DefinitionKey { get; }
+    }
+
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties
     {
         string Access { get; set; }
         string AlternateNormalizer { get; set; }
@@ -46,7 +74,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string WriteParameters { get; set; }
         SPADDefinitionTypes DefinitionType { get; set; }
         int DefinitionKey { get; }
-        
+        string SearchKey { get; }
         IValueProvider ValueProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
 
@@ -60,6 +88,8 @@ namespace SPAD.neXt.Interfaces.Configuration
         double GetValue();
         void SetValue(double val);
         string GetValueString(string displayFormat);
+
+        void FixUp();
     }
 
     public interface IDataDefinitions

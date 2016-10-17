@@ -84,8 +84,10 @@ namespace SPAD.neXt.Interfaces
         void Broadcast(string eventName, string eventTrigger = null, object eventValue = null);
 
         void RegisterProfileExtension(string name, Type type);
+        ISimulationController GetSimulationController(Guid controllerId);
 
-        
+        void RegisterClientEventProvider(string name, IEventProvider provider);
+
     }
 
     public interface IApplicationConfiguration
