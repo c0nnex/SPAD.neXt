@@ -62,8 +62,14 @@ namespace SPAD.neXt.Interfaces.Logging
         void Info(string message, params object[] args);
         void Warn(string message, params object[] args);
         void Error(string message, params object[] args);
+
+
         void WarnWithNotification(string message, params object[] args);
+        void WarnWithNotificationIf(bool doNotify, Func<string> p);
+        void WarnWithNotificationIf(bool doNotify, string message, params object[] args);
         void ErrorWithNotification(string message, params object[] args);
+
+
         void SetMinLogLevel(SPADLogLevel level);
         void Trace(Func<string> p);
         void Debug(Func<string> p);
