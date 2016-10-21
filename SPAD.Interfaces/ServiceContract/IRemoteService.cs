@@ -20,15 +20,8 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         public double Value { get; set; }
     }
 
-    public sealed class RemoteEventTarget
-    {
-        public string Name { get; set; }
-        public HashSet<string> EventNames { get; set; }
-    }
-
     [ServiceContract( Namespace = Constants.Namespace , CallbackContract = typeof(IRemoteServiceCallback))]
     [ServiceKnownType(typeof(RemoteServiceResponse))]
-    [ServiceKnownType(typeof(RemoteEventTarget))]
     public interface IRemoteService
     {
         [OperationContract]
@@ -42,6 +35,9 @@ namespace SPAD.neXt.Interfaces.ServiceContract
 
         [OperationContract]
         string GetVersion();
+
+        [OperationContract(IsOneWay = true)]
+        void Ping(uint tick);
     }
 
     public interface IRemoteServiceCallback
@@ -49,7 +45,7 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         [OperationContract(IsOneWay = true)]
         void RemoteEvent(string eventName);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void Pong(uint tick);
     }
 }

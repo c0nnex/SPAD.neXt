@@ -350,6 +350,8 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid EVENTACTION_DISPLAY_GUID = new Guid("{F3BD2794-9EB4-4016-ABE2-052989F775A9}");
 
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
+
+        public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
     }
 
     public class VendorIDs
