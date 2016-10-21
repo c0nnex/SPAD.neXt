@@ -34,7 +34,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         double Width { get; set; }
 
         bool HasValues { get; }
-        void ApplyPlacement(Window w);
+        void ApplyPlacement(Window w, bool force = false);
         bool SavePlacement(Window w);
 
         T GetOption<T>(string key, T defaultValue = default(T));
