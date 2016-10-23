@@ -119,6 +119,7 @@ namespace SPAD.neXt.Interfaces.Events
         string TargetDeviceID { get; set; }
         string TargetName { get; set; }
 
+        void AddParserValue(string key, string value);
         T GetOption<T>(string optionName, T defaultValue = default(T));
         bool HasOption(string optionName);
         void SetOption(string optionName, object value);
@@ -128,7 +129,14 @@ namespace SPAD.neXt.Interfaces.Events
         bool CheckConfiguration(List<string> errorContainer);
         
         IDeviceProfile GetTargetDevice(IEventDefinition def);
+        void SetEventValueCallback(string valueName,IEventValueCallback callback);
     }
+
+    public interface IEventValueCallback
+    {
+        object GetEventValue(string name);
+    }
+
 
     public interface IEventContext
     {

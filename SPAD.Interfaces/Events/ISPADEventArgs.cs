@@ -44,6 +44,8 @@ namespace SPAD.neXt.Interfaces.Events
 
     public class SPADEventArgs : HandledEventArgs, ISPADEventArgs
     {
+        public static SPADEventArgs Empty = new SPADEventArgs();
+
         public string EventSwitch { get; set; }
         public string EventName { get;  set; }
         public IInputElement CommandTarget { get; set; }
@@ -88,6 +90,8 @@ namespace SPAD.neXt.Interfaces.Events
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
         public EventOperations EventOperation { get; set; } = EventOperations.Normal;
         public Guid Sender { get; set; } = Guid.Empty;
+
+        private SPADEventArgs() { }
 
         public SPADEventArgs(string eventName)
         {

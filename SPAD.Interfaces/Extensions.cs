@@ -11,6 +11,16 @@ namespace SPAD.neXt.Interfaces
     public static class SPADExtensions
     {
         #region Enums
+
+        public static T SafeParse<T>(this Enum value, string valIn)
+        {
+            try
+            {
+                return  (T)Enum.Parse(value.GetType(), valIn,true);
+            }
+            catch { return default(T); }
+        }
+
         public static T SetFlag<T>(this Enum value, T flag)
         {
             Type underlyingType = Enum.GetUnderlyingType(value.GetType());
