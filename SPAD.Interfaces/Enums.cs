@@ -26,8 +26,11 @@ namespace SPAD.neXt.Interfaces
         XPLANE = 8,
         FSX_SE = 16,
         P3Dv2 = 32,
-        OTHER3 = 64,
-        OTHER4 = 128
+        SCS = 64,
+        IRACING = 128,
+        P3Dv4 = 512,
+
+        CUSTOM = 0x1000000,
     }
 
     [Flags]
@@ -319,10 +322,13 @@ namespace SPAD.neXt.Interfaces
 
     public static class SPADSystemEvents
     {
+        public const string StatusMessage = "SPAD.StatusMessage";
         public const string AircraftChanged = "SPAD_Aircraft";
-        public const string FSUIPCChanged = "FSUIPC.Status";
-        public const string SimConnectChanged = "SimConnect.Status";
+        public const string FSUIPCStatus = "FSUIPC.Status";
+        public const string SimConnectStatus = "SimConnect.Status";
+        public const string ProviderStatus = "Provider.Status";
         public const string CDUAvailable = "SPAD_CDUAvailable";
+        public const string RequestAttention = "SPAD.RequestAttention";
     }
     public static class OptionNames
     {
@@ -342,6 +348,8 @@ namespace SPAD.neXt.Interfaces
     {
         public const string Namespace = "http://www.fsgs.com/SPAD";
         public const string ConfigNamespace = "http://www.fsgs.com/SPAD/v2";
+        public const string DataNamespace = "http://schemas.spadnext.com/";
+
         public const UInt32 DEFINE_ID_NOTREGISTERED = UInt32.MaxValue;
 
         public static readonly Guid EVENTACTION_NEWID = Guid.Empty;
@@ -352,6 +360,9 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
 
         public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
+
+        public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
+        public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
     }
 
     public class VendorIDs

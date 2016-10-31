@@ -1,5 +1,6 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
+using SPAD.neXt.Interfaces.ServiceContract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,41 +41,60 @@ namespace SPAD.neXt.Interfaces.Events
         void Dispose();
     }
 
-    public sealed class ValueProviderInfomation
+    public interface IValueTranscriber
     {
-        public string Name { get; set; }
-        public string DisplayName { get; set; }
-        public string Information { get; set; }
-        public IValueProvider Provider { get; set; }
+        IMonitorableValue TranscribeValue(string varDatum, string varUnit);
     }
 
+    public interface IValueProviderInfomation
+    {
+        string Name { get; }
+        string DisplayName { get; }
+        string Information { get; }
+        IValueProvider Provider { get; }
+    }
+
+    public interface IValueConnector
+    {
+        void ForceUpdate(string dataRef);
+        void SetValue(string dataRef, double newValue);
+        void ExecuteCommand(string commandRef, uint parameter);
+
+        void Stop();
+    }
 
     public interface IValueProvider
     {
+        string Name { get; }
+        
+        bool IsInitialized { get; }
+        bool IsPaused { get; }    
+
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
-        void ForceUpdate(IMonitorableValue value);
 
+        void SendControl(IDataDefinition control, UInt32 parameter);
+
+        void ForceUpdate(IMonitorableValue value);
         void StartMonitoring(IMonitorableValue value);
         void StopMonitoring(IMonitorableValue value);
         bool IsMonitoring(IMonitorableValue value);
-
-        bool IsInitialized { get; }
-        bool IsPaused { get; }
-        string Name { get; }
 
         void Initialize();
         void Pause();
         void Continue();
 
-        void SendControl(IDataDefinition control, UInt32 parameter);
         void EventCallback(object callbackvalue);
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SCOPE_SESSION, double defaultValue = 0);
-
-
     }
 
-    public interface ISimulationController
+    public interface ISimulationInterface
+    {
+        bool IsConnected { get; }
+        bool HasConnectionStatusChanged { get; }
+    }
+
+    public interface ISimulationController : ISimulationInterface
     {
         void InitController();
         void StartProcessing();
@@ -82,8 +102,6 @@ namespace SPAD.neXt.Interfaces.Events
         void PauseProcessing();
         void ContinueProcessing();
 
-        bool IsConnected { get; }
-        bool HasConnectionStatusChanged { get; }
     }
 
     public interface ISimulationController2 : ISimulationController

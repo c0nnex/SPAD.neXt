@@ -37,7 +37,7 @@ namespace SPAD.neXt.Interfaces
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
         // SimConnect Special
         //TODO: Remove FSUIPC add General
-            ISimConnectDynamicObject GetSimConnectDataObject(string id, bool clear);
+        ISimConnectDynamicObject GetSimConnectDataObject(string id, bool clear);
         IReadOnlyList<ISimConnectDynamicObject> GetSimConnectDataObjects();
         void UpdateSimConnectDataObject(ISimConnectDynamicObject simObject);
         void ClearSimConnectDataObject(string id);
@@ -45,15 +45,15 @@ namespace SPAD.neXt.Interfaces
         IDataDefinition BrowseDataDefiniton(string curOffset, string titleName, string rootName, bool bWriteOperation, object parentWindow = null);
         IReadOnlyList<IDataDefinition> BrowseDataDefinitonMulti(string curOffset, string titleName, string rootName, bool bWriteOperation, object parentWindow = null);
         IReadOnlyList<IDataDefinition> GetDataDefinitionsByProvider(string provider);
-       
+
         ISPADBackgroundThread CreateBackgroundThread(string name, ISPADBackgroundWorker worker);
         SPADLogLevel MinLogLevel { get; set; }
         ILogger GetLogger(string name);
-        void SendSimulationControl(string ctrlName,int paramter);
+        void SendSimulationControl(string ctrlName, int paramter);
 
         ISettingsProvider Settings { get; }
         void ApplicationBusy();
-        
+
         // Gauge Stuff
         IArchive OpenArchive(string archivename);
         IReadOnlyList<IOnlineGauge> GetGauges(DateTime limes);
@@ -71,11 +71,12 @@ namespace SPAD.neXt.Interfaces
         bool RegisterValueProvider(string tag, IValueProvider provider);
         bool RegisterExternalValueProvider(IValueProvider provider);
         bool UnregisterValueProvider(IValueProvider provider);
-        IEnumerable<ValueProviderInfomation> GetRegisteredValueProviders();
+        IEnumerable<IValueProviderInfomation> GetRegisteredValueProviders();
         IValueProvider GetValueProvider(string tag);
 
         IDataDefinition CreateDataDefinition(string provider, string name, string key, string access, string normalizer, string description, string category, string subcategory, bool selectable, double correctionFactor, float espilon);
         IDataDefinition CreateDataDefinition(IValueProvider provider, string name, string globalName);
+        IDataDefinition CreateControlDefinition(IValueProvider provider, string name, string globalName);
 
         IDataDefinitions CreateDataDefinitions(SPADDefinitionTypes id, StreamReader inputReader);
         void AddDataDefinition(SPADDefinitionTypes definitionType, IDataDefinition item, bool batch = false);
@@ -88,6 +89,7 @@ namespace SPAD.neXt.Interfaces
 
         void RegisterClientEventProvider(string name, IEventProvider provider);
 
+        IValueTranscriber GetValueTranscriber();
     }
 
     public interface IApplicationConfiguration

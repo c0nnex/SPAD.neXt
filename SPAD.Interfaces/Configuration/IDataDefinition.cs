@@ -30,6 +30,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string WriteMode { get; }
         string WriteParameters { get; }
         int DefinitionKey { get; }
+        bool ExcludeKeyFromSearch { get; set; }
     }
 
     public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties
