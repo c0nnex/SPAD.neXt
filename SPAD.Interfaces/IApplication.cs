@@ -89,7 +89,7 @@ namespace SPAD.neXt.Interfaces
 
         void RegisterClientEventProvider(string name, IEventProvider provider);
 
-        IValueTranscriber GetValueTranscriber();
+        IValueTranscriber GetValueTranscriber(string providerName);
     }
 
     public interface IApplicationConfiguration

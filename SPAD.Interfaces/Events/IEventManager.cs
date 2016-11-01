@@ -44,6 +44,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IValueTranscriber
     {
         IMonitorableValue TranscribeValue(string varDatum, string varUnit);
+        string TranscribeUnit(string inUnit);
     }
 
     public interface IValueProviderInfomation
