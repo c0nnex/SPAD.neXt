@@ -219,6 +219,7 @@ namespace SPAD.neXt.Interfaces
         DIRECTORY_PROFILES,
         DIRECTORY_SCRIPTS,
         DIRECTORY_CACHE,
+        DIRECTORY_APPDATAFIXED,
     }
 
     public enum PANEL_BUTTONPOSITION
