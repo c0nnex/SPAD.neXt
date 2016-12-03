@@ -111,6 +111,7 @@ namespace SPAD.neXt.Interfaces.Events
         SPADEventActions ActionID { get; }
         string ConfigID { get; }
         string ConfigString { get; }
+        string Documentation { get; }
         string ActionHash { get; }
         bool IsDirty { get; set; }
         bool IsNew { get; }
