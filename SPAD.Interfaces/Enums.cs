@@ -220,6 +220,7 @@ namespace SPAD.neXt.Interfaces
         DIRECTORY_SCRIPTS,
         DIRECTORY_CACHE,
         DIRECTORY_APPDATAFIXED,
+        // needed? DIRECTORY_DOCUMENTSFIXED,
     }
 
     public enum PANEL_BUTTONPOSITION
@@ -343,6 +344,8 @@ namespace SPAD.neXt.Interfaces
         public const string SIMCONNECT_STATUS = "SIMCONNECT STATUS";
         public const string FSUIPC_STATUS = "FSUIPC STATUS";
         public const string LVAR_STATUS = "LVAR STATUS";
+        public const string FRAMERATE = "FRAMERATE";
+        public const string FRAMERATE_AVG = "FRAMERATE AVG";
 
     }
     public class Constants
