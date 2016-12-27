@@ -1,7 +1,9 @@
-﻿using SPAD.neXt.Interfaces.ServiceContract;
+﻿using Microsoft.Win32;
+using SPAD.neXt.Interfaces.ServiceContract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
@@ -21,7 +23,6 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
     class ServiceProxy :IRemoteService , IRemoteServiceCallback
     {
-        static Version CurrentRemoteServiceVersion = new Version("1.1.0.0");
         private RemoteServiceProxy prxy;
 
         public event EventHandler<string> RemoteEventReceived;
@@ -29,7 +30,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         public ServiceProxy(string hostname) 
         {
             prxy = new RemoteServiceProxy(new InstanceContext(this), new ServiceEndpoint(ContractDescription.GetContract(typeof(IRemoteService)),
-            new NetNamedPipeBinding(), new EndpointAddress($"net.pipe://localhost/SPAD.neXt/RemoteService")));
+            new NetNamedPipeBinding(NetNamedPipeSecurityMode.None), new EndpointAddress($"net.pipe://localhost/SPAD.neXt/RemoteService")));
         }
 
         public bool IsConnected
@@ -77,7 +78,24 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                                 Thread.Sleep(100);
                                 tries++;
                             }
-                            return prxy.State == CommunicationState.Opened;
+                            if ( prxy.State == CommunicationState.Opened )
+                            {
+                                switch (Initialize(null, null))
+                                {
+                                    case RemoteServiceResult.CONNECTION_OK:
+                                        return true;
+                                    case RemoteServiceResult.CONNECTION_OUTDATED:
+                                        vaProxy.WriteToLog("SPAD.neXt VA Plugin outdated! please update!", "red");
+                                        return false;
+                                    case RemoteServiceResult.CONNECTION_DENIED:
+                                    case RemoteServiceResult.CONNECTION_BUSY:
+                                        vaProxy.WriteToLog("Connection to SPAD.neXt failed.");
+                                        return false;
+                                    default:
+                                        return false;
+                                }
+                            }
+                            return false;
                         }
                     case CommunicationState.Closing:
                     case CommunicationState.Opening:
@@ -140,11 +158,6 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
         }
 
-        public List<RemoteEventTarget> GetEventTargets()
-        {
-            throw new NotImplementedException();
-        }
-
         public void RemoteEvent(string eventName)
         {
             RemoteEventReceived?.Invoke(this, eventName);
@@ -165,7 +178,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
         }
 
-        public void Ping(uint tick)
+        public void Ping(ulong tick)
         {
             try
             {
@@ -180,10 +193,75 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
         }
 
-        public void Pong(uint tick)
+        public void Pong(ulong tick)
         {
-            uint x = (uint)Environment.TickCount;
+            ulong x = (ulong)EnvironmentEx.TickCount;
             vaProxy.WriteToLog($"PingPong Out={tick} In={x} RoundTrip={x - tick}");
+        }
+
+        public RemoteServiceResult Initialize(string clientName, Version remoteApiVersion)
+        {
+            try
+            {
+                if (!TryToConnect())
+                    return RemoteServiceResult.CONNECTION_DENIED;
+
+                return prxy.RemoteChannel.Initialize("VoiceAttack", RemoteServiceContract.RemoteApiVersion);
+            }
+            catch (Exception ex)
+            {
+                return RemoteServiceResult.CONNECTION_DENIED;
+            }
+        }
+    }
+
+    public static class EnvironmentEx
+    {
+        [DllImport("kernel32")]
+        extern static UInt64 GetTickCount64();
+
+        public static TimeSpan UpTime
+        {
+            get { return TimeSpan.FromMilliseconds(GetTickCount64()); }
+        }
+
+        public static UInt64 TickCount64
+        {
+            get { return GetTickCount64(); }
+        }
+
+        public static UInt64 TickCount
+        {
+            get { return GetTickCount64(); }
+        }
+
+        public static long TickCountLong
+        {
+            get { return (long)GetTickCount64(); }
+        }
+
+        public static string WindowsVersion
+        {
+            get
+            {
+                try
+                {
+                    using (var mainKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                    {
+                        var val = mainKey.GetValue("ProductName");
+                        if (val != null)
+                            return val.ToString();
+                    }
+                    return "Unknown";
+                }
+                catch (Exception ex)
+                { return "Unknown"; }
+            }
+        }
+
+        public static bool IsWindows10
+        {
+            get { return WindowsVersion.ToLowerInvariant().StartsWith("windows 10"); }
         }
     }
 }
