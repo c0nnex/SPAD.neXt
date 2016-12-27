@@ -45,7 +45,7 @@ namespace SPAD.neXt.Interfaces.Profile
         bool UpdateEventConfiguration(bool ignoreNoAutoRemove);
         bool UpdateEventConfiguration(ISPADBaseEvent evt);
         void UpdateEventTarget(ISPADBaseEvent evt);
-        
+        void SetDeviceSerial(string serial);
         T GetExtension<T>(Type type) where T : IXmlAnyObject;
     }
 }

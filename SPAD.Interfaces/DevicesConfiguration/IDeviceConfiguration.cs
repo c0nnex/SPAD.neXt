@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.neXt.Interfaces.Base;
+using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {

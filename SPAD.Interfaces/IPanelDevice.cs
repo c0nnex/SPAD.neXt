@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Events;
+﻿using SPAD.neXt.Interfaces.DevicesConfiguration;
+using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.HID;
 using System;
 using System.Collections.Generic;
@@ -174,7 +175,8 @@ namespace SPAD.neXt.Interfaces
         float NormalizedValue { get; }
         int AxisValue { get; }
         bool AntiJitterActivated { get; set; }
-       
+
+        IAxisCalibration DefaultCalibration { get; }
     }
 
     public interface IInputAxisConfiguration 
@@ -186,8 +188,8 @@ namespace SPAD.neXt.Interfaces
 
     public interface IInputRange
     {
-        int Maximum { get; } 
-        int Minimum { get; } 
+        float Maximum { get; }
+        float Minimum { get; } 
     }
 
     public interface IInputButton : IInput

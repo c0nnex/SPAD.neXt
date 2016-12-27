@@ -43,6 +43,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IgnorePowerState { get; }
         ISPADBaseEvent BaseEvent { get; }
         InputModifier InputBehavior { get; set; }
+        IDeviceProfile DeviceProfile { get;  }
 
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void ForceEvaluation();

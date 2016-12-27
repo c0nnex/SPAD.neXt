@@ -22,7 +22,7 @@ namespace SPAD.neXt.Interfaces.Events
         Type[] GetExtraSerializationTypes();
         IValueProvider GetValueProvider(string provider);
         IEnumerable<string> GetValueProviders(bool onlyActive = true);
-        IDataDefinition GetDataDefinition(string id, SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET);
+        IDataDefinition GetDataDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
         IDataDefinition CreateNewLocal(string name, string displaynormalizer);
         IEnumerable<string> GetKnownNormalizers(string startWith = null);
@@ -83,9 +83,9 @@ namespace SPAD.neXt.Interfaces.Events
             return EventSystemHandler.CreateNewLocal(name, displaynormalizer);
         }
 
-        public static IDataDefinition GetDataDefinition(string id, SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET)
+        public static IDataDefinition GetDataDefinition(string id)
         {
-            return EventSystemHandler.GetDataDefinition(id, definitionType);
+            return EventSystemHandler.GetDataDefinition(id);
         }
 
         public static IEnumerable<IDynamicNormalizer> GetDynamicNormalizers()

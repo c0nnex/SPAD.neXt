@@ -8,8 +8,8 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface IEventProvider
     {
-        bool SubscribeToClientEvent<T>(string eventName, EventHandler<T> eventHandler);
-       // void RaisePanelEvent(string eventName, ISPADEventArgs e);
+        IDisposable SubscribeToClientEvent<T>(string eventName, EventHandler<T> eventHandler);
+       void RaisePanelEvent(string eventName, ISPADEventArgs e);
     }
 
 }

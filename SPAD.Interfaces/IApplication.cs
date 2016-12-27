@@ -90,6 +90,9 @@ namespace SPAD.neXt.Interfaces
         void RegisterClientEventProvider(string name, IEventProvider provider);
 
         IValueTranscriber GetValueTranscriber(string providerName);
+        void RegisterSimulationInterface(string name, ISimulationInterface simInterface);
+
+        Version GetRequiredPluginVersion(string pluginName);
     }
 
     public interface IApplicationConfiguration

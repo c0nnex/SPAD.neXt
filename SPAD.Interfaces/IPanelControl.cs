@@ -18,7 +18,7 @@ namespace SPAD.neXt.Interfaces
         IPanelDevice DeviceAttached { get; }
         IDeviceConfiguration DeviceConfiguration { get; }
         IDeviceProfile DeviceProfile { get; }
-        Guid PanelID { get; }
+        Guid PanelLinkID { get; }
         bool PanelHasFocus { get; }
         string PanelName { get; }
         string DevicePanelID { get; }

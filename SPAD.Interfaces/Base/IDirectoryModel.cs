@@ -18,6 +18,7 @@ namespace SPAD.neXt.Interfaces.Base
         string GaugesDirectory { get; }
         string ScriptsDirectory { get; }
         string CacheDirectory { get; }
+        bool IsDetailedModel { get; }
 
         string ParseName(string nameIn, Dictionary<string, string> additionalValues = null);
         string TokenizeName(string nameIn, Dictionary<string, string> additionalValues = null);

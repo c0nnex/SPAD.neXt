@@ -78,6 +78,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string SearchKey { get; }
         IValueProvider ValueProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
+        long DataIndex { get; }
 
         object Clone();
         bool IsBoolean();

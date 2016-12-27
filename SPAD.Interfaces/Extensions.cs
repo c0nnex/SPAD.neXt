@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -150,5 +151,10 @@ namespace SPAD.neXt.Interfaces
 
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
+    }
+
+    public interface INotifyPropertyChangedHandler : INotifyPropertyChanged
+    {
+        void OnPropertyChanged(string propertyName);
     }
 }

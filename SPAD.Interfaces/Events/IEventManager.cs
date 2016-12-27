@@ -56,6 +56,7 @@ namespace SPAD.neXt.Interfaces.Events
         string DisplayName { get; }
         string Information { get; }
         IValueProvider Provider { get; }
+        bool IsVisible { get;  }
     }
 
     public interface IValueConnector
@@ -73,6 +74,7 @@ namespace SPAD.neXt.Interfaces.Events
         
         bool IsInitialized { get; }
         bool IsPaused { get; }    
+        bool IsVisible { get; }
 
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
