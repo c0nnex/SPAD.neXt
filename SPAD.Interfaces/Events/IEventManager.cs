@@ -94,6 +94,17 @@ namespace SPAD.neXt.Interfaces.Events
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SCOPE_SESSION, double defaultValue = 0);
     }
 
+    public interface ITransparentValueProvider
+    {
+        event EventHandler DataUpdated;
+        string Name { get; }
+        ulong GetLastChange();
+        bool HasValue(string valueName);
+        double GetValue(string valueName);
+        void SetValue(string valueName, double value);
+        IEnumerable<string> GetAllValueNames(Func<string,bool> predicate = null);
+    }
+
     public interface ISimulationInterface
     {
         bool IsConnected { get; }

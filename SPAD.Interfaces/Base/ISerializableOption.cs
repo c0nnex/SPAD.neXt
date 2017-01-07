@@ -17,9 +17,9 @@ namespace SPAD.neXt.Interfaces.Base
     {       
         bool AsBoolean { get; set; }
         int AsInt { get; set; }
-        Double AsDouble { get; set; }
+        double AsDouble { get; set; }
         string AsString { get; set; }
-       
+        ulong AsUInt64 { get; set; }
     }
 
     public interface IOptionsProvider

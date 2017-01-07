@@ -149,6 +149,7 @@ namespace SPAD.neXt.Interfaces
         BUTTON_SHORT_OFF,
         BUTTON_LONG_ON,
         BUTTON_LONG_OFF,
+        ON
     }
 
     public enum JoystickAxis

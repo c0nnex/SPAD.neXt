@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
-    public interface IDeviceConfiguration
+    public interface IDeviceConfiguration : IOptionsProvider
     {
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
+       
         IDeviceSwitch GetSwitch(string name);
         string Name { get; }
         string Panel { get; }

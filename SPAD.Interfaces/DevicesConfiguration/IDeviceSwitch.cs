@@ -48,7 +48,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
        
         string Inherit { get; }
         string Name { get; }
-
+        string SwitchType { get;}
         bool ReadOnly { get; }
         string ConfigurationMode { get; }
         bool HasSettings { get; }

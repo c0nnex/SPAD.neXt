@@ -93,6 +93,7 @@ namespace SPAD.neXt.Interfaces
         void RegisterSimulationInterface(string name, ISimulationInterface simInterface);
 
         Version GetRequiredPluginVersion(string pluginName);
+        ITransparentValueProvider GetTransparentValueProvider(string providerName);
     }
 
     public interface IApplicationConfiguration

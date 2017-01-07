@@ -13,6 +13,8 @@ namespace SPAD.neXt.Interfaces.Profile
         event PropertyChangedEventHandler ActiveProfileStatusChanged;
         IExtensionProfileOption ProfileAddOption(string key, ProfileOptionTypes type, string defaultValue, bool changeNeedsRestart, int order);
         IExtensionProfileOption ProfileAddHiddenOption(string key, ProfileOptionTypes type, string defaultValue);
+        IExtensionProfileOption DeviceAddOption(string deviceKey,string key, ProfileOptionTypes type, string defaultValue, bool changeNeedsRestart, int order);
+        IExtensionProfileOption DeviceAddHiddenOption(string deviceKey, string key, ProfileOptionTypes type, string defaultValue);
         string ProfilePath { get; }
     }
 
