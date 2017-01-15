@@ -205,6 +205,7 @@ namespace SPAD.neXt.Interfaces
     public interface IGameDevice : IInputDevice, IPanelDevice
     {
         string DeviceCalibrationName { get; }
+        string DeviceCalibrationNameOld { get; }
         IInputDevice InputDevice { get; }
         IPanelDevice PanelDevice { get; }
 

@@ -142,6 +142,21 @@ namespace SPAD.neXt.Interfaces
         // Macro = 3
     }
 
+   
+    public enum SPADSwitchTypes
+    {
+        UNKNOWN = 0x0,
+        PUSHBUTTON = 0x10000001,
+        PUSHBUTTON_NOMODE = 0x00000001,
+        SWITCH = 0x00000002,
+        ENCODER = 0x00000004,
+        LED = 0x00000008,
+        DISPLAY = 0x00000010,
+
+        ZZ_HAS_MODE = 0x10000000
+    }
+
+
     public enum SPADButtonLight
     {
         OFF,

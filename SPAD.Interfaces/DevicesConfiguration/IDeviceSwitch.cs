@@ -48,7 +48,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
        
         string Inherit { get; }
         string Name { get; }
-        string SwitchType { get;}
+        SPADSwitchTypes SwitchType { get;}
         bool ReadOnly { get; }
         string ConfigurationMode { get; }
         bool HasSettings { get; }
@@ -62,7 +62,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         IReadOnlyList<IDeviceConfigValue> ConfigValues { get; }
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
 
-        ISerializableOption GetOption(string optionName, string defaultValue = null);
+        ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
 
         
     }
