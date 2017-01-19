@@ -214,6 +214,13 @@ namespace SPAD.neXt.Interfaces
         NoData
     }
 
+    public enum GaugeCompatibility
+    {
+        Saitek,
+        ESP,
+        SPAD
+    }
+
     [Flags]
     public enum VARIABLE_SCOPE
     {

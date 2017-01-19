@@ -45,9 +45,10 @@ namespace SPAD.neXt.Interfaces.Events
     {
         IMonitorableValue TranscribeValue(string varDatum, ref string varUnit, ref string convExpression);
         string TranscribeUnit(string inUnit);
-        double TranscribeConvert(string expression, double value);
 
-        void AddMissing(string text);
+        double ConvertValue(string expression, double value);
+        double ConvertUnit(double value, string unitIn, string unitOut);
+
     }
 
     public interface IValueProviderInfomation
