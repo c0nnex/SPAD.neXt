@@ -14,6 +14,8 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand configureSpecialCommand = new RoutedCommand("SPAD_neXt.Configure_Special", typeof(SPADCommands));
         private static RoutedCommand calibrateAxisCommand = new RoutedCommand("SPAD_neXt.calibrateAxis", typeof(SPADCommands));
         private static RoutedCommand powerConfigurationCommand = new RoutedCommand("SPAD_neXt.PowerConfiguration", typeof(SPADCommands));
+        private static RoutedCommand deviceConfigurationCommand = new RoutedCommand("SPAD_neXt.DeviceConfiguration", typeof(SPADCommands));
+
         private static RoutedCommand addEventCommand = new RoutedCommand("SPAD_neXt.AddEvent", typeof(SPADCommands));
         private static RoutedCommand editEventCommand = new RoutedCommand("SPAD_neXt.EditEvent", typeof(SPADCommands));
         private static RoutedCommand delEventCommand = new RoutedCommand("SPAD_neXt.DelEvent", typeof(SPADCommands));
@@ -91,7 +93,8 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ConfigureSpecialCommand { get { return configureSpecialCommand; } }
         public static RoutedCommand CalibrateAxisCommand { get { return calibrateAxisCommand; } }
         public static RoutedCommand PowerConfigurationCommand { get { return powerConfigurationCommand; } }
-       
+        public static RoutedCommand DeviceConfigurationCommand { get { return powerConfigurationCommand; } }
+
         public static RoutedCommand AddEventCommand { get { return addEventCommand; } }
         public static RoutedCommand EditEventCommand { get { return editEventCommand; } }
         public static RoutedCommand DelEventCommand { get { return delEventCommand; } }
