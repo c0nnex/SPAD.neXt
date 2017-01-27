@@ -54,7 +54,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool HasSettings { get; }
         bool CanRename { get; }
         bool Selectable { get; }
-
+        bool IsEnabled { get; set; }
+        bool IsCustomized { get; set; }
         int InputSubPanel { get; }
         int InputMode { get; }
         List<uint> InputVirtualHat { get; }

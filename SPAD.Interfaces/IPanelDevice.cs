@@ -87,7 +87,7 @@ namespace SPAD.neXt.Interfaces
         }
         public override string ToString()
         {
-            return $"InputEventArgs Name={Name} CustomName={CustomName} CustomIndex={CustomIndex} Triggered={IsTriggered} SwitchName={SwitchName} Index={Input.Index}";
+            return $"InputEventArgs Name={Name} CustomName={CustomName} CustomIndex={CustomIndex} Triggered={IsTriggered} SwitchName={SwitchName} Index={Input?.Index}";
         }
     }
 
@@ -145,6 +145,7 @@ namespace SPAD.neXt.Interfaces
         float PreviousValue { get; }
         int RawValue { get; }
         bool InputEventsEnabled { get; }
+        bool IsEnabled { get; set; }
         ulong LastEventTick { get; }
         bool IsVirtual { get; }
         int ButtonGroup { get; }

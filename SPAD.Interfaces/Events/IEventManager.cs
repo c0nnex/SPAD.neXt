@@ -97,6 +97,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ITransparentValueProvider
     {
+        
         event EventHandler DataUpdated;
         string Name { get; }
         ulong GetLastChange();
@@ -104,6 +105,7 @@ namespace SPAD.neXt.Interfaces.Events
         double GetValue(string valueName);
         void SetValue(string valueName, double value);
         IEnumerable<string> GetAllValueNames(Func<string,bool> predicate = null);
+        void StartUpdates();
     }
 
     public interface ISimulationInterface

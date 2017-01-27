@@ -42,7 +42,10 @@ namespace SPAD.neXt.Interfaces
 
     public interface IExtensionDynamic 
     {
+        bool HasDeviceConfiguration { get; }
+        
         bool WillHandle(IUSBDevice device);
+        
     }
 
     public interface IExtensionInfo
