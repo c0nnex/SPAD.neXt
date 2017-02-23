@@ -9,6 +9,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
        
         IDeviceSwitch GetSwitch(string name);
         string Name { get; }
+        string PublishName { get; }
         string Panel { get; }
         string ProductID { get; }
         IDeviceVendor Vendor { get; }

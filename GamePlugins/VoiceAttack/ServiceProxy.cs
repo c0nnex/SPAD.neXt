@@ -23,7 +23,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
     class ServiceProxy :IRemoteService , IRemoteServiceCallback
     {
-        private RemoteServiceProxy prxy;
+        protected RemoteServiceProxy prxy;
 
         public event EventHandler<string> RemoteEventReceived;
         
@@ -85,11 +85,15 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                                     case RemoteServiceResult.CONNECTION_OK:
                                         return true;
                                     case RemoteServiceResult.CONNECTION_OUTDATED:
+#if !STANDALONE
                                         vaProxy.WriteToLog("SPAD.neXt VA Plugin outdated! please update!", "red");
+#endif
                                         return false;
                                     case RemoteServiceResult.CONNECTION_DENIED:
                                     case RemoteServiceResult.CONNECTION_BUSY:
+#if !STANDALONE
                                         vaProxy.WriteToLog("Connection to SPAD.neXt failed.");
+#endif
                                         return false;
                                     default:
                                         return false;
@@ -109,7 +113,9 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
             catch (Exception ex)
             {
+#if !STANDALONE
                 vaProxy.WriteToLog(ex.Message, "red");
+#endif
                 return false;
             }
         }
@@ -157,6 +163,22 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 return new RemoteServiceResponse { HasError = true, Error = ex.Message };
             }
         }
+
+        public RemoteServiceResponse Monitor(string variableName)
+        {
+            try
+            {
+                if (!TryToConnect())
+                    return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
+
+                return prxy.RemoteChannel.Monitor(variableName);
+            }
+            catch (Exception ex)
+            {
+                return new RemoteServiceResponse { HasError = true, Error = ex.Message };
+            }
+        }
+
 
         public void RemoteEvent(string eventName)
         {
@@ -213,6 +235,8 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 return RemoteServiceResult.CONNECTION_DENIED;
             }
         }
+
+        
     }
 
     public static class EnvironmentEx

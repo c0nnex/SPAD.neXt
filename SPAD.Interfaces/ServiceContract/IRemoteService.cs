@@ -13,7 +13,7 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         public static readonly Uri ServiceUrl  = new Uri("net.pipe://localhost/SPAD.neXt");
         public const string ServiceEndpoint = "RemoteService";
         public const string ServiceNamespace = "http://www.spadnext.com/Service/RemoteService";
-        public static readonly Version RemoteApiVersion = new Version(1, 1, 0, 0);
+        public static readonly Version RemoteApiVersion = new Version(1, 1, 0, 1);
     }
 
     public sealed class RemoteServiceResponse
@@ -62,6 +62,8 @@ namespace SPAD.neXt.Interfaces.ServiceContract
         [OperationContract]
         RemoteServiceResponse EmulateEvent(string targetDevice,string targetEvent, string eventTrigger, string eventParameter);
 
+        [OperationContract]
+        RemoteServiceResponse Monitor(string variableName);
 
     }
 

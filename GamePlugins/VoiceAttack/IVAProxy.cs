@@ -29,7 +29,13 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 # endif
             }
         }
-
+        public static bool IsVerbose
+        {
+            get
+            {
+                return (GetBoolean("snVERBOSE")).GetValueOrDefault(true);
+            }
+        }
         public static bool CommandExists(string commandName)
         {
             return _vaProxy?.CommandExists(commandName);
@@ -112,6 +118,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static void WriteToLog(string valueToWrite, string color = "blank")
         {
+            System.Diagnostics.Debug.WriteLine(valueToWrite);
             _vaProxy?.WriteToLog(valueToWrite, color);
         }
     }

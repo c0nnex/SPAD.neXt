@@ -49,7 +49,7 @@ namespace SPAD.neXt.Interfaces
         ISPADBackgroundThread CreateBackgroundThread(string name, ISPADBackgroundWorker worker);
         SPADLogLevel MinLogLevel { get; set; }
         ILogger GetLogger(string name);
-        void SendSimulationControl(string ctrlName, int paramter);
+        void SendSimulationControl(string ctrlName, uint paramter);
 
         ISettingsProvider Settings { get; }
         void ApplicationBusy();

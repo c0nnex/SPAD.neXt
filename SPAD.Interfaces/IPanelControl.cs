@@ -41,7 +41,9 @@ namespace SPAD.neXt.Interfaces
 
     public interface IPanelControl
     {
-        
+        event EventHandler<IPanelDeviceEventArgs> EmulatedDeviceReportReceived;
+        void OnEmulateDeviceReport(IPanelDeviceEventArgs e);
+
         void InitializePanel(IPanelHost hostControl, string panelLabel);
         void DeinitializePanel();
         void SetExtension(IExtensionPanel ctrl);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,9 +31,13 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         public static void VA_Invoke1(dynamic vaproxy)
         { }
 #endif
-
+        public static string PluginVersion
+        {
+            get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+        }
         public static void VA_StopCommand()
         {
+            vaProxy.WriteToLog($"SPAD.neXt command interface StopCommand", "blank");
             isStopped = true;
             proxy?.Close();
             proxy = null;
@@ -44,7 +49,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         public static void VA_Init1(dynamic vaproxy)
         {
             vaProxy.SetVAProxy(vaproxy);
-            vaProxy.WriteToLog($"SPAD.neXt command interface initialize", "blank");
+            vaProxy.WriteToLog($"SPAD.neXt command interface initialize (Plugin Version {PluginVersion})", "blank");
             InitProxy();
 
             vaProxy.SetText("snHostname", "localhost");
@@ -60,6 +65,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 proxy.Close();
                 proxy = null;
             }
+            vaProxy.WriteToLog($"SPAD.neXt command interface deinitialize", "blank");
             vaProxy.SetVAProxy(null);
         }
 

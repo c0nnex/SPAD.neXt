@@ -134,6 +134,15 @@ namespace SPAD.neXt.Interfaces
         REDBLINK = 0xF004,
     }
 
+    public enum FLASHMODE : byte
+    {
+        FLASHMODE_STATIC = 0,
+        FLASHMODE_SLOW = 1, // 2s
+        FLASHMODE_FAST = 2, // 1s 
+        FLASHMODE_FASTER = 3, // 0.5s
+        FLASHMODE_ONCE = 4, // Flash LED once if it is on.
+    }
+
     public enum SPADKeyboardOption
     {
         PRESSANDRELEASE = 0,
@@ -152,10 +161,18 @@ namespace SPAD.neXt.Interfaces
         ENCODER = 0x00000004,
         LED = 0x00000008,
         DISPLAY = 0x00000010,
-
+        VALUESWITCH = 0x00000020,
         ZZ_HAS_MODE = 0x10000000
     }
 
+    [Flags]
+    public enum PROGRAMMABLEBUTTONSTATUS
+    {
+        OFF = 0x0,
+        SHORT = 0x1,
+        LONG = 0x2,
+        BOTH = 0x3,
+    }
 
     public enum SPADButtonLight
     {

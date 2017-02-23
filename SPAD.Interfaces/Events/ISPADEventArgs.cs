@@ -63,6 +63,11 @@ namespace SPAD.neXt.Interfaces.Events
             TargetDevice = deviceTargetID;
             return this;
         }
+        public SPADEventArgs WithAdditionalInfo(string info)
+        {
+            AdditionalInfo = info;
+            return this;
+        }
 
         private object oldValue = null;
         public virtual object NewValue 
@@ -76,7 +81,7 @@ namespace SPAD.neXt.Interfaces.Events
             }
         } private object newValue = null;
         public string NewValueFormatted { get; set; }
-
+        public string DisplayFormat { get; set; }
         public virtual IMonitorableValue MonitorableValue { get; set; }
         public IDeviceProfile DeviceProfile { get; set; }
         public bool Immediate { get; set; }
@@ -85,6 +90,9 @@ namespace SPAD.neXt.Interfaces.Events
         public bool IsCascadedEvent { get; set; }
        
         public object CallbackValue { get; set; }
+
+       
+
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;

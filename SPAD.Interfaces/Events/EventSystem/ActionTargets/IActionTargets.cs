@@ -94,11 +94,15 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IKeyMacro
     {
         IEnumerable<int> Keys { get; }
-        string KeySequence { get; }
         bool IsPause { get; }
         int Duration { get; }
         int Pause { get; }
         int Repeat { get;}
+    }
+
+    public interface IKeyboardPlayer
+    {
+        void Playback(IKeyMacro playback, SPADKeyboardOption option);
     }
 
     public interface IEventActionJoystick : IEventAction

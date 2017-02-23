@@ -93,7 +93,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ConfigureSpecialCommand { get { return configureSpecialCommand; } }
         public static RoutedCommand CalibrateAxisCommand { get { return calibrateAxisCommand; } }
         public static RoutedCommand PowerConfigurationCommand { get { return powerConfigurationCommand; } }
-        public static RoutedCommand DeviceConfigurationCommand { get { return powerConfigurationCommand; } }
+        public static RoutedCommand DeviceConfigurationCommand { get { return deviceConfigurationCommand; } }
 
         public static RoutedCommand AddEventCommand { get { return addEventCommand; } }
         public static RoutedCommand EditEventCommand { get { return editEventCommand; } }

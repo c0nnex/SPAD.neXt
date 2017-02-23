@@ -26,7 +26,7 @@ namespace SPAD.neXt.Interfaces.HID
         int DeviceSystemNumber { get; set; }
         int DeviceIndex { get; set; }
         string ProductName { get; set; }
-
+        string ManufacturerName { get; set; }
         void SetDeviceKey(string devicePath);
     }
 

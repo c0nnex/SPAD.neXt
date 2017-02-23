@@ -92,8 +92,6 @@ namespace SPAD.neXt.Interfaces.HID
         bool ReadFeatureData(out byte[] data, byte reportId = 0);
         
 
-        bool ReadManufacturer(out byte[] data);
-
        
 
         void Write(byte[] data, WriteCallback callback);

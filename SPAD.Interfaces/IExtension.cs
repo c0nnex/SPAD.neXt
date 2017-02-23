@@ -14,6 +14,7 @@ namespace SPAD.neXt.Interfaces
     {        
         void StartupExtension(IApplication app);
         void InitializeExtension();
+        void DeinitializeExtension();
         void ShutdownExtenion();
         bool IsExtensionEnabled(IApplication app);
         IExtensionInfo GetExtensionInformation();

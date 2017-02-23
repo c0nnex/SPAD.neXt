@@ -22,6 +22,14 @@ namespace SPAD.neXt.Interfaces
             _ReportId = rep.ReportId;
             Tick = rep.Tick;
         }
+
+        public PanelDeviceReport(byte[] data, byte reportId)
+        {
+            _Data = data;
+            _ReportId = reportId;
+            Tick = EnvironmentEx.TickCount;
+        }
+
         public UInt64 Tick { get; private set; }
 
         public byte[] Data

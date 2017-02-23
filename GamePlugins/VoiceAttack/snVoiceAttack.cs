@@ -15,12 +15,12 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static string VA_DisplayName()
         {
-            return "SPAD.neXt VoiceAttack Plugin - v0.9.5+";
+            return "SPAD.neXt VoiceAttack Plugin";
         }
 
         public static string VA_DisplayInfo()
         {
-            return "SPAD.neXt VoiceAttack Plugin\r\n\r\n2016 FSGS.com";
+            return "SPAD.neXt VoiceAttack Plugin\r\n\r\n2017 spadnext.com";
         }
 
         public static Guid VA_Id()
@@ -44,7 +44,8 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static void VA_StopCommand()
         {
-            snVoiceAttackCommandInterface.VA_StopCommand();
+            // Not needed!
+            //snVoiceAttackCommandInterface.VA_StopCommand();
         }
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
@@ -112,6 +113,19 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                             }
                             return;
                         }
+                    case "monitor":
+                        {
+                            foreach (var item in decimalValues.Keys)
+                            {
+                                var result = proxy.Monitor(item);
+                                if (result.HasError)
+                                {
+                                    vaProxy.WriteToLog($"Monitor: {item} failed '{result.Error}'","red");
+                                }
+                            }
+                            return;
+                        }
+
                     case "executecommand": break;
                     case "emulateevent":
                         {
@@ -162,7 +176,14 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             {
                 if (bDebug)
                 {
-                    vaProxy.WriteToLog($"snStaus='{textValues["snSTATUS"]}' snMessage='{textValues["snMESSAGE"]}' ");
+                    vaProxy.WriteToLog($"snStatus='{textValues["snSTATUS"]}' snMessage='{textValues["snMESSAGE"]}' ");
+                }
+                if (vaProxy.IsVerbose)
+                {
+                    if (textValues["snSTATUS"] == "ERROR")
+                        vaProxy.WriteToLog($"SPAD.neXt: {textValues["snMESSAGE"]}", "red");
+                    else
+                        vaProxy.WriteToLog($"SPAD.neXt: {context} executed", "green");
                 }
             }
         }

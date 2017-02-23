@@ -44,6 +44,8 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IValueTranscriber
     {
         IMonitorableValue TranscribeValue(string varDatum, ref string varUnit, ref string convExpression);
+        IDataDefinition TranscribeCommand(string commandName);
+
         string TranscribeUnit(string inUnit);
 
         double ConvertValue(string expression, double value);
@@ -58,6 +60,7 @@ namespace SPAD.neXt.Interfaces.Events
         string Information { get; }
         IValueProvider Provider { get; }
         bool IsVisible { get;  }
+        bool IsConnected { get; }
     }
 
     public interface IValueConnector
@@ -72,16 +75,17 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IValueProvider
     {
         string Name { get; }
-        
+        string StatusInformation { get; }
         bool IsInitialized { get; }
         bool IsPaused { get; }    
         bool IsVisible { get; }
+        bool IsConnected { get; }
 
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
 
-        void SendControl(IDataDefinition control, UInt32 parameter);
-
+        void SendControl(IDataDefinition control, uint parameter);
+        
         void ForceUpdate(IMonitorableValue value);
         void StartMonitoring(IMonitorableValue value);
         void StopMonitoring(IMonitorableValue value);
@@ -130,6 +134,9 @@ namespace SPAD.neXt.Interfaces.Events
         event EventHandler Disconnected;
         event EventHandler AircraftLoaded;
         event EventHandler<SPADEventArgs> ClientEvent;
+
+        void StartMonitoringEvents();
+        void StopMonitoringEvents();
     }
 
     public interface IMonitorableValue : IDisposable

@@ -109,6 +109,7 @@
     <Compile Include="Events\IEventProvider.cs" />
     <Compile Include="Events\IEventSystem.cs" />
     <Compile Include="Events\IEventManager.cs" />
+    <Compile Include="Events\IProgrammableLED.cs" />
     <Compile Include="Events\ISPADBaseEvent.cs" />
     <Compile Include="Events\ISPADEventArgs.cs" />
     <Compile Include="Events\ISPADEventValue.cs" />

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
+
     public static class SPADExtensions
     {
         #region Enums
@@ -152,6 +154,8 @@ namespace SPAD.neXt.Interfaces
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
     }
+
+   
 
     public interface INotifyPropertyChangedHandler : INotifyPropertyChanged
     {

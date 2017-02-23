@@ -37,10 +37,11 @@ namespace SPAD.neXt.Interfaces
         void StartProcessing();
         void StopProcessing();
         void SendLastReport();
+        void InjectReport(IPanelDeviceReport rep);
 
         bool Write(byte[] data);
         bool WriteFeatureData(byte[] data);
-        bool ReadFeatureData(out byte[] data);
+        bool ReadFeatureData(out byte[] data, byte reportId = 0);
         
     }
 
