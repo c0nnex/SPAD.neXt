@@ -50,7 +50,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         double ConvertValue(string expression, double value);
         double ConvertUnit(double value, string unitIn, string unitOut);
-
+        
     }
 
     public interface IValueProviderInfomation

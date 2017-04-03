@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
@@ -155,7 +156,84 @@ namespace SPAD.neXt.Interfaces
         }
     }
 
-   
+    public static class DictionaryExtensions
+    {
+        public delegate bool Predicate<TKey, TValue>(KeyValuePair<TKey, TValue> d);
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void RemoveWhere<TKey, TValue>(
+            this Dictionary<TKey, TValue> hashtable, Predicate<TKey, TValue> p)
+        {
+            foreach (KeyValuePair<TKey, TValue> value in hashtable.ToList().Where(value => p(value)))
+                hashtable.Remove(value.Key);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void RemoveWhere<TKey, TValue>(
+            this ConcurrentDictionary<TKey, TValue> hashtable, Predicate<TKey, TValue> p)
+        {
+            foreach (KeyValuePair<TKey, TValue> value in hashtable.ToList().Where(value => p(value)))
+                hashtable.Remove(value.Key);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static TValue Get<TKey, TValue>(this Dictionary<TKey, TValue> hashtable, TKey key) where TValue : class
+        {
+            TValue valOut;
+            if (hashtable.TryGetValue(key, out valOut))
+                return valOut;
+            return null;
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> hashtable, TKey key, TValue value) where TValue : class
+        {
+            TValue valOut;
+            if (hashtable.TryGetValue(key, out valOut))
+                return valOut;
+            hashtable.Add(key, value);
+            return value;
+        }
+
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        {
+            int tries = 0;
+            TValue value;
+            if ((key == null) || !dict.ContainsKey(key))
+                return false;
+            while (!dict.TryRemove(key, out value))
+            {
+                tries++;
+                if (tries > 10)
+                {
+                    //Global.Logger.Warn("ConCurrent remove for {0} failed after 10 tries", key);
+                    return false;
+                }
+                Thread.Sleep(100);
+            }
+            return true;
+        }
+
+        public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, TValue value)
+        {
+            if (key == null)
+                return false;
+            if (dict.ContainsKey(key))
+                dict.Remove(key);
+            int tries = 0;
+            while (!dict.TryAdd(key, value))
+            {
+                tries++;
+                if (tries > 10)
+                {
+                    //Global.Logger.Warn("ConCurrent add for {0} failed after 10 tries", key);
+                    return false;
+                }
+                Thread.Sleep(100);
+            }
+            return true;
+        }
+    }
 
     public interface INotifyPropertyChangedHandler : INotifyPropertyChanged
     {
