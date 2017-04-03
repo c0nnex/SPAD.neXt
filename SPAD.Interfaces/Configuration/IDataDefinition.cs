@@ -39,8 +39,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
         string Category { get; set; }
-        bool CheckBoolean(int nVal);
-
+        string AvailableDataProviders { get; }
         double CorrectionFactor { get; set; }
         string Information { get; }
         string DefaultNormalizer { get; set; }
@@ -49,16 +48,14 @@ namespace SPAD.neXt.Interfaces.Configuration
         string DisplayString { get; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
+        bool IsValid { get; }
         float Epsilon { get; set; }
-        Type EventValueType { get; }
-        string Expression { get; set; }
         string ID { get; }
         string AlternateID { get; }
         string PrimaryKey { get; }
         bool IsReadOnly { get; }
         string Key { get; set; }
         string LinkedEntry { get; set; }
-        double MinimumChange { get; }
         string Name { get; set; }
         IValueNormalizer Normalizer { get; }
         string OffsetMode { get; set; }
@@ -78,10 +75,11 @@ namespace SPAD.neXt.Interfaces.Configuration
         string SearchKey { get; }
         IValueProvider ValueProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
+        IValueRange Range { get; }
+
         long DataIndex { get; }
 
         object Clone();
-        bool IsBoolean();
         IEnumerable<string> GetIDs();
         bool HasAlternateUnits { get; }
         List<string> AlternateUnits { get; }
@@ -90,8 +88,22 @@ namespace SPAD.neXt.Interfaces.Configuration
         double GetValue();
         void SetValue(double val);
         string GetValueString(string displayFormat);
-
+        double CheckRange(double val);
         void FixUp();
+        void ProcessOutgoing(IValueConnector connection, object data);
+        object ConvertValue(object val);
+    }
+
+    public interface IValueRange
+    {
+        decimal Minimum { get; }
+        decimal Maximum { get; }
+        decimal Step { get; }
+        bool HasRange { get; }
+        bool RollOver { get; }
+
+        double CheckRange(double val);
+        bool Parse(string strVal);
     }
 
     public interface IDataDefinitions
@@ -107,6 +119,7 @@ namespace SPAD.neXt.Interfaces.Configuration
     public interface IIsMonitorable
     {
         IMonitorableValue Monitorable { get; }
+        bool CanMonitor { get; }
     }
 
 }
