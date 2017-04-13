@@ -86,6 +86,7 @@ namespace SPAD.neXt.Interfaces
 
         void RegisterProfileExtension(string name, Type type);
         ISimulationController GetSimulationController(Guid controllerId);
+        ISimulationEventProvider GetSimulationEventProvider();
 
         void RegisterClientEventProvider(string name, IEventProvider provider);
 
@@ -94,6 +95,13 @@ namespace SPAD.neXt.Interfaces
 
         Version GetRequiredPluginVersion(string pluginName);
         ITransparentValueProvider GetTransparentValueProvider(string providerName);
+
+        IValueProvider GetActiveValueProvider();
+
+        void SetActiveValueProvider(IValueProvider newProvider);
+
+        T ReadXMLConfigurationFile<T>(string filename);
+        T ReadJSONConfigurationFile<T>(string filename);
     }
 
     public interface IApplicationConfiguration

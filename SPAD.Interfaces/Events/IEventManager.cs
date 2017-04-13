@@ -63,7 +63,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsConnected { get; }
     }
 
-    public interface IValueConnector
+    public interface IValueConnector : ISimulationEventProvider
     {
         void ForceUpdate(string dataRef,bool doMonitor);
         void SetValue(string dataRef, double newValue);
@@ -128,7 +128,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface ISimulationController2 : ISimulationController
+    public interface ISimulationEventProvider 
     {
         event EventHandler Connected;
         event EventHandler Disconnected;
@@ -193,6 +193,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetPassive(); // This Monitorable will neever raise an event
         bool IsPassive { get; }
         bool NeedEvent { get; }
+        bool NeedsMonitoring { get; }
     }
 
     public enum ValueDataTypes

@@ -61,7 +61,25 @@ namespace SPAD.neXt.Interfaces
         BUTTONLIGHT,
         DISPLAY,
         BUTTONMODE,
-        PLAYSOUND
+        PLAYSOUND,
+        VIRTUALJOYSTICK,
+    }
+
+    public enum VirtualJoystickAction
+    {
+        VJOY_BUTTON,
+        VJOY_AXIS,
+        VJOY_DISCRETE_HAT,
+        VJOY_CONTINUOUS_HAT,
+    }
+
+    public enum VirtualJoystickButtonMode
+    {
+        NONE,
+        PRESS,
+        TRIGGER,
+        RELEASE,
+        RESPONSECURVE
     }
 
     public enum SPADEventValueComparator
@@ -322,6 +340,8 @@ namespace SPAD.neXt.Interfaces
         /// Input is triggered on long press and released on short press.
         /// </summary>
         LongPressLock,
+
+       
     }
 
     public enum XmlSerilizationPurpose

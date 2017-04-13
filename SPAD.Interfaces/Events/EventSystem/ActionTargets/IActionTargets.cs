@@ -91,6 +91,14 @@ namespace SPAD.neXt.Interfaces.Events
         void ConfigureKeyboardAction(IEnumerable<int> keys, int duration, int pause, int repeat);
     }
 
+    public interface IEventActionVirtualJoyStick : IEventActionChangeValue
+    {
+        VirtualJoystickAction JoystickAction { get; set; }
+        uint JoystickNumber { get; set; }
+        uint JoystickTarget { get; set; }
+        VirtualJoystickButtonMode JoystickMode { get; set; }
+    }
+
     public interface IKeyMacro
     {
         IEnumerable<int> Keys { get; }
