@@ -30,7 +30,6 @@ namespace SPAD.neXt.Interfaces.Events
         void RaiseEvent(ISPADEventArgs e);
         
         IDeviceSwitch GetSwitch();
-        ISPADBaseEvent UpgradeOldEvent();
 
         ISerializableOption GetOption(string key, string defaultVal = null);
         ISerializableOption GetPrivateOption(string key);

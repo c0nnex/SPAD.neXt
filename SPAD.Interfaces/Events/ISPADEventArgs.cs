@@ -1,20 +1,29 @@
 ﻿using SPAD.neXt.Interfaces.Profile;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 
 namespace SPAD.neXt.Interfaces.Events
 {
     public interface ISPADEventArgs : IHandledEventArgs
     {
+        ConcurrentDictionary<string, string> EventData { get;}
         string EventSwitch { get; set; }
         string EventName { get; set; }
         string EventTrigger { get; set; }
         string NewValueFormatted { get; }
-        object NewValue { get;  }        
-        object OldValue { get; }       
-        string   TargetDevice { get; }
+        string DisplayFormat { get; }
+        object NewValue { get; }
+        object OldValue { get; }
+        string TargetDevice { get; }
+        ulong EventMarker { get; }
+        EventPriority EventPriority { get; } 
+        EventSeverity EventSeverity { get; } 
+        string this[string key] { get; set; }
+
         IDeviceProfile DeviceProfile { get; set; }
         IMonitorableValue MonitorableValue { get; set; }
         Guid Sender { get; }
@@ -34,24 +43,31 @@ namespace SPAD.neXt.Interfaces.Events
         void Callback(IValueProvider provider);
 
         ISPADEventArgs Clone();
+        T GetData<T>(string key, T defaultValue = default(T));
     }
-    
+
     public interface IHandledEventArgs
     {
         bool Handled { get; set; }
     }
 
 
-    public class SPADEventArgs : HandledEventArgs, ISPADEventArgs
+    public sealed class SPADEventArgs : HandledEventArgs, ISPADEventArgs
     {
-        public static SPADEventArgs Empty = new SPADEventArgs();
 
+        public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+        public static SPADEventArgs Empty = new SPADEventArgs();
+        private static ulong EventMarkerCounter = 0;
         public string EventSwitch { get; set; }
-        public string EventName { get;  set; }
+        public string EventName { get; set; }
         public IInputElement CommandTarget { get; set; }
-        public virtual object OldValue { 
-            get {
-                if (MonitorableValue == null)
+        public ulong EventMarker { get; private set; }
+        public object OldValue
+        {
+            get
+            {
+                if (IsValueEvent || (MonitorableValue == null))
                     return oldValue;
                 else
                     return MonitorableValue.PreviousValue;
@@ -70,43 +86,46 @@ namespace SPAD.neXt.Interfaces.Events
         }
 
         private object oldValue = null;
-        public virtual object NewValue 
+        public object NewValue
         {
             get
             {
-                if (MonitorableValue == null)
+                if (IsValueEvent || (MonitorableValue == null))
                     return newValue;
                 else
                     return MonitorableValue.CurrentValue;
             }
-        } private object newValue = null;
+        }
+        private object newValue = null;
         public string NewValueFormatted { get; set; }
         public string DisplayFormat { get; set; }
-        public virtual IMonitorableValue MonitorableValue { get; set; }
+        public IMonitorableValue MonitorableValue { get; set; }
         public IDeviceProfile DeviceProfile { get; set; }
         public bool Immediate { get; set; }
         public bool IsValueEvent { get; set; }
         public string EventTrigger { get; set; }
         public bool IsCascadedEvent { get; set; }
-       
+
         public object CallbackValue { get; set; }
 
-       
+
 
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
         public EventOperations EventOperation { get; set; } = EventOperations.Normal;
         public Guid Sender { get; set; } = Guid.Empty;
-
+        public EventPriority EventPriority { get; set; } = EventPriority.Low;
+        public EventSeverity EventSeverity { get; set; } = EventSeverity.Verbose;
         private SPADEventArgs() { }
 
         public SPADEventArgs(string eventName)
         {
+            EventMarker = EventMarkerCounter++;
             EventName = eventName;
             EventTrigger = String.Empty;
             string[] args = eventName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            if ( args.Length == 2)
+            if (args.Length == 2)
             {
                 EventName = args[0];
                 EventTrigger = args[1];
@@ -117,8 +136,9 @@ namespace SPAD.neXt.Interfaces.Events
             CallbackValue = null;
         }
 
-        public SPADEventArgs(string boundTo,string trigger)
+        public SPADEventArgs(string boundTo, string trigger)
         {
+            EventMarker = EventMarkerCounter++;
             EventName = boundTo;
             EventTrigger = trigger;
             this.Handled = false;
@@ -147,12 +167,12 @@ namespace SPAD.neXt.Interfaces.Events
             this.DeviceProfile = deviceProfile;
         }*/
 
-        public virtual void UpdateEventName(string eventName)
+        public void UpdateEventName(string eventName)
         {
             EventName = eventName;
             EventTrigger = String.Empty;
             string[] args = eventName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            if ( args.Length == 2)
+            if (args.Length == 2)
             {
                 EventName = args[0];
                 EventTrigger = args[1];
@@ -161,7 +181,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         public override string ToString()
         {
-            return String.Format("{0} Old={1} New={2} ValueEvent={3}", FullName, Convert.ToString(OldValue), Convert.ToString(NewValue),IsValueEvent);
+            return String.Format("{0} Old={1} New={2} ValueEvent={3}", FullName, Convert.ToString(OldValue), Convert.ToString(NewValue), IsValueEvent);
         }
 
         public string FullName
@@ -172,6 +192,52 @@ namespace SPAD.neXt.Interfaces.Events
                     return String.Format("{0}.{1}", EventName, EventTrigger);
                 return EventName;
             }
+        }
+
+        public string this[string key]
+        {
+            get
+            {
+                string val;
+                if (EventData.TryGetValue(key, out val))
+                    return val;
+                return null;
+            }
+            set
+            {
+                EventData.Add(key, value);
+            }
+        }
+
+        public void AddData(string key, object value)
+        {
+            this[key] = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        public SPADEventArgs WithData(string key,object value)
+        {
+            AddData(key, value);
+            return this;
+        }
+
+        public T GetData<T>(string key, T defaultValue = default(T))
+        {
+            try
+            {
+                string val = this[key];
+                if (val == null)
+                    return default(T);
+                if (typeof(T) == typeof(Guid))
+                    return (T)((object)new Guid(this[key]));
+                if (typeof(T) == typeof(Version))
+                    return (T)((object)new Version(this[key]));
+                return (T) Convert.ChangeType(this[key], typeof(T));
+            }
+            catch 
+            {
+                return defaultValue;
+            }
+            
         }
 
         private HashSet<string> handledEvents = new HashSet<string>();
@@ -203,6 +269,27 @@ namespace SPAD.neXt.Interfaces.Events
         public ISPADEventArgs Clone()
         {
             return this.MemberwiseClone() as ISPADEventArgs;
+        }
+
+        public ISPADEventArgs WithData(Dictionary<string, string> eventData)
+        {
+            foreach (var item in eventData)
+            {
+                EventData.Add(item.Key, item.Value);
+            }
+            return this;
+        }
+
+        public ISPADEventArgs WithSeverity(EventSeverity severity)
+        {
+            EventSeverity = severity;
+            return this;
+        }
+
+        public ISPADEventArgs WithPriority(EventPriority priority)
+        {
+            EventPriority = priority;
+            return this;
         }
     }
 }

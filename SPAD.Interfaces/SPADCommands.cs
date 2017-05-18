@@ -41,8 +41,8 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand _PublishSnippetCommand = new RoutedCommand("SPAD_neXt.PublishSnippet", typeof(SPADCommands));
 
         private static RoutedCommand _ShowNotificationsCommand = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
+        private static RoutedCommand _DebugModeCommand = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
 
-        
 
         /*  private static RoutedCommand editActionCommand = new RoutedCommand("SPAD_neXt.EditAction", typeof(SPADCommands));
           private static RoutedCommand delActionCommand = new RoutedCommand("SPAD_neXt.DelAction", typeof(SPADCommands));
@@ -119,7 +119,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
 
         public static RoutedCommand ShowNotificationsCommand { get { return _ShowNotificationsCommand; } }
-
+        public static RoutedCommand DebugModeCommand { get { return _DebugModeCommand; } }
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }
 
         /*

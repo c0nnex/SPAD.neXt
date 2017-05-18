@@ -7,6 +7,50 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Windows.Data;
+
+namespace System
+{
+    public static class SPADSystemExtensions
+    {
+        public static string Right(this string inStr, int numChars)
+        {
+            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
+                return inStr;
+            return inStr.Substring(inStr.Length - numChars, numChars);
+        }
+
+        public static string Left(this string inStr, int numChars)
+        {
+            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
+                return inStr;
+            return inStr.Substring(0, numChars);
+        }
+    }
+}
+
+namespace System.Collections.ObjectModel
+{
+    
+    public class ObservableCollectionAsync<T> : ObservableCollection<T>
+    {
+        private readonly object _lockObject = new object();
+
+        public ObservableCollectionAsync() : base()
+        {
+            BindingOperations.EnableCollectionSynchronization(this, _lockObject);
+        }
+        public ObservableCollectionAsync(List<T> list) : base(list)
+        {
+            BindingOperations.EnableCollectionSynchronization(this, _lockObject);
+        }
+        public ObservableCollectionAsync(IEnumerable<T> collection) : base(collection)
+        {
+            BindingOperations.EnableCollectionSynchronization(this, _lockObject);
+        }
+    }
+}
 
 namespace SPAD.neXt.Interfaces
 {
@@ -81,7 +125,7 @@ namespace SPAD.neXt.Interfaces
             return iCount;
         }
 
-        public static IEnumerable<T> GetFlags<T>(this T flags)  
+        public static IEnumerable<T> GetFlags<T>(this T flags) 
         {
             foreach (T x in Enum.GetValues(typeof(T)))
             {
@@ -240,3 +284,4 @@ namespace SPAD.neXt.Interfaces
         void OnPropertyChanged(string propertyName);
     }
 }
+

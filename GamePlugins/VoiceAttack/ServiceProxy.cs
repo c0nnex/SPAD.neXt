@@ -180,7 +180,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         }
 
 
-        public void RemoteEvent(string eventName)
+        public void RemoteEvent(string eventName,string value)
         {
             RemoteEventReceived?.Invoke(this, eventName);
         }

@@ -37,7 +37,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         void BeginUpdate();
         void EndUpdate();
         void SetSingleUpdateMode(bool UseSingleUpdateMode);
-
+        bool IsUpdating();
     }
 
     public interface IDynamicSimConnectDataItem : IDataItemAttributeBase, IDataItemBoundBase

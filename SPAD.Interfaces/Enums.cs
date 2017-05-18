@@ -16,6 +16,7 @@ namespace SPAD.neXt.Interfaces
         NotConnected = 5
     }
 
+
     [Flags]
     public enum SimulationTypes
     {
@@ -29,7 +30,7 @@ namespace SPAD.neXt.Interfaces
         SCS = 64,
         IRACING = 128,
         P3Dv4 = 512,
-
+        FSW = 1024,
         CUSTOM = 0x1000000,
     }
 
@@ -65,6 +66,24 @@ namespace SPAD.neXt.Interfaces
         VIRTUALJOYSTICK,
     }
 
+    public enum EventPriority
+    {
+        First =     0,
+        High =   1000,
+        Low =   10000,
+        Last = 100000,
+    }
+
+    public enum EventSeverity
+    {
+        None = 0,
+        Verbose = 1,
+        Normal = 2,
+        Warning = 3,
+        Error = 4,
+        Fatal = 5
+    }
+
     public enum VirtualJoystickAction
     {
         VJOY_BUTTON,
@@ -79,6 +98,7 @@ namespace SPAD.neXt.Interfaces
         PRESS,
         TRIGGER,
         RELEASE,
+        PRESSANDRELEASE,
         RESPONSECURVE
     }
 
@@ -357,6 +377,7 @@ namespace SPAD.neXt.Interfaces
         FREE,
         LICENSE,
         PROTECT,
+        REMOTE
         
     }
 
@@ -407,6 +428,8 @@ namespace SPAD.neXt.Interfaces
         public const string LVAR_STATUS = "LVAR STATUS";
         public const string FRAMERATE = "FRAMERATE";
         public const string FRAMERATE_AVG = "FRAMERATE AVG";
+
+        public const string EVENT_AIRCRAFTCHANGED = "SPAD_AIRCRAFTCHANGED";
 
     }
     public class Constants

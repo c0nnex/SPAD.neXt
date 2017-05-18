@@ -11,11 +11,18 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface IProgrammableButton 
     {
+        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOn;
+        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOff;
+        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeChanged;
+        event EventHandler<IProgrammableButton, bool> LongOrShortPress;
+
+
         long LastPressDuration { get; }
         bool BothModeOn { get; set; }
         Visibility BothModeVisible { get; set; }
         ulong CurrentMask { get; set; }
         PROGRAMMABLEBUTTONSTATUS CurrentMode { get; }
+        PROGRAMMABLEBUTTONSTATUS DefaultMode { get; set; }
         Visibility CurrentUIState { get; set; }
         object Data { get; }
         bool IsOff { get; set; }
@@ -26,6 +33,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool ShortModeOn { get; set; }
         Visibility ShortModeVisible { get; set; }
         string Tag { get; }
+        bool NeedsCallout { get; }
 
         bool HasMode(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeOff(PROGRAMMABLEBUTTONSTATUS whichMode);

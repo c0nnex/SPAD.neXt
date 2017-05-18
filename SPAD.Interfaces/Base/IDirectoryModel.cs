@@ -23,6 +23,9 @@ namespace SPAD.neXt.Interfaces.Base
         string ParseName(string nameIn, Dictionary<string, string> additionalValues = null);
         string TokenizeName(string nameIn, Dictionary<string, string> additionalValues = null);
 
+        void SetDirectory(string dirIndex, string dirValue);
+        string GetDirectory(string dirIndex);
+
         void RevertChanges();
         void SetupDirectories();
         

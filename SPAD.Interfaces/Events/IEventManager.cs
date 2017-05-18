@@ -14,7 +14,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventManager
     {
 
-        void SubscribeToSystemEvent(string eventName, SPADEventHandler newDelegate);
+        void SubscribeToSystemEvent(string eventName, SPADEventHandler newDelegate, EventPriority priority = EventPriority.Low);
         //void Subscribe(string eventName, IEventHandler eventDelegate, ISPADComparator comparator);
         //void Unsubscribe(IMonitorableValue monitorableValue, string eventName, IEventHandler eventDelegate);
         event PropertyChangedEventHandler AircraftChanged;
@@ -130,9 +130,11 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ISimulationEventProvider 
     {
+        /*
         event EventHandler Connected;
         event EventHandler Disconnected;
         event EventHandler AircraftLoaded;
+        */
         event EventHandler<SPADEventArgs> ClientEvent;
 
         void StartMonitoringEvents();
@@ -157,6 +159,7 @@ namespace SPAD.neXt.Interfaces.Events
         event EventHandler<BooleanEventArgs> MonitoredChanged;
 
         void SetRawValue(object newValue);
+        Double ConvertValue(object newValue);
         object GetRawValue(bool secondary = false);
         string GetValueString();
 
@@ -185,7 +188,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         bool IsActive { get; }
         bool IsUndefined();
-
+        bool HasObservers { get; }
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
         void Raise(string eventName, object sender, ISPADEventArgs eventArgs);
@@ -194,6 +197,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsPassive { get; }
         bool NeedEvent { get; }
         bool NeedsMonitoring { get; }
+        bool AlwaysUpdate { get; set; }
     }
 
     public enum ValueDataTypes

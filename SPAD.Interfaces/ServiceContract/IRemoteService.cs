@@ -70,7 +70,7 @@ namespace SPAD.neXt.Interfaces.ServiceContract
     public interface IRemoteServiceCallback
     {
         [OperationContract(IsOneWay = true)]
-        void RemoteEvent(string eventName);
+        void RemoteEvent(string eventName,string value);
 
         [OperationContract(IsOneWay = true)]
         void Pong(ulong tick);

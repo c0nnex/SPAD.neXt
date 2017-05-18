@@ -15,6 +15,7 @@ namespace SPAD.neXt.Interfaces.Events
         string BoundTo { get; set; }
         string ConfigString { get; }
         string Name { get; set; }
+        bool DebugMode { get; set; }
 
         void Configure(ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void Activate(string boundTo, ISPADBaseEvent baseEvent);
@@ -36,6 +37,7 @@ namespace SPAD.neXt.Interfaces.Events
         string ConfigStringToolTip { get; }
         string EventName { get; }
         bool IsFinal { get; set; }
+        bool DebugMode { get; set; }
         string Comment { get; set; }
         string DisplayName { get; }
         string Trigger { get; set; }
@@ -96,7 +98,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventConditions : IObservableList<IEventCondition>
     {
         string ConfigString { get; }
-        bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding);
+        bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);
     }
 
     public interface IEventActions : IObservableList<IEventAction>

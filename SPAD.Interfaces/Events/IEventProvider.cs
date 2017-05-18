@@ -8,8 +8,9 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface IEventProvider
     {
-        IDisposable SubscribeToClientEvent<T>(string eventName, EventHandler<T> eventHandler);
-       void RaisePanelEvent(string eventName, ISPADEventArgs e);
+        IDisposable SubscribeToClientEvent<T>(string eventName, EventHandler<string,T> eventHandler);
+        void IncomingClientEvent(string eventName, ISPADEventArgs e);
+        List<ISPADEventArgs> GetStartupEvents();
     }
 
 }

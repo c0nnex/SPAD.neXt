@@ -115,6 +115,7 @@
     <Compile Include="Events\ISPADEventValue.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Aircraft\ICDUScreen.cs" />
+    <Compile Include="ISpecificOptions.cs" />
     <Compile Include="Gauges\IOnlineGaugeData.cs" />
     <Compile Include="Gauges\IOnlineGauge.cs" />
     <Compile Include="HID\IHidDevice.cs" />

@@ -35,6 +35,8 @@ namespace SPAD.neXt.Interfaces
         bool CheckRegisteredFeature();
         UInt32 GetAuthorID();
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
+        void RegisterSimulationConnected(EventHandler<IValueProvider> simulationConnected);
+
         // SimConnect Special
         //TODO: Remove FSUIPC add General
         ISimConnectDynamicObject GetSimConnectDataObject(string id, bool clear);
@@ -99,9 +101,14 @@ namespace SPAD.neXt.Interfaces
         IValueProvider GetActiveValueProvider();
 
         void SetActiveValueProvider(IValueProvider newProvider);
+        void OnSimulationConnected(IValueProvider provider);
 
+        Stream GetConfigurationFile(string filename);
         T ReadXMLConfigurationFile<T>(string filename);
         T ReadJSONConfigurationFile<T>(string filename);
+
+        ISpecificOptions GetSpecificOptions(Guid id);
+        HashSet<string> GetConfigurationSet(string name);
     }
 
     public interface IApplicationConfiguration
