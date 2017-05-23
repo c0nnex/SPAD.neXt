@@ -218,7 +218,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         public void Pong(ulong tick)
         {
             ulong x = (ulong)EnvironmentEx.TickCount;
-            vaProxy.WriteToLog($"PingPong Out={tick} In={x} RoundTrip={x - tick}");
+            vaProxy.WriteToDebugLog($"PingPong Out={tick} In={x} RoundTrip={x - tick}");
         }
 
         public RemoteServiceResult Initialize(string clientName, Version remoteApiVersion)

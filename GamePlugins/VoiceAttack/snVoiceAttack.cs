@@ -50,15 +50,13 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-            bool bDebug = vaProxy.IsDebug;
-           
             try
             {
                 object tmp;
 
                 textValues["snSTATUS"] = "OK";
                 textValues["snMESSAGE"] = String.Empty;
-                if (bDebug) vaProxy.WriteToLog($"Command '{context}'");
+                vaProxy.WriteToDebugLog($"Command '{context}'");
                 var proxy = snVoiceAttackCommandInterface.GetServiceProxy();
                 if ((proxy == null) || !proxy.IsConnected)
                 {
@@ -84,7 +82,8 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                                 textValues["snMESSAGE"] = $"GetValue: Failed to get {varName} : {result.Error}";
                                 return;
                             }
-                            if (bDebug) vaProxy.WriteToLog( String.Format("GotValue: {0} {1}", result.Value, Convert.ToDecimal(result.Value)));
+                            vaProxy.WriteToDebugLog($"VarName = '{varName}");
+                            vaProxy.WriteToDebugLog( String.Format("GotValue: {0} {1}", result.Value, Convert.ToDecimal(result.Value)));
                             decimalValues[varName] = Convert.ToDecimal(result.Value);
                             return;
                         }
@@ -104,6 +103,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                                 textValues["snMESSAGE"] = $"SetValue: {varName} has no decimal value";
                                 return;
                             }
+                            vaProxy.WriteToDebugLog($"VarName = '{varName}' Value = {newValue.GetValueOrDefault(0)}");
                             var result = proxy.SetValue(varName, Convert.ToDouble(newValue.GetValueOrDefault(0)));
                             if (result.HasError)
                             {
@@ -117,6 +117,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                         {
                             foreach (var item in decimalValues.Keys)
                             {
+                                vaProxy.WriteToDebugLog($"VarName = '{item}");
                                 var result = proxy.Monitor(item);
                                 if (result.HasError)
                                 {
@@ -170,14 +171,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             {
                 textValues["snSTATUS"] = "ERROR";
                 textValues["snMESSAGE"] = $"FATAL: {ex.Message}";
-                if (bDebug) vaProxy.WriteToLog(ex.ToString());
+                vaProxy.WriteToDebugLog(ex.ToString());
             }
             finally
             {
-                if (bDebug)
-                {
-                    vaProxy.WriteToLog($"snStatus='{textValues["snSTATUS"]}' snMessage='{textValues["snMESSAGE"]}' ");
-                }
+                vaProxy.WriteToDebugLog($"snStatus='{textValues["snSTATUS"]}' snMessage='{textValues["snMESSAGE"]}' ");
                 if (vaProxy.IsVerbose)
                 {
                     if (textValues["snSTATUS"] == "ERROR")

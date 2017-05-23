@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,16 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
     public static class vaProxy
     {
         private static dynamic _vaProxy;
+        private static StreamWriter logFile;
 
         public static void SetVAProxy(dynamic vaproxy)
         {
             _vaProxy = vaproxy;
+            var logDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SPAD.neXt\\logs");
+            try { Directory.CreateDirectory(logDir); } catch { }
+            logFile = new StreamWriter(Path.Combine(logDir, "VoiceAttack.log"), false);
+            logFile.AutoFlush = true;
+            logFile.WriteLine($"Logstarted {DateTime.Now}");
         }
 
         public static bool IsDebug
@@ -33,7 +40,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         {
             get
             {
+#if DEBUG
                 return (GetBoolean("snVERBOSE")).GetValueOrDefault(true);
+#else
+                return (GetBoolean("snVERBOSE")).GetValueOrDefault(true);
+#endif
             }
         }
         public static bool CommandExists(string commandName)
@@ -118,8 +129,16 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         public static void WriteToLog(string valueToWrite, string color = "blank")
         {
-            System.Diagnostics.Debug.WriteLine(valueToWrite);
+            //  System.Diagnostics.Debug.WriteLine(valueToWrite);
+            logFile?.WriteLine($"{DateTime.Now} [{color}] {valueToWrite}");
             _vaProxy?.WriteToLog(valueToWrite, color);
+        }
+        public static void WriteToDebugLog(string valueToWrite, string color = "blank")
+        {
+            //  System.Diagnostics.Debug.WriteLine(valueToWrite);
+            logFile?.WriteLine($"{DateTime.Now} [{color}] {valueToWrite}");
+            if (IsDebug)
+                _vaProxy?.WriteToLog(valueToWrite, color);
         }
     }
 }
