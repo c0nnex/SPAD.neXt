@@ -129,4 +129,15 @@ namespace SPAD.neXt.Interfaces.Events
         string ScriptName { get; set; }
         int ScriptArgument { get; set; }
     }
+
+    public interface IEventActionText2Speech : IEventAction
+    {
+        string Text { get; set; }
+        string Voice { get; set; }
+        bool StopAll { get; set; }
+        bool WaitForFinish { get; set; }
+        bool UseSSML { get; set; }
+        int Volume { get; set; }
+        int Rate { get; set; }
+    }
 }

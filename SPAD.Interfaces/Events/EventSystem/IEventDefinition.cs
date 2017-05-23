@@ -122,6 +122,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool CanTargetDevice { get; set; }
         string TargetDeviceID { get; set; }
         string TargetName { get; set; }
+        string DataReferenceText { get; }
 
         void AddParserValue(string key, string value);
         T GetOption<T>(string optionName, T defaultValue = default(T));
