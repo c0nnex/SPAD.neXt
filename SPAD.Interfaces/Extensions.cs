@@ -192,6 +192,13 @@ namespace SPAD.neXt.Interfaces
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Rescale(this Decimal value, Decimal sourceMin, Decimal sourceMax, Decimal targetMin, Decimal targetMax)
+        {
+            value = Math.Max(sourceMin, Math.Min(value, sourceMax));
+
+            return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Rescale(this float value, float sourceMin, float sourceMax, float targetMin, float targetMax)
         {
             value = Math.Max(sourceMin, Math.Min(value, sourceMax));
