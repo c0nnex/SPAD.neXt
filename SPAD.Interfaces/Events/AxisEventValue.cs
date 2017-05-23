@@ -27,6 +27,8 @@ namespace SPAD.neXt.Interfaces.Events
         public AxisEventValue(IInputAxis axis)
         {
             Axis = axis;
+            if (axis == null)
+                return;
             RawValue = axis.RawValue;
             NormalizedValue = (int)axis.Rescale(axis.Value, 0, 1, 16383, -16383);
             InvertedRawValue = axis.MaximumValue - axis.RawValue + axis.MinimumValue;
@@ -38,9 +40,12 @@ namespace SPAD.neXt.Interfaces.Events
         {
             Axis = axis;
             RawValue = rawValue;
-            NormalizedValue = (int)axis.Rescale(value, 0, 1, 16383, -16383);
-            InvertedRawValue = axis.MaximumValue - rawValue + axis.MinimumValue;
-            InvertedNormalizedValue = (int)axis.Rescale(1 - value, 0, 1, 16383, -16383);
+            NormalizedValue = (int)value.Rescale(0, 1, 16383, -16383);
+            if (axis != null)
+            {
+                InvertedRawValue = axis.MaximumValue - rawValue + axis.MinimumValue;
+            }
+            InvertedNormalizedValue = (int)(1 - value).Rescale(0, 1, 16383, -16383);
             AxisValue = value;
         }
 
