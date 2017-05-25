@@ -36,6 +36,7 @@ namespace SPAD.neXt.Interfaces.Base
         string Key { get; set; }
         string Name { get; set; }
         string ToSim { get; set; }
+        bool Hidden { get; set; }
 
         void Construct();
     }
