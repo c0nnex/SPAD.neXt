@@ -101,7 +101,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IKeyMacro
     {
-        IEnumerable<int> Keys { get; }
+        IList<int> Keys { get; }
         bool IsPause { get; }
         int Duration { get; }
         int Pause { get; }

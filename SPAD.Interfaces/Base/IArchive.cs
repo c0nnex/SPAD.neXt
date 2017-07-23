@@ -14,7 +14,7 @@ namespace SPAD.neXt.Interfaces.Base
         IArchiveEntry GetFileInfo(string filename);
         Stream GetFile(string filename);
         bool FileExists(string filename);
-        IReadOnlyList<string> GetFiles(string pattern);
+        IReadOnlyList<string> GetFiles(string pattern, bool fullNameMatch = false);
     }
 
     public interface IArchiveEntry

@@ -109,6 +109,7 @@ namespace SPAD.neXt.Interfaces
 
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
+        ISerializableOption GetApplicationOption(string optionKey);
     }
 
     public interface IApplicationConfiguration

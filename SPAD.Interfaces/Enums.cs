@@ -31,6 +31,7 @@ namespace SPAD.neXt.Interfaces
         IRACING = 128,
         P3Dv4 = 512,
         FSW = 1024,
+        RAILWORKS = 2048,
         CUSTOM = 0x1000000,
     }
 

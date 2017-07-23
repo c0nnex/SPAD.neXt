@@ -1,6 +1,6 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
-using SPAD.neXt.Interfaces.ServiceContract;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

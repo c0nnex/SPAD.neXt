@@ -29,6 +29,8 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand profileNewFromThisCommand = new RoutedCommand("SPAD_neXt.Profile_NewFromThis", typeof(SPADCommands));
         private static RoutedCommand profileDeleteCommand = new RoutedCommand("SPAD_neXt.Profile_Delete", typeof(SPADCommands));
         private static RoutedCommand profileEditCommand = new RoutedCommand("SPAD_neXt.Profile_Edit", typeof(SPADCommands));
+        private static RoutedCommand profileEditAircraftsCommand = new RoutedCommand("SPAD_neXt.Profile_Edit_Aicrafts", typeof(SPADCommands));
+        private static RoutedCommand profileEditDevicesCommand = new RoutedCommand("SPAD_neXt.Profile_Edit_Devcices", typeof(SPADCommands));
         private static RoutedCommand profilePublishCommand = new RoutedCommand("SPAD_neXt.Profile_Publish", typeof(SPADCommands));
         private static RoutedCommand profileReconvertCommand = new RoutedCommand("SPAD_neXt.Profile_Reconvert", typeof(SPADCommands));
         private static RoutedCommand profileRateCommand = new RoutedCommand("SPAD_neXt.Profile_Rate", typeof(SPADCommands));
@@ -42,7 +44,8 @@ namespace SPAD.neXt.Interfaces
 
         private static RoutedCommand _ShowNotificationsCommand = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
         private static RoutedCommand _DebugModeCommand = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
-
+        private static RoutedCommand _ProgrammingCommand = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
+        
 
         /*  private static RoutedCommand editActionCommand = new RoutedCommand("SPAD_neXt.EditAction", typeof(SPADCommands));
           private static RoutedCommand delActionCommand = new RoutedCommand("SPAD_neXt.DelAction", typeof(SPADCommands));
@@ -114,12 +117,15 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileNewFromThisCommand { get { return profileNewFromThisCommand; } }
         public static RoutedCommand ProfileDeleteCommand { get { return profileDeleteCommand; } }
         public static RoutedCommand ProfileEditCommand { get { return profileEditCommand; } }
+        public static RoutedCommand ProfileEditAircraftsCommand { get { return profileEditAircraftsCommand; } }
+        public static RoutedCommand ProfileEditDevicesCommand { get { return profileEditDevicesCommand; } }
         public static RoutedCommand ProfilePublishCommand { get { return profilePublishCommand; } }
         public static RoutedCommand ProfileReconvertCommand { get { return profileReconvertCommand; } }
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
 
         public static RoutedCommand ShowNotificationsCommand { get { return _ShowNotificationsCommand; } }
         public static RoutedCommand DebugModeCommand { get { return _DebugModeCommand; } }
+        public static RoutedCommand ProgrammingCommand { get { return _ProgrammingCommand; } }
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }
 
         /*

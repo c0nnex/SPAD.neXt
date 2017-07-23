@@ -39,7 +39,7 @@ namespace SPAD.neXt.Interfaces.Base
         bool ContainsKey(string key);
         TOPT GetOption<TOPT>(string optionName, TOPT defaultValue = default(TOPT));
         bool HasOption(string optionName);
-        bool Merge(IReadOnlyList<ISerializableOption> other);
+        bool Merge(IReadOnlyList<ISerializableOption> other, bool updateExisting = false);
         void Remove(string key);
         bool SetOption(string optionName, object value);
     }

@@ -37,6 +37,7 @@ namespace SPAD.neXt.Interfaces
         void AddPanelCheckbox(string buttonName, string buttonTag, ICommand command, bool bIsChecked, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void SetEventContext(string eventName, Point targetPoint, IInput input);
         string GetConfigurationSetting(string key);
+        void NavigateToThis();
     }
 
     public interface IPanelControl
