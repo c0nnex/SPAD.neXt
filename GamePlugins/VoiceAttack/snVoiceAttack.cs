@@ -160,9 +160,6 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                             }
                             return;
                         }
-                    case "ping":
-                        proxy.Ping(0);
-                        return;
                     default:
                         break;
                 }

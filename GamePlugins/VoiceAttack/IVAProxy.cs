@@ -5,6 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+namespace SPAD.neXt.Interfaces.Events
+{
+    public interface IKeyMacro
+    {
+        IList<int> Keys { get; }
+        bool IsPause { get; }
+        int Duration { get; }
+        int Pause { get; }
+        int Repeat { get; }
+    }
+}
+
 namespace SPAD.neXt.GamePlugins.VoiceAttack
 {
     /// <summary>

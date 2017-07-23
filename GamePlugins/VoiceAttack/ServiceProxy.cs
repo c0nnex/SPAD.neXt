@@ -1,8 +1,13 @@
 ﻿using Microsoft.Win32;
-using SPAD.neXt.Interfaces.ServiceContract;
+using NetworkCommsDotNet;
+using NetworkCommsDotNet.Connections;
+using NetworkCommsDotNet.Connections.TCP;
+using NetworkingDataContracts;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Description;
@@ -13,43 +18,28 @@ using System.Threading.Tasks;
 namespace SPAD.neXt.GamePlugins.VoiceAttack
 {
 
-    class RemoteServiceProxy : ClientBase<IRemoteService>
+    class ServiceProxy 
     {
-        public RemoteServiceProxy(InstanceContext ctx, ServiceEndpoint ep) : base(ctx,ep)
-        { }
+        static int DefaultTimeout = 5000;
 
-        public IRemoteService RemoteChannel { get { return Channel; } }
-    }
-
-    class ServiceProxy :IRemoteService , IRemoteServiceCallback
-    {
-        protected RemoteServiceProxy prxy;
-
+        protected Connection Connection;
+        protected string RemoteVersion = "unknown";
         public event EventHandler<string> RemoteEventReceived;
         
         public ServiceProxy(string hostname) 
         {
-            prxy = new RemoteServiceProxy(new InstanceContext(this), new ServiceEndpoint(ContractDescription.GetContract(typeof(IRemoteService)),
-            new NetNamedPipeBinding(NetNamedPipeSecurityMode.None), new EndpointAddress($"net.pipe://localhost/SPAD.neXt/RemoteService")));
+            NetworkComms.AppendGlobalConnectionEstablishHandler(OnConnectionEstablished, true);
+            NetworkComms.AppendGlobalConnectionCloseHandler(OnConnectionClosed);
+            NetworkComms.IgnoreUnknownPacketTypes = false;
+            // NetworkComms.DefaultSendReceiveOptions = new SendReceiveOptions<NetworkingDataContracts.NetworkingDataContractSerializer>();
+            
         }
 
-        public bool IsConnected
+        public virtual bool IsConnected
         {
             get
             {
-                switch (prxy.State)
-                {
-                    case CommunicationState.Created:
-                    case CommunicationState.Opening:
-                    case CommunicationState.Closing:
-                    case CommunicationState.Closed:
-                    case CommunicationState.Faulted:
-                        return false;
-                    case CommunicationState.Opened:
-                        return true;
-                    default:
-                        return false;
-                }
+                return ((Connection != null) && (Connection.ConnectionInfo.ConnectionState == ConnectionState.Established));
             }
         }
 
@@ -57,64 +47,73 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         {
             try
             {
-                prxy?.Close();
+                Connection?.CloseConnection(false);
             }
             catch { }
+        }
+
+        private void OnConnectionClosed(Connection connection)
+        {
+            vaProxy.WriteToLog($"Connection Closed {connection?.ConnectionInfo?.RemoteEndPoint}","red");
+            RemoteEventReceived?.Invoke(this, "SN_CONNECTION_CLOSED");
+            Connection = null;
+            
+        }
+
+        private void OnConnectionEstablished(Connection connection)
+        {
+           // logger.Info($"New Connection To {connection.ConnectionInfo.RemoteEndPoint}");
+
+            var res = connection.SendReceiveObject<NetworkingDataContracts.NetworkConnect, NetworkingDataContracts.NetworkConnectResponse>(new NetworkingDataContracts.NetworkConnect() {
+                ClientName = "VoiceAttack",
+                RemoteApiVersion = NetworkingDataContracts.ContractConstants.RemoteApiVersion,
+                ContractName = "VA", ContractVersion = Assembly.GetExecutingAssembly().GetName().Version
+            });
+            if ((res == null) || (res.Result != RemoteServiceResult.CONNECTION_OK))
+            {
+                switch (res.Result)
+                {
+                    case RemoteServiceResult.CONNECTION_OUTDATED:
+#if !STANDALONE
+                        vaProxy.WriteToLog("SPAD.neXt VA Plugin outdated! please update!", "red");
+#endif
+                        break;
+                    case RemoteServiceResult.CONNECTION_DENIED:
+                    case RemoteServiceResult.CONNECTION_BUSY:
+#if !STANDALONE
+                        vaProxy.WriteToLog("Connection to SPAD.neXt failed.","red");
+#endif
+                        break;
+                    default:
+                        vaProxy.WriteToLog($"Unknown Response: {res.Result}");
+                        break;
+                }
+                connection.CloseConnection(false);
+                return;
+            }
+            RemoteVersion = res.RemoteVersion;
+            Connection = connection;
+            connection.AppendIncomingPacketHandler<NetworkEvent>("RS.EVENT", OnRemoteEvent);
+        }
+
+        private void OnRemoteEvent(PacketHeader packetHeader, Connection connection, NetworkEvent incomingObject)
+        {
+            RemoteEventReceived?.Invoke(this, incomingObject.EventKey);
         }
 
         public bool TryToConnect()
         {
             try
             {
-                switch (prxy.State)
-                {
-                    case CommunicationState.Created:
-                    case CommunicationState.Closed:
-                        {
-                            int tries = 0;
-                            while ((prxy.State != CommunicationState.Opened) && (tries < 20))
-                            {
-                                prxy.Open();
-                                Thread.Sleep(100);
-                                tries++;
-                            }
-                            if ( prxy.State == CommunicationState.Opened )
-                            {
-                                switch (Initialize(null, null))
-                                {
-                                    case RemoteServiceResult.CONNECTION_OK:
-                                        return true;
-                                    case RemoteServiceResult.CONNECTION_OUTDATED:
-#if !STANDALONE
-                                        vaProxy.WriteToLog("SPAD.neXt VA Plugin outdated! please update!", "red");
-#endif
-                                        return false;
-                                    case RemoteServiceResult.CONNECTION_DENIED:
-                                    case RemoteServiceResult.CONNECTION_BUSY:
-#if !STANDALONE
-                                        vaProxy.WriteToLog("Connection to SPAD.neXt failed.");
-#endif
-                                        return false;
-                                    default:
-                                        return false;
-                                }
-                            }
-                            return false;
-                        }
-                    case CommunicationState.Closing:
-                    case CommunicationState.Opening:
-                    case CommunicationState.Faulted:
-                        return false;
-                    case CommunicationState.Opened:
-                        return true;
-                    default:
-                        return false;
-                }
+                if (IsConnected)
+                    return true;
+                TCPConnection.GetConnection(new ConnectionInfo("127.0.0.1", 8181), true);
+                return IsConnected;
             }
             catch (Exception ex)
             {
 #if !STANDALONE
-                vaProxy.WriteToLog(ex.Message, "red");
+                vaProxy.WriteToLog(ex.ToString(), "red");
 #endif
                 return false;
             }
@@ -126,7 +125,8 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             {
                 if ( ! TryToConnect() )
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
-                return prxy.RemoteChannel.EmulateEvent(targetDevice, targetEvent, eventTrigger, eventParameter);
+                return Connection.SendReceiveObject<NetworkEvent, RemoteServiceResponse>("RS.EMULATEEVENT", "RemoteServiceResponse", DefaultTimeout,
+                    new NetworkEvent(targetDevice, targetEvent, eventTrigger).WithData("PARAMETER", eventParameter));
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 if (!TryToConnect())
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
 
-                return prxy.RemoteChannel.GetValue(variableName);
+                return Connection.SendReceiveObject<NetworkEvent, RemoteServiceResponse>("RS.GETVALUE", "RemoteServiceResponse", DefaultTimeout, NetworkEvent.Create(variableName));
             }
             catch (Exception ex)
             {
@@ -156,11 +156,11 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 if (!TryToConnect())
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
 
-                return prxy.RemoteChannel.SetValue(variableName, newValue);
+                return Connection.SendReceiveObject<NetworkEvent, RemoteServiceResponse>("RS.SETVALUE", "RemoteServiceResponse", DefaultTimeout, NetworkEvent.Create(variableName).WithEventTrigger(newValue.ToString(CultureInfo.InvariantCulture)));
             }
             catch (Exception ex)
             {
-                return new RemoteServiceResponse { HasError = true, Error = ex.Message };
+                return new RemoteServiceResponse { HasError = true, Error = ex.ToString() };
             }
         }
 
@@ -171,18 +171,12 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 if (!TryToConnect())
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
 
-                return prxy.RemoteChannel.Monitor(variableName);
+                return Connection.SendReceiveObject<NetworkEvent, RemoteServiceResponse>("RS.MONITOR", "RemoteServiceResponse", DefaultTimeout, NetworkEvent.Create(variableName));
             }
             catch (Exception ex)
             {
                 return new RemoteServiceResponse { HasError = true, Error = ex.Message };
             }
-        }
-
-
-        public void RemoteEvent(string eventName,string value)
-        {
-            RemoteEventReceived?.Invoke(this, eventName);
         }
 
         public string GetVersion()
@@ -192,7 +186,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
                 if (!TryToConnect())
                     return null;
 
-                return prxy.RemoteChannel.GetVersion();
+                return RemoteVersion;
             }
             catch (Exception ex)
             {
@@ -200,43 +194,6 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
             }
         }
 
-        public void Ping(ulong tick)
-        {
-            try
-            {
-                if (!TryToConnect())
-                    return;
-                uint x = (uint)Environment.TickCount;
-                prxy.RemoteChannel.Ping(x);
-            }
-            catch (Exception ex)
-            {
-                return;
-            }
-        }
-
-        public void Pong(ulong tick)
-        {
-            ulong x = (ulong)EnvironmentEx.TickCount;
-            vaProxy.WriteToDebugLog($"PingPong Out={tick} In={x} RoundTrip={x - tick}");
-        }
-
-        public RemoteServiceResult Initialize(string clientName, Version remoteApiVersion)
-        {
-            try
-            {
-                if (!TryToConnect())
-                    return RemoteServiceResult.CONNECTION_DENIED;
-
-                return prxy.RemoteChannel.Initialize("VoiceAttack", RemoteServiceContract.RemoteApiVersion);
-            }
-            catch (Exception ex)
-            {
-                return RemoteServiceResult.CONNECTION_DENIED;
-            }
-        }
-
-        
     }
 
     public static class EnvironmentEx
