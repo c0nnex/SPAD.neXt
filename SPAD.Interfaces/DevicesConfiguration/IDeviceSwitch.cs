@@ -31,6 +31,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool MustHaveCondition { get; }
         bool HasDisplayName { get; }
         bool CanChangeBehavior { get; }
+        bool CanChangeTunerAccelleration { get; }
         bool CanChangeIgnorePower { get;  }
         Guid SingletonID { get; }
         bool CanRename { get;  } 
