@@ -43,7 +43,7 @@ namespace SPAD.neXt.Interfaces.Events
         string Trigger { get; set; }
         int Priority { get; }
         bool IgnorePowerState { get; }
-        bool IgnoreAccelleration { get; }
+        bool EnableAcceleration { get; }
         ISPADBaseEvent BaseEvent { get; }
         InputModifier InputBehavior { get; set; }
         IDeviceProfile DeviceProfile { get;  }
