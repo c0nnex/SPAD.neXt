@@ -26,8 +26,8 @@ namespace SPAD.neXt.Interfaces.Events
         bool OneTime { get; set; }
         int RangeFrom { get; set; }
         int RangeTo { get; set; }
-        int MapFrom { get; set; }
-        int MapTo { get; set; }
+        float MapFrom { get; set; }
+        float MapTo { get; set; }
         bool UseMapping { get; set; }
         bool SendRaw { get; set; }
     }

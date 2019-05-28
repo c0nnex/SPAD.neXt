@@ -68,7 +68,7 @@ namespace SPAD.neXt.Interfaces.Events
         void ForceUpdate(string dataRef,bool doMonitor);
         void SetValue(string dataRef, double newValue);
         void ExecuteCommand(string commandRef, uint parameter);
-
+        void SendMessage(string message);
         void Stop();
     }
 
@@ -97,6 +97,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         void EventCallback(object callbackvalue);
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SCOPE_SESSION, double defaultValue = 0);
+
+        void SendMessage(string message);
     }
 
     public interface ITransparentValueProvider

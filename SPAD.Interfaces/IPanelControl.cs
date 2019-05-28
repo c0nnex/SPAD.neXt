@@ -69,6 +69,17 @@ namespace SPAD.neXt.Interfaces
         IProfileEventProvider ProfileEventProvider { get; }
 
         void ApplicationReady(BooleanEventArgs e);
+
+        bool CreateDocumentation(IPanelDocumentation docProxy);
+    }
+
+    public interface IPanelDocumentation
+    {
+        void AddPageBreak();
+        void AddSection(string heading);
+        void AddParagraph(string text, string style = null);
+        void AddImage(string filename);
+        void AddEventDocumentation(ISPADBaseEvent evt);
     }
 
     public interface IProfileEventProvider

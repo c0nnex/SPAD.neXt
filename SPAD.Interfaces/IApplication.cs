@@ -79,6 +79,8 @@ namespace SPAD.neXt.Interfaces
         IDataDefinition CreateDataDefinition(string provider, string name, string key, string access, string normalizer, string description, string category, string subcategory, bool selectable, double correctionFactor, float espilon);
         IDataDefinition CreateDataDefinition(IValueProvider provider, string name, string globalName);
         IDataDefinition CreateControlDefinition(IValueProvider provider, string name, string globalName);
+        void ClearDataDefinitions(IValueProvider provider);
+        IDataDefinition RemoveDataDefinition(IValueProvider provider, string id);
 
         IDataDefinitions CreateDataDefinitions(SPADDefinitionTypes id, StreamReader inputReader);
         void AddDataDefinition(SPADDefinitionTypes definitionType, IDataDefinition item, bool batch = false);
@@ -104,8 +106,8 @@ namespace SPAD.neXt.Interfaces
         void OnSimulationConnected(IValueProvider provider);
 
         Stream GetConfigurationFile(string filename);
-        T ReadXMLConfigurationFile<T>(string filename);
-        T ReadJSONConfigurationFile<T>(string filename);
+        T ReadXMLConfigurationFile<T>(string filename) where T : class, new();
+        T ReadJSONConfigurationFile<T>(string filename) where T : class, new();
 
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
