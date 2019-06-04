@@ -9,13 +9,14 @@ namespace SPAD.neXt.Interfaces.Profile
 
     public interface IExtensionProfileOption
     {
-        string Key { get; }
+//        string Key { get; }
         int Order { get; }
         bool Restart { get; }
         string ValueString { get; set; }
         string DefaultValueString { get; }
         bool Hidden { get; set; }
         string ConfigurationClass { get; set; }
+        string ConfigurationName { get; set; }
         string DependsOn { get; set; }
         string OptionGroup { get; set; }
         IReadOnlyList<string> Choices { get; }

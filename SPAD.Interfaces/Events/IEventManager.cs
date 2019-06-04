@@ -38,6 +38,12 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IObserverTicket
     {
+        Guid ID { get; }
+        string EventName { get; }
+        string SubscriptionID { get; }
+        int Priority { get; }
+        string CustomData { get; set; }
+
         void Dispose();
     }
 

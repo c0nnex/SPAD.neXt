@@ -15,6 +15,8 @@ namespace SPAD.neXt.Interfaces.Configuration
     {
         IProfileOption AddOption(string key, Interfaces.Profile.ProfileOptionTypes type, string defaultValue, bool needrestart = false, bool editable = false, bool hidden = false,string groupName="Other");
         IProfileOption GetOption(string key);
+        List<IProfileOption> GetOptions(string startWith);
+        bool HasOption(string key);
         void SetOption(string key, string value);
     }
 
