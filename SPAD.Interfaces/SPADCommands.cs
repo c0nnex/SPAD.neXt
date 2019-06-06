@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand changeLabelCommand = new RoutedCommand("SPAD_neXt.ChangeLabel", typeof(SPADCommands));
         private static RoutedCommand doNothingCommand = new RoutedCommand("SPAD_neXt.DoNothing", typeof(SPADCommands));
         private static RoutedCommand notImplementedCommand = new RoutedCommand("SPAD_neXt.NotImplmented", typeof(SPADCommands));
+        private static RoutedCommand switchSettingsCommand = new RoutedCommand("SPAD_neXt.SwitchSettings", typeof(SPADCommands));
 
         private static RoutedCommand profileActivateCommand = new RoutedCommand("SPAD_neXt.Profile_Activate", typeof(SPADCommands));
         private static RoutedCommand profileCreateNewCommand = new RoutedCommand("SPAD_neXt.Profile_CreateNew", typeof(SPADCommands));
@@ -107,7 +108,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand OnlineActionCommand { get { return onlineActionCommand; } }
         public static RoutedCommand ChangeLabelCommand { get { return changeLabelCommand; } }
         public static RoutedCommand DoNothingCommand { get { return doNothingCommand; } }
-
+        public static RoutedCommand SwitchSettingsCommand => switchSettingsCommand;
         public static RoutedCommand CopyThisCommand { get { return _CopyThisCommand; } }
         public static RoutedCommand CopyAllCommand { get { return _CopyAllCommand; } }
         public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }

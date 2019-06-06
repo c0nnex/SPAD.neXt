@@ -29,7 +29,7 @@ namespace SPAD.neXt.Interfaces
         void UpdatePanelVariable(string name, double value);
         double GetPanelVariable(string name);
 
-        void NavigateToSettings();
+        void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
 
         void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
