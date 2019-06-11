@@ -64,6 +64,7 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand _EmulateCommand = new RoutedCommand("SPAD_neXt.Emulate", typeof(SPADCommands));
         private static RoutedCommand _RemoteEventCommand = new RoutedCommand("SPAD_neXt.Remote", typeof(SPADCommands));
         private static RoutedCommand _SendMessageCommand = new RoutedCommand("SPAD_neXt.Message", typeof(SPADCommands));
+        private static RoutedCommand _RunProgramCommand = new RoutedCommand("SPAD_neXt.RunProgram", typeof(SPADCommands));
 
         public static RoutedCommand CommandDevicePowerON { get { return devicePowerONCommand; } }
         public static RoutedCommand CommandDevicePowerOFF { get { return devicePowerOFFCommand; } }
@@ -74,6 +75,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandEmulate { get { return _EmulateCommand; } }
         public static RoutedCommand CommandRemoteEvent { get { return _RemoteEventCommand; } }
         public static RoutedCommand CommandSendMessage { get { return _SendMessageCommand; } }
+        public static RoutedCommand CommandRunProgram { get { return _RunProgramCommand; } }
 
         private static List<RoutedCommand> _ExposedCommands = new List<RoutedCommand>();
         public static IEnumerable<RoutedCommand> ExposedCommands
@@ -91,6 +93,7 @@ namespace SPAD.neXt.Interfaces
             _ExposedCommands.Add(CommandEmulate);
             _ExposedCommands.Add(CommandRemoteEvent);
             _ExposedCommands.Add(CommandSendMessage);
+            _ExposedCommands.Add(CommandRunProgram);
         }
 
         /// <summary>
