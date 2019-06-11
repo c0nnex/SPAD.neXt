@@ -416,6 +416,7 @@ namespace SPAD.neXt.Interfaces
         public const string ProviderStatus = "Provider.Status";
         public const string CDUAvailable = "SPAD_CDUAvailable";
         public const string RequestAttention = "SPAD.RequestAttention";
+        public const string ExtractXplane = "SPAD.ExtractXplane";
     }
     public static class OptionNames
     {
