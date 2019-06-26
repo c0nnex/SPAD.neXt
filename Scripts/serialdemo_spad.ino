@@ -45,8 +45,8 @@ void onUnknownCommand()
 {
   messenger.sendCmdStart(kDebug);
   messenger.sendCmdArg("UNKNOWN COMMAND");
-  messenger.sendCmdArg(messenger.lastCommandId);
-  messenger.sendCmdArg(messenger.commandBuffer);
+//  messenger.sendCmdArg(messenger.lastCommandId);
+//  messenger.sendCmdArg(messenger.commandBuffer);
   messenger.sendCmdEnd();
 }
 
@@ -56,7 +56,7 @@ void onIdentifyRequest()
 {
   char *szRequest = messenger.readStringArg();
 
-  if (stricmp(szRequest, "INIT") == 0) {
+  if (strcmp(szRequest, "INIT") == 0) {
     messenger.sendCmdStart(kRequest);
     messenger.sendCmdArg("SPAD");
     // Unique Device ID
@@ -67,14 +67,14 @@ void onIdentifyRequest()
     return;
   }
 
-  if (stricmp(szRequest, "PING") == 0) {
+  if (strcmp(szRequest, "PING") == 0) {
     messenger.sendCmdStart(kRequest);
     messenger.sendCmdArg("PONG");
     messenger.sendCmdArg(messenger.readInt32Arg());
     messenger.sendCmdEnd();
     return;
   }
-  if (stricmp(szRequest, "CONFIG") == 0) {
+  if (strcmp(szRequest, "CONFIG") == 0) {
 
     // Expose LED
     messenger.sendCmdStart(kCommand);
