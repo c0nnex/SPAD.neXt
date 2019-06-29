@@ -29,6 +29,9 @@ enum
   kHeading = 11, // CMDID for data updates from SPAD.neXt
 };
 
+int lastLedState = 999;
+bool isReady = false;
+
 void attachCommandCallbacks()
 {
   // Attach callback methods
@@ -43,11 +46,7 @@ void attachCommandCallbacks()
 // Called when a received command has no attached function
 void onUnknownCommand()
 {
-  messenger.sendCmdStart(kDebug);
-  messenger.sendCmdArg("UNKNOWN COMMAND");
-//  messenger.sendCmdArg(messenger.lastCommandId);
-//  messenger.sendCmdArg(messenger.commandBuffer);
-  messenger.sendCmdEnd();
+  messenger.sendCmd(kDebug,"UNKNOWN COMMAND"); 
 }
 
 // Callback function to respond to indentify request. This is part of the
@@ -96,6 +95,7 @@ void onIdentifyRequest()
 
     // tell SPAD.neXT we are done with config
     messenger.sendCmd(kRequest, "CONFIG");
+    isReady = true;
     return;
   }
 }
@@ -164,4 +164,13 @@ void loop()
 {
   // Process incoming serial data, and perform callbacks
   messenger.feedinSerialData();
+
+  // Update Led-Data on SPAD.neXt
+  int ledVal = digitalRead(ledPin);
+  if ((ledVal != lastLedState) && isReady)
+  {
+     lastLedState = ledVal;
+     messenger.sendCmd(kLed,ledVal);
+  }
+ 
 }
