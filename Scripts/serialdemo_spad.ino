@@ -2,6 +2,8 @@
 
 // This example shows how to autoconnect between the SPAD.neXt and Arduino.
 //
+// SPAD.neXt >= 0.9.7.3 required
+//
 // It demonstrates how to
 // - Respond to a connection request from SPAD.neXt
 // - Use a identifier to handshake
@@ -11,7 +13,7 @@
 #include <CmdMessenger.h>  // CmdMessenger
 
 // Internal led
-const int ledPin = 13;
+const int ledPin = LED_BUILTIN;
 
 // Listen on serial connection for messages from the pc
 CmdMessenger messenger(Serial);
@@ -58,7 +60,7 @@ void onIdentifyRequest()
   if (strcmp(szRequest, "INIT") == 0) {
     messenger.sendCmdStart(kRequest);
     messenger.sendCmdArg("SPAD");
-    // Unique Device ID
+    // Unique Device ID: Change this!
     messenger.sendCmdArg(F("{DD7E3826-E439-4484-B186-A1443F3BC521}"));
     // Device Name for UI
     messenger.sendCmdArg("Arduino Demo");
@@ -96,6 +98,9 @@ void onIdentifyRequest()
     // tell SPAD.neXT we are done with config
     messenger.sendCmd(kRequest, "CONFIG");
     isReady = true;
+
+	// Make sure led is turned off and SPAD.neXt gets the value
+	setLED( LOW);
     return;
   }
 }
@@ -106,12 +111,17 @@ void onTurnLedOn()
   int32_t newLed = messenger.readInt32Arg();
   if (newLed == 1)
   {
-    digitalWrite(ledPin, HIGH);
+    setLED( HIGH);
     messenger.sendCmd(kDebug, "LED COMMAND ON");
+
+	// For Demo Purpose:
+	// If we received a LED ON command, we set the heading in the sim to 180
+	messenger.sendCmd(kHeading,180);
+
   }
   else
   {
-    digitalWrite(ledPin, LOW);
+    setLED( LOW);
     messenger.sendCmd(kDebug, "LED COMMAND OFF");
 
     // When we turned it off we unsubscribe from the heading lock for demo purpose
@@ -129,22 +139,32 @@ void onHeadingLockChanged()
   int32_t newHeading = messenger.readInt32Arg();
   if (newHeading > 180)
   {
-    digitalWrite(ledPin, HIGH);
+    setLED( HIGH);
     messenger.sendCmd(kDebug, "HEADING > 180");
   }
   else
   {
-    digitalWrite(ledPin, LOW);
+    setLED( LOW);
     messenger.sendCmd(kDebug, "HEADING < 180");
   }
 }
 
+// Update system LED and post state back to SPAD.neXt
+void setLED(int ledVal)
+{
+	digitalWrite(ledPin,ledVal);
+	// Update Led-Data on SPAD.neXt
+	if ((ledVal != lastLedState) && isReady)
+	{
+		lastLedState = ledVal;
+		messenger.sendCmd(kLed,ledVal);
+	}
+}
 // ------------------ M A I N  ----------------------
 
 // Setup function
 void setup()
 {
-  // Listen on serial connection for messages from the pc
 
   // 115200 is typically the maximum speed for serial over USB
   Serial.begin(115200);
@@ -155,8 +175,8 @@ void setup()
   // initialize the digital pin as an output.
   pinMode(ledPin, OUTPUT);
 
-  // Make sure led is turned off after start or reset
-  digitalWrite(ledPin, LOW);
+  // Turn LED on, will be turned off when connection to SPAD.neXt it up and running
+  setLED( HIGH);
 }
 
 // Loop function
@@ -165,12 +185,4 @@ void loop()
   // Process incoming serial data, and perform callbacks
   messenger.feedinSerialData();
 
-  // Update Led-Data on SPAD.neXt
-  int ledVal = digitalRead(ledPin);
-  if ((ledVal != lastLedState) && isReady)
-  {
-     lastLedState = ledVal;
-     messenger.sendCmd(kLed,ledVal);
-  }
- 
 }
