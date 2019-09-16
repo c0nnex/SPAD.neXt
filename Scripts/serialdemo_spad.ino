@@ -2,7 +2,7 @@
 
 // This example shows how to autoconnect between the SPAD.neXt and Arduino.
 //
-// SPAD.neXt >= 0.9.7.3 required
+// SPAD.neXt >= 0.9.7.5 required
 //
 // It demonstrates how to
 // - Respond to a connection request from SPAD.neXt
@@ -27,6 +27,7 @@ enum
   kCommand = 1, // Command to SPAD.neXt
   kEvent = 2, // Events from SPAD.neXt
   kDebug = 3, // Debug strings to SPAD.neXt Logfile
+  kSimCommand = 4, // Send Event to Simulation
   kLed = 10, // CMDID for exposed data to SPAD.neXt
   kHeading = 11, // CMDID for data updates from SPAD.neXt
 };
@@ -117,6 +118,11 @@ void onTurnLedOn()
 	// For Demo Purpose:
 	// If we received a LED ON command, we set the heading in the sim to 180
 	messenger.sendCmd(kHeading,180);
+
+	// New in 0.9.7.5
+	// For Demo purpose:
+	// Send FLAPS_UP command to simulation
+	messenger.sendCmd(kSimCommand,"SIMCONNECT:FLAPS_UP");
 
   }
   else
