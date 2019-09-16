@@ -28,7 +28,8 @@ namespace SPAD.neXt.Interfaces
         string Name { get; }
         string PanelName { get; }
         int SubPanelID { get; }
-        
+        int DefaultSortOrder { get; }
+
         Guid ID { get; }
 
         IPanelControl CreateControl();

@@ -9,7 +9,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
     public interface IExtensionProfileOption
     {
-//        string Key { get; }
+        //        string Key { get; }
         int Order { get; }
         bool Restart { get; }
         string ValueString { get; set; }
@@ -17,6 +17,9 @@ namespace SPAD.neXt.Interfaces.Profile
         bool Hidden { get; set; }
         string ConfigurationClass { get; set; }
         string ConfigurationName { get; set; }
+
+        List<ExtensionConfigurationEvent> ConfigurationEvents { get; set; }
+
         string DependsOn { get; set; }
         string OptionGroup { get; set; }
         IReadOnlyList<string> Choices { get; }
@@ -24,4 +27,15 @@ namespace SPAD.neXt.Interfaces.Profile
         void AddChoice(string choice);
         void SetDirty();
     }
+
+    public class ExtensionConfigurationEvent
+    {
+        public string EventName { get; set; }
+        public string EventTrigger { get; set; }
+        public object EventValue { get; set; }
+        public string EventDisplayName { get; set; }
+        public Func<bool> IsEnabled { get; set; } = () => true;
+        public Func<bool> IsVisible { get; set; } = () => true;
+    }
+
 }

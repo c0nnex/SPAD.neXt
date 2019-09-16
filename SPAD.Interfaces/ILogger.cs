@@ -56,7 +56,9 @@ namespace SPAD.neXt.Interfaces.Logging
         //     A value of true if logging is enabled for the Warn level, otherwise it returns
         //     false.
          bool IsWarnEnabled { get; }
-        
+
+        string Name { get; }
+
         void Trace(string message, params object[] args);
         void Debug(string message, params object[] args);
         void Info(string message, params object[] args);
