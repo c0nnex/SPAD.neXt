@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Profile;
+﻿using SPAD.neXt.Interfaces.Logging;
+using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,6 +55,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public sealed class SPADEventArgs : HandledEventArgs, ISPADEventArgs
     {
+        private ILogger logger = null;
 
         public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -118,6 +120,7 @@ namespace SPAD.neXt.Interfaces.Events
         public EventPriority EventPriority { get; set; } = EventPriority.Low;
         public EventSeverity EventSeverity { get; set; } = EventSeverity.Verbose;
         private SPADEventArgs() { }
+        private readonly ulong CreationTimeStamp = EnvironmentEx.TickCount64;
 
         public SPADEventArgs(string eventName)
         {
@@ -220,6 +223,12 @@ namespace SPAD.neXt.Interfaces.Events
             return this;
         }
 
+        public SPADEventArgs WithLogger(ILogger logger)
+        {
+            this.logger = logger;
+            return this;
+        }
+
         public T GetData<T>(string key, T defaultValue = default(T))
         {
             try
@@ -255,6 +264,10 @@ namespace SPAD.neXt.Interfaces.Events
             if ((provider != null) && (CallbackValue != null))
             {
                 provider.EventCallback(CallbackValue);
+            }
+            if (logger != null)
+            {
+                logger.Debug($"EventHandling done in {EnvironmentEx.TickCount64 - CreationTime} ms {this.ToString()}");
             }
         }
 

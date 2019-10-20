@@ -17,6 +17,7 @@ namespace SPAD.neXt.Interfaces.Events
         IEventAction CreateAction(string action);
         IEventConditionSimple CreateCondition();
         IEventConditionSimple CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue);
+        IEventCondition CreateEventCondition();
         IEventDefinitions CreateEventDefinitions(string boundTo);
 
         Type[] GetExtraSerializationTypes();
@@ -77,7 +78,10 @@ namespace SPAD.neXt.Interfaces.Events
         {
             return EventSystemHandler.CreateCondition();
         }
-
+        public static IEventCondition CreateEventCondition()
+        {
+            return EventSystemHandler.CreateEventCondition();
+        }
         public static IDataDefinition CreateNewLocal(string name, string displaynormalizer)
         {
             return EventSystemHandler.CreateNewLocal(name, displaynormalizer);

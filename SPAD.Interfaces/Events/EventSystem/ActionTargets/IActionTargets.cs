@@ -43,7 +43,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventActionChangeValue : IEventAction,IEventActionMonitor
     {
-        double Value { get; set; }
+        object Value { get; set; }
         SPADValueOperation ValueOperation { get; set; }
 
         bool UseTriggerValue { get; set; }

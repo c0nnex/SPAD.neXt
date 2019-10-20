@@ -9,10 +9,10 @@ namespace SPAD.neXt.Interfaces
     public interface ISpecificOptions
     {
         Guid ID { get; }
-        double GetVariable(string variableName);
-        void UpdateVariable(string variableName, double value);
+        object GetVariable(string variableName);
+        void UpdateVariable(string variableName, object value);
         bool HasVariable(string variableName);
-        void AddVariable(string variableName, double value, bool overwriteExisting = false);
+        void AddVariable(string variableName, object value, bool overwriteExisting = false);
         void Save();
     }
 }

@@ -162,6 +162,11 @@ namespace SPAD.neXt.Interfaces
         OR
     }
 
+    public enum SPADConditionType
+    {
+        CONDITION,
+        EVENT
+    }
 
     public enum SPADColors
     {
@@ -281,12 +286,12 @@ namespace SPAD.neXt.Interfaces
     [Flags]
     public enum VARIABLE_SCOPE
     {
-        SCOPE_SESSION,
-        SCOPE_PROFILE,
-        SCOPE_GAUGE,
-        SCOPE_DEVICE,
-        SCOPE_EVENT,
-        SCOPE_ANY = VARIABLE_SCOPE.SCOPE_GAUGE | VARIABLE_SCOPE.SCOPE_PROFILE | VARIABLE_SCOPE.SCOPE_SESSION | VARIABLE_SCOPE.SCOPE_DEVICE,
+        SESSION,
+        PROFILE,
+        GAUGE,
+        DEVICE,
+        EVENT,
+        SCOPE_ANY = VARIABLE_SCOPE.GAUGE | VARIABLE_SCOPE.PROFILE | VARIABLE_SCOPE.SESSION | VARIABLE_SCOPE.DEVICE,
     }
 
     public enum APPLICATION_DIRECTORY
@@ -403,6 +408,7 @@ namespace SPAD.neXt.Interfaces
         public const string UpdateVariable = "__UPDATEVAR__";
         public const string ActiveWindow = "__ACTIVEWINDOW__";
         public const string FSXMainWindow = "FS98MAIN";
+        public const string XPlaneMainWindow = "__XPLANEWINDOW__";
         public const string ModeChanged = "__MODECHANGED__";
         public const string ModeReport = "__MODEREPORT__";
     }
@@ -417,6 +423,7 @@ namespace SPAD.neXt.Interfaces
         public const string CDUAvailable = "SPAD_CDUAvailable";
         public const string RequestAttention = "SPAD.RequestAttention";
         public const string ExtractXplane = "SPAD.ExtractXplane";
+        public const string ProfileLoaded = "SPAD.ProfileLoaded";
     }
     public static class OptionNames
     {

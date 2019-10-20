@@ -66,7 +66,10 @@ namespace SPAD.neXt.Interfaces
             {
                 return  (T)Enum.Parse(value.GetType(), valIn,true);
             }
-            catch { return default(T); }
+            catch (Exception ex)
+            {
+                return default(T);
+            }
         }
 
         public static T SetFlag<T>(this Enum value, T flag)

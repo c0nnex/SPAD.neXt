@@ -72,7 +72,7 @@ namespace SPAD.neXt.Interfaces
 
         bool RegisterValueProvider(string tag, IValueProvider provider);
         bool RegisterExternalValueProvider(IValueProvider provider);
-        bool UnregisterValueProvider(IValueProvider provider);
+        bool UnregisterValueProvider(string tag,IValueProvider provider);
         IEnumerable<IValueProviderInfomation> GetRegisteredValueProviders();
         IValueProvider GetValueProvider(string tag);
 

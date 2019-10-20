@@ -73,6 +73,11 @@ namespace SPAD.neXt.Interfaces.Events
         bool Evaluate(ISPADEventArgs e);
     }
 
+    public interface IEventEventCondition : IEventCondition
+    {
+        string BoundEvent { get; set; }
+    }
+
     public interface IEventConditionExpression : ICloneable<IEventConditionExpression>,IEventCondition,IIsMonitorable
     {
         string Expression { get; set; }
@@ -136,6 +141,7 @@ namespace SPAD.neXt.Interfaces.Events
         
         IDeviceProfile GetTargetDevice(IEventDefinition def);
         void SetEventValueCallback(string valueName,IEventValueCallback callback);
+        void SetEventTargetCallback(string targetName, IEventTargetCallback callback);
     }
 
     public interface IEventValueCallback
@@ -143,6 +149,10 @@ namespace SPAD.neXt.Interfaces.Events
         object GetEventValue(string name);
     }
 
+    public interface IEventTargetCallback
+    {
+        string GetEventTargetName(string name);
+    }
 
     public interface IEventContext
     {

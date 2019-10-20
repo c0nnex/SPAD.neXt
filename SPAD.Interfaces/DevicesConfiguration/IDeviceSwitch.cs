@@ -29,6 +29,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string ActionTarget { get; }
         bool Selectable { get; }
         bool MustHaveCondition { get; }
+        SPADConditionType ConditionType { get; }
         bool HasDisplayName { get; }
         bool CanChangeBehavior { get; }
         bool CanChangeTunerAcceleration { get; }

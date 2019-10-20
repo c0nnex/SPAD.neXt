@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace SPAD.neXt.Interfaces.Events
 {
-    public interface IProgrammableButton 
+    public interface IProgrammableButton : INotifyPropertyChanged
     {
         event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOn;
         event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOff;
@@ -24,6 +24,7 @@ namespace SPAD.neXt.Interfaces.Events
         PROGRAMMABLEBUTTONSTATUS CurrentMode { get; }
         PROGRAMMABLEBUTTONSTATUS DefaultMode { get; set; }
         Visibility CurrentUIState { get; set; }
+        Visibility CurrentUIStateInverted { get; set; }
         object Data { get; }
         bool IsOff { get; set; }
         bool LEDIsOn { get; }

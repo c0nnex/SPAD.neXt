@@ -10,7 +10,7 @@ namespace SPAD.neXt.Interfaces.Configuration
     {
         string Name { get;  }
         string DisplayName { get; }
-        double Value { get; }
+        object Value { get; }
         VARIABLE_SCOPE Scope { get; }
         bool IsMonitored { get; }
         bool IsReadOnly { get; }

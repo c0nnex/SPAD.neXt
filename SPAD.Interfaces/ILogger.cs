@@ -69,6 +69,8 @@ namespace SPAD.neXt.Interfaces.Logging
         void WarnWithNotification(string message, params object[] args);
         void WarnWithNotificationIf(bool doNotify, Func<string> p);
         void WarnWithNotificationIf(bool doNotify, string message, params object[] args);
+        void WarnWithNotificationIfOnce(bool doNotify,string tag, Func<string> p);
+        void WarnWithNotificationIfOnce(bool doNotify, string tag, string message, params object[] args);
         void ErrorWithNotification(string message, params object[] args);
 
 

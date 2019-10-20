@@ -59,7 +59,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string Name { get; set; }
         IValueNormalizer Normalizer { get; }
         string OffsetMode { get; set; }
-        string ProviderName { get; }
+        string ProviderName { get; set; }
         bool Selectable { get; set; }
         int Size { get; set; }
         string SortID { get; }
@@ -73,12 +73,12 @@ namespace SPAD.neXt.Interfaces.Configuration
         SPADDefinitionTypes DefinitionType { get; set; }
         int DefinitionKey { get; }
         string SearchKey { get; }
-        IValueProvider ValueProvider { get; }
+        IValueProvider ValueProvider { get; set; }
         IDataDefinition LinkedDataDefinition { get; }
         IValueRange Range { get; }
 
-        long DataIndex { get; }
-
+        ushort DataIndex { get; }
+        bool IsProviderDataDefinition { get;  }
         object Clone();
         IEnumerable<string> GetIDs();
         bool HasAlternateUnits { get; }

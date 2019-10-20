@@ -55,6 +55,7 @@ namespace SPAD.neXt.Interfaces
         void SetApplicationExtension(IExtension ext);
         void SetSubPanelID(int subPanelID);
 
+        string GetPanelVariableSuffix();
         IReadOnlyList<string> GetPanelVariables();
         bool AllowExternalVariableChange(string varName);
         void MonitoredChanged(string varName, bool isMonitored);
