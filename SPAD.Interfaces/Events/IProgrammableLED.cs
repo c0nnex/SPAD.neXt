@@ -41,7 +41,7 @@ namespace SPAD.neXt.Interfaces.Events
         void ModeOn(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeToggle(PROGRAMMABLEBUTTONSTATUS whichMode);
         void Reset();
-        void SetMode(PROGRAMMABLEBUTTONSTATUS newMode);
+        bool SetMode(PROGRAMMABLEBUTTONSTATUS newMode);
         CancellationTokenSource StartWaiting();
         void StopWaiting();
         bool UpdateSequence();

@@ -291,6 +291,8 @@ namespace SPAD.neXt.Interfaces
         GAUGE,
         DEVICE,
         EVENT,
+        PRIVATE,
+        DONOTUSE,
         SCOPE_ANY = VARIABLE_SCOPE.GAUGE | VARIABLE_SCOPE.PROFILE | VARIABLE_SCOPE.SESSION | VARIABLE_SCOPE.DEVICE,
     }
 

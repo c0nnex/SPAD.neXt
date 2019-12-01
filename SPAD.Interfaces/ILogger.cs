@@ -79,6 +79,7 @@ namespace SPAD.neXt.Interfaces.Logging
         void Debug(Func<string> p);
     }
 
+
     public enum SPADLogLevel
     {
         None = 0,
