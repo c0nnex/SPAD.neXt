@@ -86,6 +86,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsPaused { get; }    
         bool IsVisible { get; }
         bool IsConnected { get; }
+        string ExtraStatusInformation { get; }
 
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
