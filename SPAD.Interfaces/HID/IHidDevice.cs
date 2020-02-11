@@ -59,10 +59,6 @@ namespace SPAD.neXt.Interfaces.HID
 
     public interface IHidDevice : IDisposable,IUSBDevice
     {
-        
-
-        event InsertedEventHandler Inserted;
-        event RemovedEventHandler Removed;
 
         SafeFileHandle Handle { get; }
         bool IsOpen { get; }
@@ -70,7 +66,6 @@ namespace SPAD.neXt.Interfaces.HID
         bool IsConnected { get; }
         IHidDeviceCapabilities Capabilities { get; }
         IHidDeviceAttributes Attributes { get;  }
-        bool MonitorDeviceEvents { get; set; }
 
         void OpenDevice();
 

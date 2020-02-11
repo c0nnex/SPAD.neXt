@@ -60,6 +60,7 @@ namespace SPAD.neXt.Interfaces
         IArchive OpenArchive(string archivename);
         IReadOnlyList<IOnlineGauge> GetGauges(DateTime limes);
         IOnlineGaugeData DownloadGauge(string id);
+        IGaugeVersionInformation GetGaugeVersionInformation(Guid gaugeId);
 
         void AddResource(string key, string value);
         IDeviceSwitchConfiguration GetSwitchConfiguration(string key);

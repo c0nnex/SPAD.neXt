@@ -29,6 +29,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsRegisteredVariable(string tag);
         IMonitorableValue GetRegisteredVariable(string tag);
         IMonitorableValue CreateMonitorableValue(string Name, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
+        void RemoveRegisteredVariable(string variableName, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION);
     }
 
     public interface IEventHandler
@@ -64,6 +65,7 @@ namespace SPAD.neXt.Interfaces.Events
         string Name { get; }
         string DisplayName { get; }
         string Information { get; }
+        string StatusInformation { get; }
         IValueProvider Provider { get; }
         bool IsVisible { get;  }
         bool IsConnected { get; }
@@ -104,7 +106,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         void EventCallback(object callbackvalue);
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
-
+        void RemoveDynamic(string name,VARIABLE_SCOPE scope);
         void SendMessage(string message);
     }
 
@@ -161,7 +163,7 @@ namespace SPAD.neXt.Interfaces.Events
         double MinimumChange { get; }
         bool IsDisposed { get; }
         VARIABLE_SCOPE Scope { get; set; }
-        ValueDataTypes ValueDataType { get; }
+        ValueDataTypes ValueDataType { get; set; }
         IValueProvider ValueProvider { get; }
         IValueNormalizer ValueNormalizer { get; }
         IDataDefinition DataDefinition { get; }

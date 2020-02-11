@@ -47,7 +47,7 @@ namespace SPAD.neXt.Interfaces.Events
         ISPADBaseEvent BaseEvent { get; }
         InputModifier InputBehavior { get; set; }
         IDeviceProfile DeviceProfile { get;  }
-
+        
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void ForceEvaluation();
         bool Activate(ISPADBaseEvent baseEvent);
@@ -55,6 +55,8 @@ namespace SPAD.neXt.Interfaces.Events
         void Execute(ISPADEventArgs e, bool force = false);
         void SetBinding(string boundTo);
         void SetDisplayName(string displayNameResource);
+        void SetVariableNameTransformFunc(Func<IEventDefinition, string, string> transformFunc);
+        string TransformVariableName(string varName);
 
         // Creating new actions
         void AddAction(IEventAction action, bool singleton = true);

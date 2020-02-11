@@ -283,7 +283,6 @@ namespace SPAD.neXt.Interfaces
         SPAD
     }
 
-    [Flags]
     public enum VARIABLE_SCOPE
     {
         SESSION,
@@ -293,7 +292,6 @@ namespace SPAD.neXt.Interfaces
         EVENT,
         PRIVATE,
         DONOTUSE,
-        SCOPE_ANY = VARIABLE_SCOPE.GAUGE | VARIABLE_SCOPE.PROFILE | VARIABLE_SCOPE.SESSION | VARIABLE_SCOPE.DEVICE,
     }
 
     public enum APPLICATION_DIRECTORY
