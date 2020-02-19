@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Gauge" nillable="true" type="Gauge" />
+  <xs:complexType name="Gauge">
+      <xs:choice maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Element" type="Element" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Template" type="Template" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Event" type="Event" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Mouse" type="Mouse" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Position" type="Position" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Image" type="GaugeImage" />
+          <xs:element minOccurs="0" maxOccurs="1" name="GaugeSettings" type="GaugeSettings" />
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" />
+        <xs:attribute name="Version" type="xs:string" />
+        <xs:attribute name="ArtDirectory" type="xs:string" />
+        <xs:attribute name="Enabled" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="ISerializationFixUp" abstract="true" />
+  <xs:complexType name="GaugeSettings">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ISerializationFixUp">
+        <xs:choice maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="1" name="Author" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Thumbnail" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Url" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ManualURL" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Font" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Sound" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Category" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Type" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Simulation" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DemoModeTimeLimit" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Buttons" type="ArrayOfButton" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Variables" type="ArrayOfVariable" />
+        </xs:choice>
+        <xs:attribute name="GaugeID" type="xs:string" />
+        <xs:attribute name="PowerMode" type="GaugePowerMode" />
+        <xs:attribute name="GaugeCompatibility" type="GaugeCompatibility" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Template">
+     <xs:choice maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Element" nillable="true" type="Element" />
+	  <xs:element minOccurs="0" maxOccurs="1" name="Visible" type="Visible" />
+	  <xs:element minOccurs="0" maxOccurs="1" name="TemplateElement" type="TemplateElement" />
+    </xs:choice>
+    <xs:attribute name="id" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfButton">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Button" nillable="true" type="Button" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Button">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Label" type="Label" />
+    </xs:sequence>
+    <xs:attribute name="BoundTo" type="ButtonBinding" use="required" />
+    <xs:attribute name="Event" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Label">
+    <xs:all>
+      <xs:element minOccurs="0" maxOccurs="1" name="Default" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CustomText" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DynamicText" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TextExpression" type="ValueDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TextFormat" type="LabelFormat" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Visible" type="Visible" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Color" type="LabelColor" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Position" type="Position" />
+	  <xs:element minOccurs="0" maxOccurs="1" name="Shift" type="Shift" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Size" type="Position" />
+    </xs:all>
+    <xs:attribute name="Font" type="xs:string" />
+    <xs:attribute name="FontSize" type="xs:float"  />
+    <xs:attribute name="FontStyle" type="FontStyle"  />
+  </xs:complexType>
+  <xs:complexType name="LabelFormat" mixed="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="IExpressionDefinition">
+        <xs:attribute name="HorizontalAlignment" type="LabelFormatMode" />
+        <xs:attribute name="VerticalAlignment" type="LabelFormatMode" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LabelColor">
+    <xs:all>
+	 <xs:element minOccurs="0" maxOccurs="1" name="ForegroundValue" type="ValueDefinition" />
+	 <xs:element minOccurs="0" maxOccurs="1" name="BackgroundValue" type="ValueDefinition" />
+	</xs:all>
+    <xs:attribute name="Background" type="xs:string" />
+    <xs:attribute name="Foreground" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Position">
+	<xs:all>
+	 <xs:element minOccurs="0" maxOccurs="1" name="XValue" type="ValueDefinition" />
+	 <xs:element minOccurs="0" maxOccurs="1" name="YValue" type="ValueDefinition" />
+	</xs:all>
+    <xs:attribute name="X" type="xs:float"  />
+    <xs:attribute name="Y" type="xs:float" />	
+  </xs:complexType>
+  <xs:complexType name="Axis">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Position">
+        <xs:attribute name="PointsTo" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="NonlinearityItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Position">
+        <xs:attribute name="Value" type="xs:double" />
+        <xs:attribute name="Degrees" type="xs:double"  />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="FontStyle">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Regular" />
+          <xs:enumeration value="Bold" />
+          <xs:enumeration value="Italic" />
+          <xs:enumeration value="Underline" />
+          <xs:enumeration value="Strikeout" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:simpleType name="ButtonBinding">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FIP_BUTTON_S1" />
+      <xs:enumeration value="FIP_BUTTON_S2" />
+      <xs:enumeration value="FIP_BUTTON_S3" />
+      <xs:enumeration value="FIP_BUTTON_S4" />
+      <xs:enumeration value="FIP_BUTTON_S5" />
+      <xs:enumeration value="FIP_BUTTON_S6" />
+      <xs:enumeration value="FIP_BUTTON_PAGEUP" />
+      <xs:enumeration value="FIP_BUTTON_PAGEDOWN" />
+      <xs:enumeration value="FIP_DIAL_RIGHT_CLOCKWISE" />
+      <xs:enumeration value="FIP_DIAL_RIGHT_COUNTERCLOCKWISE" />
+      <xs:enumeration value="FIP_DIAL_LEFT_CLOCKWISE" />
+      <xs:enumeration value="FIP_DIAL_LEFT_COUNTERCLOCKWISE" />
+      <xs:enumeration value="FIP_RIGHTDIAL_CLOCKWISE" />
+      <xs:enumeration value="FIP_RIGHTDIAL_COUNTERCLOCKWISE" />
+      <xs:enumeration value="FIP_LEFTDIAL_CLOCKWISE" />
+      <xs:enumeration value="FIP_LEFTDIAL_COUNTERCLOCKWISE" />
+    </xs:restriction>
+  </xs:simpleType>
+   <xs:simpleType name="VariableScope">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SESSION" />
+      <xs:enumeration value="GAUGE" />
+      <xs:enumeration value="PROFILE" />
+      <xs:enumeration value="DEVICE" />
+      <xs:enumeration value="PRIVATE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfVariable">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Variable" nillable="true" type="Variable" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Variable">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GaugeVariable">
+        <xs:attribute name="DisplayName" type="xs:string" />
+        <xs:attribute name="Description" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GaugeVariable">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Value" type="xs:string"  />
+	<xs:attribute name="Scope" type="VariableScope" />
+  </xs:complexType>
+  <xs:simpleType name="GaugePowerMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="AlwaysOn" />
+      <xs:enumeration value="NoData" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="GaugeCompatibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Saitek" />
+      <xs:enumeration value="ESP" />
+      <xs:enumeration value="SPAD" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="LabelFormatMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Far" />
+      <xs:enumeration value="Center" />
+      <xs:enumeration value="Near" />
+    </xs:restriction>
+  </xs:simpleType>  
+  <xs:complexType name="IExpressionDefinition" abstract="true">
+      <xs:simpleContent>
+        <xs:extension base="xs:string" />
+      </xs:simpleContent>
+  </xs:complexType>
+   <xs:complexType name="Visible" mixed="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="IExpressionDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Scale">
+    <xs:attribute name="X" type="xs:float"  />
+    <xs:attribute name="Y" type="xs:float"  />
+  </xs:complexType>
+  <xs:complexType name="ValueDefinition" mixed="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="IExpressionDefinition">
+        <xs:attribute name="Minimum" type="xs:float" />
+        <xs:attribute name="Maximum" type="xs:float"  />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ImageModifier" abstract="true">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ISerializationFixUp">
+        <xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfNonlinearityItem">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="NonlinearityItem" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="Shift">
+        <xs:all>
+          <xs:element minOccurs="0" maxOccurs="1" name="X" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Y" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="ValueDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Scale" type="Position" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DirectionVector" type="Position" />
+        </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Rotate">
+    <xs:all>
+          <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="ValueDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ImageRotationDegrees" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="1" name="currentAngle" type="xs:double" />
+        </xs:all>
+  </xs:complexType>
+  <xs:complexType name="GaugeImage">
+    <xs:all>
+          <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="ValueDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Axis" type="Axis" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DrawBorder" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IsEnabled" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IsVisible" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
+        </xs:all>
+        <xs:attribute name="PointsTo" type="ImageDirection"  />
+        <xs:attribute name="Name" type="xs:string" />
+        <xs:attribute name="ImageSizes" type="xs:string" />
+        <xs:attribute name="Alpha" type="xs:boolean" />
+        <xs:attribute name="Dynamic" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="ImageDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="East" />
+      <xs:enumeration value="South" />
+      <xs:enumeration value="West" />
+      <xs:enumeration value="North" />
+      <xs:enumeration value="Invalid" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="MaskImage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GaugeImage" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Element">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ISerializationFixUp">
+        <xs:all >
+          <xs:element minOccurs="0" maxOccurs="1" name="Position" type="Position" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Image" type="GaugeImage" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Rotate" type="Rotate" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaskImage" type="MaskImage" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Shift" type="Shift" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Visible" type="Visible" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IsVisible" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Label" type="Label" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TemplateElement" type="TemplateElement" />
+        </xs:all>
+        <xs:attribute name="id" type="xs:string" />
+        <xs:attribute name="Enabled" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Event">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ISerializationFixUp">
+        <xs:all >
+          <xs:element minOccurs="0" maxOccurs="1" name="Condition" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="EventActions" type="EventActions" />
+        </xs:all>
+        <xs:attribute name="id" type="xs:string" />
+        <xs:attribute name="Enabled" type="xs:boolean" />
+        <xs:attribute name="AlwaysActive" type="xs:boolean" />
+		<xs:attribute name="OnDemand" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TemplateElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Parameter" type="Parameter" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+	<xs:attribute name="DynamicId" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Parameter" mixed="true">
+    <xs:attribute name="id" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="EventActions">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EventAction" type="EventAction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BaseAction">
+    <xs:anyAttribute processContents="skip"/>
+  </xs:complexType>
+  <xs:complexType name="EventAction">
+    <xs:complexContent>
+      <xs:extension base="BaseAction">
+        <xs:attribute name="Type" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Mouse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Area" type="ArrayOfMouseEvent" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfMouseEvent">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Area" nillable="true" type="MouseEvent" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MouseEvent">
+    <xs:all>
+      <xs:element minOccurs="0" maxOccurs="1" name="Cursor" type="Cursor" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Click" type="ClickEvent" />
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Cursor">
+    <xs:attribute name="Type" type="CursorType" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="CursorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DownArrow" />
+      <xs:enumeration value="UpArrow" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ClickEvent">
+    <xs:attribute name="Event" type="xs:string" />
+    <xs:attribute name="Repeat" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

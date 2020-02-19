@@ -17,7 +17,7 @@ namespace SPAD.neXt.Interfaces.HID
         string Version { get; }
         string Description { get; set; }
         string InstanceId { get; }
-
+        bool SkipDevice { get; set; }
         Guid SessionDeviceID { get; }
         string DeviceKey { get; }
         string ProductIndex { get; }

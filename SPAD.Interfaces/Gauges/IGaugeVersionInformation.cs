@@ -2,6 +2,14 @@
 
 namespace SPAD.neXt.Interfaces.Gauges
 {
+
+    public enum GaugeVersionStatus
+    {
+        OK,
+        UPDATE_AVAILABLE,
+        OUTDATED
+    };
+
     public interface IGaugeVersionInformation
     {
         Version CurrentVersion { get; }

@@ -61,6 +61,7 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<IOnlineGauge> GetGauges(DateTime limes);
         IOnlineGaugeData DownloadGauge(string id);
         IGaugeVersionInformation GetGaugeVersionInformation(Guid gaugeId);
+        GaugeVersionStatus GetGaugeVersionStatus(Guid gaugeId, Version localVersion);
 
         void AddResource(string key, string value);
         IDeviceSwitchConfiguration GetSwitchConfiguration(string key);
