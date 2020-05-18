@@ -51,6 +51,8 @@ namespace SPAD.neXt.Interfaces.Events
         Double ValueMin { get; set; }
         Double ValueMax { get; set; }
         bool EnableRollOver { get; set; }
+
+
     }
 
     public interface IEventActionObserve : IEventAction

@@ -32,6 +32,7 @@ namespace SPAD.neXt.Interfaces
         bool IsListening { get; }
 
         bool OpenDevice();
+        void OpenHidDevice();
         void CloseDevice();
 
         void StartProcessing();

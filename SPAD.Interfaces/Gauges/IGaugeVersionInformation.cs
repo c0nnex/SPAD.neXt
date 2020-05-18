@@ -15,6 +15,7 @@ namespace SPAD.neXt.Interfaces.Gauges
         Version CurrentVersion { get; }
         Guid Guid { get; }
         string Name { get; }
-        string UpdateURL { get; }
+        string ManualUpdateURL { get; }
+        string AutomaticUpdateURL { get; }
     }
 }

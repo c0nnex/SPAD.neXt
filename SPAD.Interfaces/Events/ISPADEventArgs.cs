@@ -32,6 +32,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Immediate { get; set; }
         bool IsValueEvent { get; set; }
         bool IsCascadedEvent { get; set; }
+        bool IsDisplayEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
         UInt64 CreationTime { get; }
@@ -52,6 +53,11 @@ namespace SPAD.neXt.Interfaces.Events
         bool Handled { get; set; }
     }
 
+    public interface IAcceleratedEncoder
+    {
+        void Reset();
+        int GetAcceleration(double threshold, double timeout, double multiplier, double maxAcceleration);
+    }
 
     public sealed class SPADEventArgs : HandledEventArgs, ISPADEventArgs
     {
@@ -59,7 +65,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-        public static SPADEventArgs Empty = new SPADEventArgs();
+        public static new SPADEventArgs Empty = new SPADEventArgs();
         private static ulong EventMarkerCounter = 0;
         public string EventSwitch { get; set; }
         public string EventName { get; set; }
@@ -109,7 +115,7 @@ namespace SPAD.neXt.Interfaces.Events
         public bool IsCascadedEvent { get; set; }
 
         public object CallbackValue { get; set; }
-
+        public bool IsDisplayEvent { get; set; }
 
 
         public string AdditionalInfo { get; set; }

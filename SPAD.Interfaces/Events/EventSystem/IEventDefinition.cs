@@ -25,9 +25,16 @@ namespace SPAD.neXt.Interfaces.Events
         IEventDefinition CreateEvent(string trigger);
         IEventDefinition GetByID(Guid eventDefinitionID);
     }
+    public interface IEncoderAcceleration
+    {
+        Double Threshold { get; set; }
+        Double Timeout { get; set; }
+        Double Multiplier { get; set; }
+        Double Max { get; set; }
 
-   
-    public interface IEventDefinition : ICloneableWithID<IEventDefinition>
+    }
+
+    public interface IEventDefinition : IEventOptions,ICloneableWithID<IEventDefinition>
     {
         IEventActions Actions { get; }
         string BoundTo { get; }
@@ -44,6 +51,8 @@ namespace SPAD.neXt.Interfaces.Events
         int Priority { get; }
         bool IgnorePowerState { get; }
         bool EnableAcceleration { get; }
+        IEncoderAcceleration Acceleration { get; }
+
         ISPADBaseEvent BaseEvent { get; }
         InputModifier InputBehavior { get; set; }
         IDeviceProfile DeviceProfile { get;  }
@@ -116,7 +125,7 @@ namespace SPAD.neXt.Interfaces.Events
         void Execute(IEventDefinition definition, ISPADEventArgs e);
     }
 
-    public interface IEventAction : INotifyPropertyChanged , ICloneableWithID<IEventAction>
+    public interface IEventAction : INotifyPropertyChanged ,IEventOptions, ICloneableWithID<IEventAction>
     {
         IEventDefinition ParentEventDefinition { get; }
         SPADEventActions ActionID { get; }
@@ -133,9 +142,6 @@ namespace SPAD.neXt.Interfaces.Events
         string DataReferenceText { get; }
 
         void AddParserValue(string key, string value);
-        T GetOption<T>(string optionName, T defaultValue = default(T));
-        bool HasOption(string optionName);
-        void SetOption(string optionName, object value);
         int TransformValue(AxisEventValue e);
         void Execute(IEventDefinition definition, ISPADEventArgs e);
         bool Equals(IEventAction other);
@@ -165,5 +171,13 @@ namespace SPAD.neXt.Interfaces.Events
         string EventName { get; }
         IInput Input { get; }
         bool IsConfigured { get; }
+    }
+
+    public interface IEventOptions
+    {
+        T GetOption<T>(string optionName, T defaultValue = default(T));
+        bool HasOption(string optionName);
+        void SetOption(string optionName, object value);
+
     }
 }

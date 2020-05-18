@@ -6,63 +6,22 @@ namespace SPAD.neXt.Interfaces.Configuration
 {
     public interface IDataDefinitionProperties
     {
-        string Access { get; }
-        string Category { get; }
-        double CorrectionFactor { get; }
-        string Information { get; }
-        float Epsilon { get; }
-        string ID { get; }
-        string AlternateID { get; }
-        string PrimaryKey { get; }
-        bool IsReadOnly { get; }
-        string Key { get; }
-        string LinkedEntry { get; }
-        string Name { get; }
-        string OffsetMode { get; }
-        string ProviderName { get; }
-        bool Selectable { get; }
-        int Size { get; }
-        string SubCategory { get; }
-        string TypeName { get; }
-        string UnitsName { get; }
-        string Usage { get; }
-        string ValueType { get; }
-        string WriteMode { get; }
-        string WriteParameters { get; }
-        int DefinitionKey { get; }
-        bool ExcludeKeyFromSearch { get; set; }
-    }
-
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties
-    {
         string Access { get; set; }
-        string AlternateNormalizer { get; set; }
-        string CustomNormalizer { get; set; }
         string Category { get; set; }
-        string AvailableDataProviders { get; }
         double CorrectionFactor { get; set; }
-        string Information { get; }
-        string DefaultNormalizer { get; set; }
-        string DefaultValue { get; set; }
-        string DisplayName { get; set; }
-        string DisplayString { get; }
-        string GlobalName { get; set; }
-        bool Disposable { get; set; }
-        bool IsValid { get; }
+        string Information { get;  }
         float Epsilon { get; set; }
-        string ID { get; }
-        string AlternateID { get; }
-        string PrimaryKey { get; }
+        string ID { get;  }
+        string AlternateID { get; set; }
+        string PrimaryKey { get; set; }
         bool IsReadOnly { get; }
         string Key { get; set; }
         string LinkedEntry { get; set; }
         string Name { get; set; }
-        IValueNormalizer Normalizer { get; }
         string OffsetMode { get; set; }
         string ProviderName { get; set; }
         bool Selectable { get; set; }
         int Size { get; set; }
-        string SortID { get; }
         string SubCategory { get; set; }
         string TypeName { get; }
         string UnitsName { get; set; }
@@ -70,15 +29,33 @@ namespace SPAD.neXt.Interfaces.Configuration
         string ValueType { get; set; }
         string WriteMode { get; set; }
         string WriteParameters { get; set; }
-        SPADDefinitionTypes DefinitionType { get; set; }
         int DefinitionKey { get; }
+        bool ExcludeKeyFromSearch { get; set; }
+    }
+
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties
+    {
+        string AlternateNormalizer { get; set; }
+        string CustomNormalizer { get; set; }
+        string AvailableDataProviders { get; }
+        string DefaultNormalizer { get; set; }
+        string DefaultValue { get; set; }
+        string DisplayName { get; set; }
+        string DisplayString { get; }
+        string GlobalName { get; set; }
+        bool Disposable { get; set; }
+        bool IsValid { get; }
+        bool HasCustomPrimaryKey { get; }
+        IValueNormalizer Normalizer { get; }
+        string SortID { get; }
+        SPADDefinitionTypes DefinitionType { get; set; }
         string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
         IDataDefinition LinkedDataDefinition { get; }
         IValueRange Range { get; }
 
         ushort DataIndex { get; }
-        bool IsProviderDataDefinition { get;  }
+        bool IsProviderDataDefinition { get; }
         object Clone();
         IEnumerable<string> GetIDs();
         bool HasAlternateUnits { get; }

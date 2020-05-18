@@ -32,6 +32,8 @@ namespace SPAD.neXt.Interfaces
         P3Dv4 = 512,
         FSW = 1024,
         RAILWORKS = 2048,
+        P3Dv5 = 4096,
+        MSFS = 8192,
         CUSTOM = 0x1000000,
     }
 

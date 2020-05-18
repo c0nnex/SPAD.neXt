@@ -14,6 +14,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventManager
     {
 
+        void UnsubscribeFromSystemEvent(string eventName, SPADEventHandler oldDeleagte);
         void SubscribeToSystemEvent(string eventName, SPADEventHandler newDelegate, EventPriority priority = EventPriority.Low);
         //void Subscribe(string eventName, IEventHandler eventDelegate, ISPADComparator comparator);
         //void Unsubscribe(IMonitorableValue monitorableValue, string eventName, IEventHandler eventDelegate);
@@ -44,7 +45,7 @@ namespace SPAD.neXt.Interfaces.Events
         string SubscriptionID { get; }
         int Priority { get; }
         string CustomData { get; set; }
-
+        bool IsStatic { get; set; }
         void Dispose();
     }
 
