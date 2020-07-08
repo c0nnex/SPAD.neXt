@@ -24,12 +24,13 @@ namespace SPAD.neXt.Interfaces.Profile
         string OptionGroup { get; set; }
         IReadOnlyList<string> Choices { get; }
 
-        void AddChoice(string choice);
+        IExtensionProfileOption AddChoice(string choice);
         void SetDirty();
     }
 
     public class ExtensionConfigurationEvent
     {
+        public string EventType { get; set; } = "Button";
         public string EventName { get; set; }
         public string EventTrigger { get; set; }
         public object EventValue { get; set; }

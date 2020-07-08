@@ -18,6 +18,7 @@ namespace SPAD.neXt.Interfaces
         event EventHandler<IPanelDeviceEventArgs> DeviceReportReceived;
 
         IHidDeviceCapabilities Capabilities { get; }
+        IHidDeviceAttributes Attributes { get; }
         IUSBDevice UsbDevice { get; }
         string DevicePath { get; }
         string ProductID { get; }
