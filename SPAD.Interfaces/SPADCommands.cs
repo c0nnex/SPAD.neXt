@@ -59,6 +59,7 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand devicePowerOFFCommand = new RoutedCommand("SPAD_neXt.Device_PowerOFF", typeof(SPADCommands));
         private static RoutedCommand gaugeNextCommand = new RoutedCommand("SPAD_neXt.Gauge_Next", typeof(SPADCommands));
         private static RoutedCommand gaugePrevCommand = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
+        private static RoutedCommand gaugeSetCommand = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
         private static RoutedCommand _CommandChangeDigitmark = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
         private static RoutedCommand _CommandPlaySound = new RoutedCommand("SPAD_neXt.PlaySound", typeof(SPADCommands));
         private static RoutedCommand _EmulateCommand = new RoutedCommand("SPAD_neXt.Emulate", typeof(SPADCommands));
@@ -70,6 +71,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandDevicePowerOFF { get { return devicePowerOFFCommand; } }
         public static RoutedCommand CommandGaugeNext { get { return gaugeNextCommand; } }
         public static RoutedCommand CommandGaugePrev { get { return gaugePrevCommand; } }
+        public static RoutedCommand CommandGaugeSet { get { return gaugeSetCommand; } }
         public static RoutedCommand CommandChangeDigitmark { get { return _CommandChangeDigitmark; } }
         public static RoutedCommand CommandPlaySound { get { return _CommandPlaySound; } }
         public static RoutedCommand CommandEmulate { get { return _EmulateCommand; } }
@@ -89,6 +91,7 @@ namespace SPAD.neXt.Interfaces
             _ExposedCommands.Add(CommandDevicePowerOFF);
             _ExposedCommands.Add(CommandGaugeNext);
             _ExposedCommands.Add(CommandGaugePrev);
+            _ExposedCommands.Add(CommandGaugeSet);
             _ExposedCommands.Add(CommandChangeDigitmark);
             _ExposedCommands.Add(CommandEmulate);
             _ExposedCommands.Add(CommandRemoteEvent);

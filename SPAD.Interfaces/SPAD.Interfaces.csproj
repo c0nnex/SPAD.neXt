@@ -146,6 +146,7 @@
     <Compile Include="Scripting\IScriptValueProvider.cs" />
     <Compile Include="SimConnect\DataItemAttributeBase.cs" />
     <Compile Include="SimConnect\ISimConnectDynamic.cs" />
+    <Compile Include="SimulationConfiguration.cs" />
     <Compile Include="SPADCommands.cs" />
     <Compile Include="UI\IConfigurationDialog.cs" />
     <Compile Include="UI\IDialConfigurationDialog.cs" />

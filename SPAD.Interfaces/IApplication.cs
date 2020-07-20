@@ -15,6 +15,7 @@ using System.IO;
 
 namespace SPAD.neXt.Interfaces
 {
+
     public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager
     {
         Guid ConsumerID { get; }
@@ -35,7 +36,7 @@ namespace SPAD.neXt.Interfaces
         bool CheckRegisteredFeature();
         UInt32 GetAuthorID();
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
-        void RegisterSimulationConnected(EventHandler<IValueProvider> simulationConnected);
+        void RegisterSimulationConnected(EventHandler<SimulationConfiguration, IValueProvider> simulationConnected);
 
         // SimConnect Special
         //TODO: Remove FSUIPC add General
@@ -105,7 +106,7 @@ namespace SPAD.neXt.Interfaces
         IValueProvider GetActiveValueProvider();
 
         void SetActiveValueProvider(IValueProvider newProvider);
-        void OnSimulationConnected(IValueProvider provider);
+        void OnSimulationConnected(SimulationConfiguration simConfig,IValueProvider provider);
 
         Stream GetConfigurationFile(string filename);
         T ReadXMLConfigurationFile<T>(string filename) where T : class, new();

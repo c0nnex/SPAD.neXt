@@ -67,7 +67,8 @@ namespace SPAD.neXt.Interfaces
         BUTTONMODE,
         PLAYSOUND,
         VIRTUALJOYSTICK,
-        TEXT2SPEECH
+        TEXT2SPEECH,
+        SEPERATOR,
     }
 
     public enum EventPriority
