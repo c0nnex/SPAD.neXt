@@ -39,11 +39,13 @@ namespace SPAD.neXt.Interfaces
     public interface IExtensionDevice : IExtensionPanel
     {
         string VendorID { get; }
-        string ProductID { get; }       
+        string ProductID { get; }
+        Guid GetDeviceUniqueIdentifier();
     }
 
     public interface IExtensionDynamic 
     {
+      
         bool HasDeviceConfiguration { get; }
         
         bool WillHandle(IUSBDevice device);

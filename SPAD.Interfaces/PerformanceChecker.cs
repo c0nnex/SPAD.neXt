@@ -13,6 +13,7 @@ namespace SPAD.neXt.Interfaces
     {
         public static ILogger logger { get; set; }
         public static bool DoLogPerformance { get; set; } = false;
+        bool doLog = false;
         ulong stTicks;
         string Name;
 
@@ -20,10 +21,11 @@ namespace SPAD.neXt.Interfaces
         {
             // DoLogPerformance = System.Environment.MachineName == "DESKTOP-40RM7LC";
         }
-        public PerformanceChecker(string name)
+        public PerformanceChecker(string name,bool doLog = false)
         {
             Name = name;
             stTicks = EnvironmentEx.TickCount64;
+            this.doLog = doLog;
         }
 
         #region IDisposable Support
@@ -35,7 +37,7 @@ namespace SPAD.neXt.Interfaces
             {
                 if (disposing)
                 {
-                    if (DoLogPerformance) logger?.Info($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
+                    if (DoLogPerformance || doLog) logger?.Info($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

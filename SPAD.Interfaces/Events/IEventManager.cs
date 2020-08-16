@@ -38,15 +38,18 @@ namespace SPAD.neXt.Interfaces.Events
         void HandleEvent(ISPADEventArgs e);
     }
 
-    public interface IObserverTicket
+    public interface IObserverTicket : IDisposable
     {
         Guid ID { get; }
         string EventName { get; }
         string SubscriptionID { get; }
         int Priority { get; }
-        string CustomData { get; set; }
+        object UserData { get; set; }
         bool IsStatic { get; set; }
-        void Dispose();
+        bool NeedNotify { get; }
+
+        void Subscribe(IMonitorableValue monitorableValue);
+        void Unsubscribe(IMonitorableValue monitorableValue);
     }
 
     public interface IValueTranscriber
@@ -74,11 +77,14 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IValueConnector : ISimulationEventProvider
     {
+        bool SupportsDynamicDefinitions { get; }
+        bool IsConnected { get; }
         void ForceUpdate(string dataRef,bool doMonitor);
         void SetValue(string dataRef, double newValue);
         void ExecuteCommand(string commandRef, uint parameter);
         void SendMessage(string message);
         void Stop();
+
     }
 
     public interface IValueProvider
@@ -201,6 +207,9 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsActive { get; }
         bool IsUndefined();
         bool HasObservers { get; }
+
+        void Subscribe(IObserverTicket observerTicket);
+        void Unsubscribe(IObserverTicket observerTicket);
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
         void Raise(string eventName, object sender, ISPADEventArgs eventArgs);

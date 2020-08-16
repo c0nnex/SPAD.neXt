@@ -12,6 +12,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventSystemHandler
     {
+        
         IEventDefinition CreateEvent(string boundTo,string trigger);
         IEventAction CreateAction(SPADEventActions action);
         IEventAction CreateAction(string action);
@@ -23,6 +24,8 @@ namespace SPAD.neXt.Interfaces.Events
         Type[] GetExtraSerializationTypes();
         IValueProvider GetValueProvider(string provider);
         IEnumerable<string> GetValueProviders(bool onlyActive = true);
+
+        long GetDataDefinitionsIteration();
         IDataDefinition GetDataDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
         IDataDefinition CreateNewLocal(string name, string displaynormalizer);
@@ -95,6 +98,10 @@ namespace SPAD.neXt.Interfaces.Events
         public static IEnumerable<IDynamicNormalizer> GetDynamicNormalizers()
         {
             return EventSystemHandler.GetDynamicNormalizers();
+        }
+        public static long GetDataDefinitionsIteration()
+        {
+            return EventSystemHandler.GetDataDefinitionsIteration();
         }
 
         public static IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null)

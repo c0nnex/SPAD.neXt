@@ -69,6 +69,7 @@ namespace SPAD.neXt.Interfaces
         VIRTUALJOYSTICK,
         TEXT2SPEECH,
         SEPERATOR,
+        PLATEIMAGE,
     }
 
     public enum EventPriority
@@ -403,6 +404,7 @@ namespace SPAD.neXt.Interfaces
         public const string ButtonMode = "__BUTTONMODE__";
         public const string LEDColor = "__LEDCOLOR__";
         public const string PlateColor = "__PLATECOLOR__";
+        public const string PlateImage = "__PLATEIMAGE__";
         public const string Digitmark = "__DIGITMARK__";
         public const string Display = "DISPLAY";
         public const string LeftDisplay = "LEFTDISPLAY";

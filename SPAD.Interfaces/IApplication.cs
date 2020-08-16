@@ -111,6 +111,7 @@ namespace SPAD.neXt.Interfaces
         Stream GetConfigurationFile(string filename);
         T ReadXMLConfigurationFile<T>(string filename) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename) where T : class, new();
+        IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, bool preferLocal = false);
 
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);

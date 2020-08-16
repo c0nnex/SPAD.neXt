@@ -48,6 +48,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool HasCustomPrimaryKey { get; }
         IValueNormalizer Normalizer { get; }
         string SortID { get; }
+        HashSet<string> AdditionalSortIDs { get; }
         SPADDefinitionTypes DefinitionType { get; set; }
         string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
@@ -56,6 +57,9 @@ namespace SPAD.neXt.Interfaces.Configuration
 
         ushort DataIndex { get; }
         bool IsProviderDataDefinition { get; }
+
+        object UserData { get; set; }
+        T GetUserData<T>();
         object Clone();
         IEnumerable<string> GetIDs();
         bool HasAlternateUnits { get; }
