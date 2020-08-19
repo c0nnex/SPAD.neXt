@@ -40,7 +40,6 @@ namespace SPAD.neXt.Interfaces
     {
         string VendorID { get; }
         string ProductID { get; }
-        Guid GetDeviceUniqueIdentifier();
     }
 
     public interface IExtensionDynamic 

@@ -17,7 +17,6 @@ namespace SPAD.neXt.Interfaces
         event EventHandler DeviceRemoved;
         event EventHandler<IPanelDeviceEventArgs> DeviceReportReceived;
 
-        IDeviceConfiguration DeviceConfiguration { get; }
         IHidDeviceCapabilities Capabilities { get; }
         IHidDeviceAttributes Attributes { get; }
         IUSBDevice UsbDevice { get; }
@@ -33,7 +32,6 @@ namespace SPAD.neXt.Interfaces
         bool IsConnected { get; }
         bool IsListening { get; }
 
-        void SetDeviceConfiguration(IDeviceConfiguration deviceConfiguration);
 
 
         bool OpenDevice();
