@@ -105,7 +105,7 @@ namespace SPAD.neXt.Interfaces
 
         IValueProvider GetActiveValueProvider();
 
-        void SetActiveValueProvider(IValueProvider newProvider);
+        void SetValueProviderStatus(IValueProvider newProvider, bool isActive);
         void OnSimulationConnected(SimulationConfiguration simConfig,IValueProvider provider);
 
         Stream GetConfigurationFile(string filename);

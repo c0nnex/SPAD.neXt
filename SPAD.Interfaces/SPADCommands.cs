@@ -43,41 +43,19 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand _PublishProfileCommand = new RoutedCommand("SPAD_neXt.PublishProfile", typeof(SPADCommands));
         private static RoutedCommand _PublishSnippetCommand = new RoutedCommand("SPAD_neXt.PublishSnippet", typeof(SPADCommands));
 
-        private static RoutedCommand _ShowNotificationsCommand = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
-        private static RoutedCommand _DebugModeCommand = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
-        private static RoutedCommand _ProgrammingCommand = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
-        
-
-        /*  private static RoutedCommand editActionCommand = new RoutedCommand("SPAD_neXt.EditAction", typeof(SPADCommands));
-          private static RoutedCommand delActionCommand = new RoutedCommand("SPAD_neXt.DelAction", typeof(SPADCommands));
-          private static RoutedCommand moveActionUpCommand = new RoutedCommand("SPAD_neXt.MoveActionUP", typeof(SPADCommands));
-          private static RoutedCommand moveActionDownCommand = new RoutedCommand("SPAD_neXt.MoveActionDOWN", typeof(SPADCommands));
-          */
-
-        // Exposed Commands
-        private static RoutedCommand devicePowerONCommand = new RoutedCommand("SPAD_neXt.Device_PowerON", typeof(SPADCommands));
-        private static RoutedCommand devicePowerOFFCommand = new RoutedCommand("SPAD_neXt.Device_PowerOFF", typeof(SPADCommands));
-        private static RoutedCommand gaugeNextCommand = new RoutedCommand("SPAD_neXt.Gauge_Next", typeof(SPADCommands));
-        private static RoutedCommand gaugePrevCommand = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
-        private static RoutedCommand gaugeSetCommand = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
-        private static RoutedCommand _CommandChangeDigitmark = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
-        private static RoutedCommand _CommandPlaySound = new RoutedCommand("SPAD_neXt.PlaySound", typeof(SPADCommands));
-        private static RoutedCommand _EmulateCommand = new RoutedCommand("SPAD_neXt.Emulate", typeof(SPADCommands));
-        private static RoutedCommand _RemoteEventCommand = new RoutedCommand("SPAD_neXt.Remote", typeof(SPADCommands));
-        private static RoutedCommand _SendMessageCommand = new RoutedCommand("SPAD_neXt.Message", typeof(SPADCommands));
-        private static RoutedCommand _RunProgramCommand = new RoutedCommand("SPAD_neXt.RunProgram", typeof(SPADCommands));
-
-        public static RoutedCommand CommandDevicePowerON { get { return devicePowerONCommand; } }
-        public static RoutedCommand CommandDevicePowerOFF { get { return devicePowerOFFCommand; } }
-        public static RoutedCommand CommandGaugeNext { get { return gaugeNextCommand; } }
-        public static RoutedCommand CommandGaugePrev { get { return gaugePrevCommand; } }
-        public static RoutedCommand CommandGaugeSet { get { return gaugeSetCommand; } }
-        public static RoutedCommand CommandChangeDigitmark { get { return _CommandChangeDigitmark; } }
-        public static RoutedCommand CommandPlaySound { get { return _CommandPlaySound; } }
-        public static RoutedCommand CommandEmulate { get { return _EmulateCommand; } }
-        public static RoutedCommand CommandRemoteEvent { get { return _RemoteEventCommand; } }
-        public static RoutedCommand CommandSendMessage { get { return _SendMessageCommand; } }
-        public static RoutedCommand CommandRunProgram { get { return _RunProgramCommand; } }
+        public static RoutedCommand CommandDevicePowerON { get; } = new RoutedCommand("SPAD_neXt.Device_PowerON", typeof(SPADCommands));
+        public static RoutedCommand CommandDevicePowerOFF { get; } = new RoutedCommand("SPAD_neXt.Device_PowerOFF", typeof(SPADCommands));
+        public static RoutedCommand CommandGaugeNext { get; } = new RoutedCommand("SPAD_neXt.Gauge_Next", typeof(SPADCommands));
+        public static RoutedCommand CommandGaugePrev { get; } = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
+        public static RoutedCommand CommandGaugeSet { get; } = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
+        public static RoutedCommand CommandDeviceStop { get; } = new RoutedCommand("SPAD_neXt.Device_STOP", typeof(SPADCommands));
+        public static RoutedCommand CommandDeviceStart { get; } = new RoutedCommand("SPAD_neXt.Device_START", typeof(SPADCommands));
+        public static RoutedCommand CommandChangeDigitmark { get; } = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
+        public static RoutedCommand CommandPlaySound { get; } = new RoutedCommand("SPAD_neXt.PlaySound", typeof(SPADCommands));
+        public static RoutedCommand CommandEmulate { get; } = new RoutedCommand("SPAD_neXt.Emulate", typeof(SPADCommands));
+        public static RoutedCommand CommandRemoteEvent { get; } = new RoutedCommand("SPAD_neXt.Remote", typeof(SPADCommands));
+        public static RoutedCommand CommandSendMessage { get; } = new RoutedCommand("SPAD_neXt.Message", typeof(SPADCommands));
+        public static RoutedCommand CommandRunProgram { get; } = new RoutedCommand("SPAD_neXt.RunProgram", typeof(SPADCommands));
 
         private static List<RoutedCommand> _ExposedCommands = new List<RoutedCommand>();
         public static IEnumerable<RoutedCommand> ExposedCommands
@@ -89,6 +67,8 @@ namespace SPAD.neXt.Interfaces
         {
             _ExposedCommands.Add(CommandDevicePowerON);
             _ExposedCommands.Add(CommandDevicePowerOFF);
+            _ExposedCommands.Add(CommandDeviceStart);
+            _ExposedCommands.Add(CommandDeviceStop);
             _ExposedCommands.Add(CommandGaugeNext);
             _ExposedCommands.Add(CommandGaugePrev);
             _ExposedCommands.Add(CommandGaugeSet);
@@ -133,9 +113,9 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileReconvertCommand { get { return profileReconvertCommand; } }
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
 
-        public static RoutedCommand ShowNotificationsCommand { get { return _ShowNotificationsCommand; } }
-        public static RoutedCommand DebugModeCommand { get { return _DebugModeCommand; } }
-        public static RoutedCommand ProgrammingCommand { get { return _ProgrammingCommand; } }
+        public static RoutedCommand ShowNotificationsCommand { get; } = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
+        public static RoutedCommand DebugModeCommand { get; } = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
+        public static RoutedCommand ProgrammingCommand { get; } = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }
 
         /*
