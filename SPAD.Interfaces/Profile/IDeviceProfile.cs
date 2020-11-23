@@ -2,7 +2,6 @@
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.DevicesConfiguration;
 using SPAD.neXt.Interfaces.Events;
-using SPAD.neXt.Interfaces.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +25,9 @@ namespace SPAD.neXt.Interfaces.Profile
         bool DeviceActive { get; }
         int Version { get; }
         
-        IDeviceConfiguration DeviceConfiguration { get; }       
+        IDeviceConfiguration DeviceConfiguration { get; }
+        IPanelHost PanelHost { get; }
+        
         string DeviceName { get; }
 
         IReadOnlyList<ISPADBaseEvent> Events { get; }
@@ -47,5 +48,6 @@ namespace SPAD.neXt.Interfaces.Profile
         void UpdateEventTarget(ISPADBaseEvent evt);
         void SetDeviceSerial(string serial);
         T GetExtension<T>(Type type) where T : IXmlAnyObject;
+        bool HasExtension<T>() where T : IXmlAnyObject;
     }
 }

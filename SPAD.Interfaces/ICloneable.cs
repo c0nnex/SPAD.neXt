@@ -16,6 +16,11 @@ namespace SPAD.neXt.Interfaces
         void ChangeID(Guid newID);
     }
 
+    public interface ICustomCloneable<T> : ICloneable<T> where T : class
+    {
+        T Clone(Action<T> customize = null);
+    }
+
     public interface ICloneable<T> where T : class
     {
         T Clone();
@@ -25,5 +30,11 @@ namespace SPAD.neXt.Interfaces
     {
         void Replace(T oldItem, T newItem);
     }
-   
+
+    public interface IObservableReadOnlyList<T> : IReadOnlyList<T>
+    {
+        void Replace(T oldItem, T newItem);
+        void Remove(T oldItem);
+    }
+
 }

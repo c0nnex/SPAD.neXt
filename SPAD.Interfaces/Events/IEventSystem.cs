@@ -3,7 +3,6 @@ using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.Profile;
-using SPAD.neXt.Interfaces.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +27,7 @@ namespace SPAD.neXt.Interfaces.Events
         long GetDataDefinitionsIteration();
         IDataDefinition GetDataDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
-        IDataDefinition CreateNewLocal(string name, string displaynormalizer);
+        IDataDefinition CreateNewLocal(string name, string displaynormalizer, object defaultValue = null);
         IEnumerable<string> GetKnownNormalizers(string startWith = null);
         IEnumerable<IDynamicNormalizer> GetDynamicNormalizers();
         IDataDefinition BrowseDataDefiniton(string curOffset, string titleName, string rootName, bool bWriteOperation, object parentWindow = null);
@@ -85,9 +84,9 @@ namespace SPAD.neXt.Interfaces.Events
         {
             return EventSystemHandler.CreateEventCondition();
         }
-        public static IDataDefinition CreateNewLocal(string name, string displaynormalizer)
+        public static IDataDefinition CreateNewLocal(string name, string displaynormalizer,object defaultValue = null)
         {
-            return EventSystemHandler.CreateNewLocal(name, displaynormalizer);
+            return EventSystemHandler.CreateNewLocal(name, displaynormalizer,defaultValue);
         }
 
         public static IDataDefinition GetDataDefinition(string id)

@@ -6,6 +6,49 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    [Flags]
+    public enum FontStyle
+    {
+        //
+        // Summary:
+        //     Normal text.
+        Regular = 0,
+        //
+        // Summary:
+        //     Bold text.
+        Bold = 1,
+        //
+        // Summary:
+        //     Italic text.
+        Italic = 2,
+        //
+        // Summary:
+        //     Underlined text.
+        Underline = 4,
+        //
+        // Summary:
+        //     Text with a line through the middle.
+        Strikeout = 8
+    }
+
+    public enum AxisCurveResponseType
+    {
+        None,
+        Multiplier,
+        Values
+    }
+    public enum AxisCurveShapeType
+    {
+        Bezier,
+        Cardinal
+    }
+
+    public enum DisplayFormatting
+    {
+        RightToLeft = 0,
+        LeftToRight = 1
+    }
+
     public enum PanelDevicReadStatus
     {
         Success = 0,
@@ -70,6 +113,8 @@ namespace SPAD.neXt.Interfaces
         TEXT2SPEECH,
         SEPERATOR,
         PLATEIMAGE,
+        PLATELABEL,
+        SWITCHWINDOW
     }
 
     public enum EventPriority
@@ -144,7 +189,10 @@ namespace SPAD.neXt.Interfaces
         Decrement,
         SetBit,
         ClearBit,
-        ToggleBit
+        ToggleBit,
+        AppendChars,
+        DeleteChars,
+        ClearChars
     }
 
     public enum SPADSoundOperation
@@ -270,6 +318,9 @@ namespace SPAD.neXt.Interfaces
         PanelPasteThis = 8,
         PanelPasteAll = 16,
         PanelPasteDevice = 32,
+        NoRemotePasteThis = 64,
+        NoRemotePasteAll = 128,
+        NoRemotePasteDevice = 256,
         PanelClipboardAll = PanelCopyAll | PanelCopyThis | PanelPasteAll | PanelPasteThis | PanelCopyDevice | PanelPasteDevice,
     }
 
@@ -317,7 +368,8 @@ namespace SPAD.neXt.Interfaces
     public enum PANEL_BUTTONPOSITION
     {
         FIRST = 0,
-        LAST = -1
+        LAST = -1,
+        DROPDOWN = 1,
     }
 
     public enum DEVICEPOWER
@@ -351,7 +403,13 @@ namespace SPAD.neXt.Interfaces
         /// <summary>
         /// Input is pulsed repeatedly while triggered.
         /// </summary>
-        Repeat,
+        Repeat,/*
+        Repeat50,
+        Repeat100,
+        Repeat200,
+        Repeat400,
+        Repeat500,
+        Repeat1000,*/
 
         /// <summary>
         /// Input is toggled when triggered.
@@ -405,6 +463,7 @@ namespace SPAD.neXt.Interfaces
         public const string LEDColor = "__LEDCOLOR__";
         public const string PlateColor = "__PLATECOLOR__";
         public const string PlateImage = "__PLATEIMAGE__";
+        public const string PlateLabel = "__PLATELABEL__";
         public const string Digitmark = "__DIGITMARK__";
         public const string Display = "DISPLAY";
         public const string LeftDisplay = "LEFTDISPLAY";
@@ -416,6 +475,7 @@ namespace SPAD.neXt.Interfaces
         public const string XPlaneMainWindow = "__XPLANEWINDOW__";
         public const string ModeChanged = "__MODECHANGED__";
         public const string ModeReport = "__MODEREPORT__";
+        public const string EventUpdate = "__EVENTUPDATE__";
     }
 
     public static class SPADSystemEvents
@@ -426,6 +486,7 @@ namespace SPAD.neXt.Interfaces
         public const string SimConnectStatus = "SimConnect.Status";
         public const string ProviderStatus = "Provider.Status";
         public const string CDUAvailable = "SPAD_CDUAvailable";
+        public const string CDUUpdate = "SPAD_CDU_Update_";
         public const string RequestAttention = "SPAD.RequestAttention";
         public const string ExtractXplane = "SPAD.ExtractXplane";
         public const string ProfileLoaded = "SPAD.ProfileLoaded";
@@ -444,6 +505,18 @@ namespace SPAD.neXt.Interfaces
         public const string LVAR_STATUS = "LVAR STATUS";
         public const string FRAMERATE = "FRAMERATE";
         public const string FRAMERATE_AVG = "FRAMERATE AVG";
+
+        public const string TRANSPONDER1_DIGIT_1 = "TC1DIGIT1";
+        public const string TRANSPONDER1_DIGIT_2 = "TC1DIGIT2";
+        public const string TRANSPONDER1_DIGIT_3 = "TC1DIGIT3";
+        public const string TRANSPONDER1_DIGIT_4 = "TC1DIGIT4";
+
+        public const string TRANSPONDER2_DIGIT_1 = "TC2DIGIT1";
+        public const string TRANSPONDER2_DIGIT_2 = "TC2DIGIT2";
+        public const string TRANSPONDER2_DIGIT_3 = "TC2DIGIT3";
+        public const string TRANSPONDER2_DIGIT_4 = "TC2DIGIT4";
+
+
 
         public const string EVENT_AIRCRAFTCHANGED = "SPAD_AIRCRAFTCHANGED";
 

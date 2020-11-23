@@ -22,8 +22,9 @@ namespace SPAD.neXt.Interfaces.Events
         void Deactivate(string boundTo, ISPADBaseEvent baseEvent);
         void Execute(ISPADEventArgs e);
         IReadOnlyList<IEventDefinition> GetByTrigger(string trigger, bool create = true);
-        IEventDefinition CreateEvent(string trigger);
+        IEventDefinition CreateEvent(string trigger, Guid? singletonID = null);
         IEventDefinition GetByID(Guid eventDefinitionID);
+        void RemoveAll(IEnumerable<IEventDefinition> enumerable);
     }
     public interface IEncoderAcceleration
     {
@@ -36,6 +37,8 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventDefinition : IEventOptions,ICloneableWithID<IEventDefinition>
     {
+        Guid SingletonID { get; set; } 
+        bool IsSingleton { get; }
         IEventActions Actions { get; }
         string BoundTo { get; }
         SPADConditionBinding ConditionBinding { get; set; }
@@ -123,6 +126,8 @@ namespace SPAD.neXt.Interfaces.Events
         string ConfigString { get; }
 
         void Execute(IEventDefinition definition, ISPADEventArgs e);
+
+        IEventAction GetBySingleton(Guid id);
     }
 
     public interface IEventAction : INotifyPropertyChanged ,IEventOptions, ICloneableWithID<IEventAction>
@@ -140,7 +145,7 @@ namespace SPAD.neXt.Interfaces.Events
         string TargetDeviceID { get; set; }
         string TargetName { get; set; }
         string DataReferenceText { get; }
-
+        bool IsInEditMode { get; set; }
         void AddParserValue(string key, string value);
         int TransformValue(AxisEventValue e);
         void Execute(IEventDefinition definition, ISPADEventArgs e);

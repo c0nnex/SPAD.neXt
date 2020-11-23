@@ -24,6 +24,7 @@ namespace SPAD.neXt.Interfaces
         string DevicePath { get; }
         string ProductID { get; }
         string VendorID { get; }
+        string DeviceTypeID { get; }
         string SerialNumber { get; }
         string Name { get; set; }
         string BaseName { get; set; }
@@ -134,7 +135,7 @@ namespace SPAD.neXt.Interfaces
 
         uint ID { get; }
         uint Index { get; }
-        int Curve { get; set; }
+        
         int DeadZone { get; }
         IInputDevice Device { get; }
         uint CustomIndex { get; }
@@ -172,6 +173,8 @@ namespace SPAD.neXt.Interfaces
 
     public interface IInputAxis : IInput
     {
+        float[] Curve { get; set; }
+        
         void SetCalibrationMode(bool bEnable);
 
         bool AxisNeedsUpdate { get; set; }

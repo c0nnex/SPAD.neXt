@@ -12,4 +12,10 @@ namespace SPAD.neXt.Interfaces.UI
         void SetTitle(string ressourceName);
         void SetConfigurationEventHandler(EventHandler handler);
     }
+
+    public interface IOrderableItem
+    {
+        string Name { get; }
+        Guid ID { get; }
+    }
 }

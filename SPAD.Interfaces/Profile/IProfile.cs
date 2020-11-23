@@ -9,6 +9,7 @@ namespace SPAD.neXt.Interfaces.Profile
 {
     public interface IProfile
     {
+        bool IsDummyProfile { get; }
         bool IsDirty { get; }
         string Name { get; }
         string Filename { get; }
@@ -18,7 +19,7 @@ namespace SPAD.neXt.Interfaces.Profile
         void DeleteOption(string key);
 
         IReadOnlyList<IDeviceProfile> Devices { get; }
-
+        IDeviceProfile FindTarget(string targetDeviceID);
         void Save(bool IncrementVersion = true);
         void MarkForAutoSave();
     }

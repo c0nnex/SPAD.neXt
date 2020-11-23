@@ -37,6 +37,7 @@ namespace SPAD.neXt.Interfaces
         UInt32 GetAuthorID();
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
         void RegisterSimulationConnected(EventHandler<SimulationConfiguration, IValueProvider> simulationConnected);
+        void RegisterNonDeleteableAction(Guid id);
 
         // SimConnect Special
         //TODO: Remove FSUIPC add General
@@ -111,17 +112,29 @@ namespace SPAD.neXt.Interfaces
         Stream GetConfigurationFile(string filename);
         T ReadXMLConfigurationFile<T>(string filename) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename) where T : class, new();
+
+        string CreateXml(object o);
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, bool preferLocal = false);
 
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
         ISerializableOption GetApplicationOption(string optionKey);
+
+        IExternalExpression CreateExpression(string name, string expression);
+
+        IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
+        bool IsBuild(string buildName);
     }
 
     public interface IApplicationConfiguration
     {
         bool ExecuteConfiguration(IApplication app);
+        
     }
 
+    public interface IResolvesAtRuntime
+    {
+        void RuntimeResolve(IApplication proxy, string baseUri);
+    }
 
 }

@@ -18,11 +18,14 @@ namespace SPAD.neXt.Interfaces
         IPanelDevice DeviceAttached { get; }
         IDeviceConfiguration DeviceConfiguration { get; }
         IDeviceProfile DeviceProfile { get; }
+        IProfileEventProvider ProfileEventProvider { get; }
+
+        IPanelControl PanelControl { get; }
         Guid PanelLinkID { get; }
         bool PanelHasFocus { get; }
         string PanelName { get; }
         string DevicePanelID { get; }
-       
+        bool SupportsDefaultProfiles { get; set; }
         bool ShowDialog(string dialogName, ISPADBaseEvent evt, EventHandler configHandler = null);
 
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars);
@@ -33,14 +36,16 @@ namespace SPAD.neXt.Interfaces
         void DevicePowerChanged(DEVICEPOWER newPowerState);
 
         void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
-        void AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
+        UserControl AddDropDownCommand(string buttonName, string buttonTag, ICommand command,string mainbuttonLabel = null);
+        Button AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void AddPanelCheckbox(string buttonName, string buttonTag, ICommand command, bool bIsChecked, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void SetEventContext(string eventName, Point targetPoint, IInput input);
+        IEventContext GetCurrentEventContext();
         string GetConfigurationSetting(string key);
         void NavigateToThis();
     }
 
-    public interface IPanelControl
+    public interface IPanelControl 
     {
         event EventHandler<IPanelDeviceEventArgs> EmulatedDeviceReportReceived;
         void OnEmulateDeviceReport(IPanelDeviceEventArgs e);
@@ -59,19 +64,20 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<string> GetPanelVariables();
         bool AllowExternalVariableChange(string varName);
         void MonitoredChanged(string varName, bool isMonitored);
-
+        void DeviceProfileChanged();
         string GetNavigationHint();
         IInput GetAttachedInput(string switchName);
 
         bool PanelCanRename { get; }
         bool PanelHasSettings { get; }
         bool PanelHasPowerSettings { get; }
-
+        bool IsCommandSupported(string commandName);
         IProfileEventProvider ProfileEventProvider { get; }
 
         void ApplicationReady(BooleanEventArgs e);
 
         bool CreateDocumentation(IPanelDocumentation docProxy);
+        bool InterceptCommand(ICommand command);
     }
 
     public interface IPanelDocumentation
@@ -88,8 +94,13 @@ namespace SPAD.neXt.Interfaces
         PanelOptions PanelOptions {get;}
         ISPADBaseEvent FindEvent(string bound);
         void AddEvent(ISPADBaseEvent evt, bool permanent = true);
-       
+        bool IsValidEvent(string eventName);
         void RemoveAllEvents();
         bool RemoveEvent(string bound);
+
+        IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
+        bool IsCommandSupported(string commandName);
+
+
     }
 }

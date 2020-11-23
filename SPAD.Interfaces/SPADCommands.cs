@@ -47,7 +47,8 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandDevicePowerOFF { get; } = new RoutedCommand("SPAD_neXt.Device_PowerOFF", typeof(SPADCommands));
         public static RoutedCommand CommandGaugeNext { get; } = new RoutedCommand("SPAD_neXt.Gauge_Next", typeof(SPADCommands));
         public static RoutedCommand CommandGaugePrev { get; } = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
-        public static RoutedCommand CommandGaugeSet { get; } = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
+//        public static RoutedCommand CommandGaugeSet { get; } = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
+        public static RoutedCommand CommandGaugeSwitch { get; } = new RoutedCommand("SPAD_neXt.Gauge_Switch", typeof(SPADCommands));
         public static RoutedCommand CommandDeviceStop { get; } = new RoutedCommand("SPAD_neXt.Device_STOP", typeof(SPADCommands));
         public static RoutedCommand CommandDeviceStart { get; } = new RoutedCommand("SPAD_neXt.Device_START", typeof(SPADCommands));
         public static RoutedCommand CommandChangeDigitmark { get; } = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
@@ -56,6 +57,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandRemoteEvent { get; } = new RoutedCommand("SPAD_neXt.Remote", typeof(SPADCommands));
         public static RoutedCommand CommandSendMessage { get; } = new RoutedCommand("SPAD_neXt.Message", typeof(SPADCommands));
         public static RoutedCommand CommandRunProgram { get; } = new RoutedCommand("SPAD_neXt.RunProgram", typeof(SPADCommands));
+        public static RoutedCommand CommandConfigureSwitch { get; } = new RoutedCommand("SPAD_neXt.Device_ConfigureSwitch", typeof(SPADCommands));
 
         private static List<RoutedCommand> _ExposedCommands = new List<RoutedCommand>();
         public static IEnumerable<RoutedCommand> ExposedCommands
@@ -63,15 +65,21 @@ namespace SPAD.neXt.Interfaces
             get { return _ExposedCommands; }
         }
 
+        public static List<string> DeviceCommands = new List<string>()
+        {
+            CommandGaugeSwitch.Name,CommandGaugeNext.Name,CommandGaugePrev.Name,CommandDevicePowerOFF.Name,CommandDevicePowerON.Name
+        };
+
         static SPADCommands()
         {
             _ExposedCommands.Add(CommandDevicePowerON);
             _ExposedCommands.Add(CommandDevicePowerOFF);
-            _ExposedCommands.Add(CommandDeviceStart);
-            _ExposedCommands.Add(CommandDeviceStop);
+            //_ExposedCommands.Add(CommandDeviceStart);
+            //_ExposedCommands.Add(CommandDeviceStop);
             _ExposedCommands.Add(CommandGaugeNext);
             _ExposedCommands.Add(CommandGaugePrev);
-            _ExposedCommands.Add(CommandGaugeSet);
+            //_ExposedCommands.Add(CommandGaugeSet);
+            _ExposedCommands.Add(CommandGaugeSwitch);
             _ExposedCommands.Add(CommandChangeDigitmark);
             _ExposedCommands.Add(CommandEmulate);
             _ExposedCommands.Add(CommandRemoteEvent);
@@ -85,6 +93,8 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand SaveCommand { get { return saveCommand; } }
         public static RoutedCommand ConfigureSpecialCommand { get { return configureSpecialCommand; } }
         public static RoutedCommand CalibrateAxisCommand { get { return calibrateAxisCommand; } }
+        public static RoutedCommand AxisCurveCommand { get; } = new RoutedCommand("SPAD_neXt.AxisCurve", typeof(SPADCommands));
+
         public static RoutedCommand PowerConfigurationCommand { get { return powerConfigurationCommand; } }
         public static RoutedCommand DeviceConfigurationCommand { get { return deviceConfigurationCommand; } }
 

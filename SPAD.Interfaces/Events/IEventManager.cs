@@ -87,6 +87,14 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
+    public interface ISimConnectValueProvider : IValueProvider
+    { }
+
+    public interface ICDUValueProvider
+    {
+        void SendCDUControl(uint control, uint parameter);
+    }
+
     public interface IValueProvider
     {
         string Name { get; }
@@ -95,6 +103,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsPaused { get; }    
         bool IsVisible { get; }
         bool IsConnected { get; }
+
         string ExtraStatusInformation { get; }
 
         object GetValue(IMonitorableValue value);
@@ -159,7 +168,7 @@ namespace SPAD.neXt.Interfaces.Events
         void StopMonitoringEvents();
     }
 
-    public interface IMonitorableValue : IDisposable
+    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>
     {
         Guid ID { get; }
         Guid Owner { get; set; }
@@ -198,7 +207,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool HasChanged();
 
         void SetValue(object newValue, int delay = 0);
-        Double ChangeValue(Double valChange);
+        Decimal ChangeValue(Decimal valChange);
 
         void StartMonitoring();
         void StopMonitoring();

@@ -64,7 +64,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventActionSingleton : IEventAction
     {
-        Guid SingletonID { get; }
+        Guid SingletonID { get; set; }
     }
 
     public interface IEventActionCommand : IEventAction
@@ -91,6 +91,31 @@ namespace SPAD.neXt.Interfaces.Events
         IKeyMacro KeyboardMacro { get;}
         SPADKeyboardOption MacroType { get; set; }
         void ConfigureKeyboardAction(IEnumerable<int> keys, int duration, int pause, int repeat);
+    }
+
+    public interface IEventActionSwitchWindow : IEventAction
+    {
+    }
+
+    public interface IEventActionPlateImage : IEventAction
+    {
+        FLASHMODE FlashMode { get; set; }
+        string Image { get; set; }
+    }
+
+    public interface IEventActionPlateLabel : IEventActionObserve
+    {
+        string Text { get; set; }
+        string Color { get; set; }
+    }
+
+    public interface IEventImageData : IXmlAnyObject
+    {
+        Guid ID { get; }
+        string Name { get; set; }
+
+        byte[] GetImageData();
+        void UpdateImage(byte[] data);
     }
 
     public interface IEventActionVirtualJoyStick : IEventActionChangeValue
@@ -141,5 +166,10 @@ namespace SPAD.neXt.Interfaces.Events
         bool UseSSML { get; set; }
         int Volume { get; set; }
         int Rate { get; set; }
+    }
+
+    public interface IEventActionDummy :  IEventActionSingleton 
+    {
+        IXmlAnyObject Data { get; set; }
     }
 }

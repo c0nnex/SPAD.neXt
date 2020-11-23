@@ -43,6 +43,11 @@ namespace SPAD.neXt.Interfaces
         Guid GetDeviceUniqueIdentifier();
     }
 
+    public interface IExtensionDevice2 : IExtensionDevice
+    {
+        string DevicePath { get; }
+    }
+
     public interface IExtensionDynamic 
     {
       

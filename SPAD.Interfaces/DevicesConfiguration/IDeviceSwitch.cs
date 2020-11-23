@@ -5,39 +5,40 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
     public interface IGameDeviceInput
     {
-        string InputName { get; }
-        uint InputID { get; }
-        JoystickInputTypes InputType { get; }
-        bool NoCalibration { get; }
+        string InputName { get;set; }
+        uint InputID { get;set; }
+        JoystickInputTypes InputType { get;set; }
+        bool NoCalibration { get;set; }
         
     }
 
     public interface IDeviceConfigValue : IGameDeviceInput
     {
-        string Value { get; }
-        int Order { get; }
-        string Default { get; }
-        string DefaultValue { get; }
-        string DisableConfig { get; }
-        string DisplayName { get; }       
-        bool ReadOnly { get; }
-        bool CanAdd { get; }
-        bool CanEdit { get; }
-        bool CanDelete { get; }
-        bool CanBeBound { get; }
-        bool Monitor { get; }
-        string ActionTarget { get; }
-        bool Selectable { get; }
-        bool MustHaveCondition { get; }
-        SPADConditionType ConditionType { get; }
+        string Value { get;set; }
+        int Order { get;set; }
+        string Default { get;set; }
+        string DefaultValue { get;set; }
+        string DisableConfig { get;set; }
+        string DisplayName { get;set; }       
+        bool ReadOnly { get;set; }
+        bool CanAdd { get;set; }
+        bool CanEdit { get;set; }
+        bool CanDelete { get;set; }
+        bool CanBeBound { get;set; }
+        bool Monitor { get;set; }
+        string ActionTarget { get;set; }
+        bool Selectable { get;set; }
+        bool MustHaveCondition { get;set; }
+        SPADConditionType ConditionType { get;set; }
         bool HasDisplayName { get; }
-        bool CanChangeBehavior { get; }
-        bool HasModes { get; }
-        bool CanChangeTunerAcceleration { get; }
+        bool CanChangeBehavior { get;set; }
+        bool HasModes { get;set; }
+        bool CanChangeTunerAcceleration { get;set; }
         bool CanChangeIgnorePower { get;  }
-        Guid SingletonID { get; }
+        Guid SingletonID { get;set; }
+        bool IsSingleton { get; }
         bool CanRename { get;  } 
-        string Parameter { get; }
+        string Parameter { get;set; }
         SPADEventValueComparator ComparatorOverride { get; }
         IReadOnlyList<ISerializableOption> Options { get; }
         IReadOnlyList<string> DisabledConfigs { get; }
@@ -49,26 +50,28 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
     public interface IDeviceSwitch : IGameDeviceInput
     {
        
-        string Inherit { get; }
-        string Name { get; }
+        string Inherit { get;set; }
+        string Name { get;set; }
         SPADSwitchTypes SwitchType { get;}
-        bool ReadOnly { get; }
-        string ConfigurationMode { get; }
-        bool HasSettings { get; }
-        bool CanRename { get; }
-        bool Selectable { get; }
+        bool ReadOnly { get;set; }
+        string ConfigurationMode { get;set; }
+        bool HasSettings { get;set; }
+        bool CanRename { get;set; }
+        bool Selectable { get;set; }
         bool IsEnabled { get; set; }
         bool IsCustomized { get; set; }
-        int InputSubPanel { get; }
-        int InputMode { get; }
+        int InputSubPanel { get;set; }
+        int InputMode { get;set; }
+        bool NoCustomize { get; set; }
         List<uint> InputVirtualHat { get; }
 
         IReadOnlyList<IDeviceConfigValue> ConfigValues { get; }
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
 
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
-
-        
+        void AddConfigValue(IDeviceConfigValue cfgValue);
+        IDeviceConfigValue CreateConfigValue();
+        ISerializableOption GetTriggerOption(string trigger, string optionName, string defaultValue = null);
     }
 
     public interface ISimpleSwitch : IDeviceSwitch
