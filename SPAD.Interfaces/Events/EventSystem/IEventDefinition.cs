@@ -42,6 +42,7 @@ namespace SPAD.neXt.Interfaces.Events
         IEventActions Actions { get; }
         string BoundTo { get; }
         SPADConditionBinding ConditionBinding { get; set; }
+        bool ConditionRepeat { get; set; }
         IEventConditions Conditions { get; }
         string ConfigString { get; }
         string ConfigStringToolTip { get; }

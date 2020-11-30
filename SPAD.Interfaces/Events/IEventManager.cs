@@ -228,6 +228,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool NeedEvent { get; }
         bool NeedsMonitoring { get; }
         bool AlwaysUpdate { get; set; }
+        bool DebugMonitorable { get; set; }
     }
 
     public enum ValueDataTypes
