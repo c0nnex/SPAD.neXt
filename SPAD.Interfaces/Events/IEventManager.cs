@@ -38,15 +38,18 @@ namespace SPAD.neXt.Interfaces.Events
         void HandleEvent(ISPADEventArgs e);
     }
 
-    public interface IObserverTicket
+    public interface IObserverTicket : IDisposable
     {
         Guid ID { get; }
         string EventName { get; }
         string SubscriptionID { get; }
         int Priority { get; }
-        string CustomData { get; set; }
+        object UserData { get; set; }
         bool IsStatic { get; set; }
-        void Dispose();
+        bool NeedNotify { get; }
+
+        void Subscribe(IMonitorableValue monitorableValue);
+        void Unsubscribe(IMonitorableValue monitorableValue);
     }
 
     public interface IValueTranscriber
@@ -74,11 +77,22 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IValueConnector : ISimulationEventProvider
     {
+        bool SupportsDynamicDefinitions { get; }
+        bool IsConnected { get; }
         void ForceUpdate(string dataRef,bool doMonitor);
         void SetValue(string dataRef, double newValue);
         void ExecuteCommand(string commandRef, uint parameter);
         void SendMessage(string message);
         void Stop();
+
+    }
+
+    public interface ISimConnectValueProvider : IValueProvider
+    { }
+
+    public interface ICDUValueProvider
+    {
+        void SendCDUControl(uint control, uint parameter);
     }
 
     public interface IValueProvider
@@ -89,6 +103,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsPaused { get; }    
         bool IsVisible { get; }
         bool IsConnected { get; }
+
         string ExtraStatusInformation { get; }
 
         object GetValue(IMonitorableValue value);
@@ -153,7 +168,7 @@ namespace SPAD.neXt.Interfaces.Events
         void StopMonitoringEvents();
     }
 
-    public interface IMonitorableValue : IDisposable
+    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>
     {
         Guid ID { get; }
         Guid Owner { get; set; }
@@ -192,7 +207,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool HasChanged();
 
         void SetValue(object newValue, int delay = 0);
-        Double ChangeValue(Double valChange);
+        Decimal ChangeValue(Decimal valChange);
 
         void StartMonitoring();
         void StopMonitoring();
@@ -201,6 +216,9 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsActive { get; }
         bool IsUndefined();
         bool HasObservers { get; }
+
+        void Subscribe(IObserverTicket observerTicket);
+        void Unsubscribe(IObserverTicket observerTicket);
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
         void Raise(string eventName, object sender, ISPADEventArgs eventArgs);
@@ -210,6 +228,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool NeedEvent { get; }
         bool NeedsMonitoring { get; }
         bool AlwaysUpdate { get; set; }
+        bool DebugMonitorable { get; set; }
     }
 
     public enum ValueDataTypes

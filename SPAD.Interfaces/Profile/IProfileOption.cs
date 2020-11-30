@@ -30,13 +30,19 @@ namespace SPAD.neXt.Interfaces.Profile
 
     public class ExtensionConfigurationEvent
     {
+        public Action<bool> Callback = (b) => { };
         public string EventType { get; set; } = "Button";
         public string EventName { get; set; }
         public string EventTrigger { get; set; }
         public object EventValue { get; set; }
         public string EventDisplayName { get; set; }
-        public Func<bool> IsEnabled { get; set; } = () => true;
+        public Func<string,bool> IsEnabled { get; set; } = (s) => true;
         public Func<bool> IsVisible { get; set; } = () => true;
+
+        public void UpdateStatus()
+        {
+            Callback(IsEnabled(EventTrigger));
+        }
     }
 
 }

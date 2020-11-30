@@ -7,7 +7,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
     {
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
        
-        IDeviceSwitch GetSwitch(string name);
+        
         string Name { get; }
         string PublishName { get; }
         string Panel { get; }
@@ -19,12 +19,14 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string DeviceType { get; }
         string DeviceMenu { get; }
         bool NoEventsAutoRemove { get; }
-        bool ContainsSwitch(string name);
+        bool HasDeviceSwitch(string name);
 
         void CreateVirtualInputs(IInputDevice gameDevice);
         void Clear();
+        void AddDeviceSwitch(IDeviceSwitch newSwitch);
         bool AddDeviceSwitch(string xmlSwitchFragment);
-
+        IDeviceSwitch GetDeviceSwitch(string name);
+        IDeviceSwitch CreateDeviceSwitch();
     }
 
     public interface IDeviceCalibration
@@ -39,7 +41,6 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 
     public interface IAxisCalibration
     {
-        int Curve { get; set; }
         int Deadzone { get; set; }
         string DisplayName { get; set; }
         int Maximum { get; set; }

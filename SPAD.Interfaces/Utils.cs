@@ -49,7 +49,7 @@ namespace SPAD.neXt.Interfaces
                     }
                     return "Unknown";
                 }
-                catch (Exception ex)
+                catch 
                 { return "Unknown"; }
             }
         }

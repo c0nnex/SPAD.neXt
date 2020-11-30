@@ -168,6 +168,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// </summary>
         bool IsValid { get; }
 
+        List<List<byte>> ToArray();
+
         /// <summary>
         /// Subscribable event if content of CDU screen changed
         /// </summary>
@@ -207,6 +209,6 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// </summary>
         /// <param name="key">Key to send <see cref="CDU_KEYS"/></param>
         void SendKey(CDU_KEYS key);
-
+        void SendCDUKey(uint key);
     }
 }

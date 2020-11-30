@@ -26,6 +26,7 @@ namespace SPAD.neXt.Interfaces.Events
         Visibility CurrentUIState { get; set; }
         Visibility CurrentUIStateInverted { get; set; }
         object Data { get; }
+        I GetData<I>() where I : class;
         bool IsOff { get; set; }
         bool LEDIsOn { get; }
         bool LongModeOn { get; set; }
@@ -34,7 +35,20 @@ namespace SPAD.neXt.Interfaces.Events
         bool ShortModeOn { get; set; }
         Visibility ShortModeVisible { get; set; }
         string Tag { get; }
+        string TargetTag { get; }
+        string EventPressName { get; set; }
+        string EventLongPressName { get; set; } 
+        string EventReleaseName { get; set; }
+        string EventShortOnName { get; set; }
+        string EventShortOffName { get; set; }
+        string EventLongOnName { get; set; }
+        string EventLongOffName { get; set; }
+        string EventHeldName { get; set; }
         bool NeedsCallout { get; }
+
+        bool IsHeldModeEnabled { get; }
+        void EnableHeldMode();
+        void DisableHeldMode();
 
         bool HasMode(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeOff(PROGRAMMABLEBUTTONSTATUS whichMode);

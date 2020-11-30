@@ -77,6 +77,8 @@ namespace SPAD.neXt.Interfaces.Logging
         void SetMinLogLevel(SPADLogLevel level);
         void Trace(Func<string> p);
         void Debug(Func<string> p);
+        void Info(Func<string> p);
+
     }
 
 

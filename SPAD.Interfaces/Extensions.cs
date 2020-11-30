@@ -28,10 +28,10 @@ namespace System
             return inStr.Substring(0, numChars);
         }
 
-        public static string HexDump(this byte[] bytes, int bytesPerLine = 16)
+        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0)
         {
             if (bytes == null) return "<null>";
-            int bytesLength = bytes.Length;
+            int bytesLength = bytes.Length - startOffset;
 
             char[] HexChars = "0123456789ABCDEF".ToCharArray();
 
@@ -52,7 +52,7 @@ namespace System
             int expectedLines = (bytesLength + bytesPerLine - 1) / bytesPerLine;
             StringBuilder result = new StringBuilder(expectedLines * lineLength);
 
-            for (int i = 0; i < bytesLength; i += bytesPerLine)
+            for (int i = startOffset; i < bytesLength; i += bytesPerLine)
             {
                 line[0] = HexChars[(i >> 28) & 0xF];
                 line[1] = HexChars[(i >> 24) & 0xF];
@@ -128,7 +128,7 @@ namespace SPAD.neXt.Interfaces
             {
                 return (T)Enum.Parse(value.GetType(), valIn, true);
             }
-            catch (Exception ex)
+            catch 
             {
                 return default(T);
             }
@@ -287,6 +287,13 @@ namespace SPAD.neXt.Interfaces
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Rescale(this Double value, Double sourceMin, Double sourceMax, Double targetMin, Double targetMax)
+        {
+            value = Math.Max(sourceMin, Math.Min(value, sourceMax));
+
+            return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Rescale(this float value, float sourceMin, float sourceMax, float targetMin, float targetMax)
         {
             value = Math.Max(sourceMin, Math.Min(value, sourceMax));
@@ -311,8 +318,8 @@ namespace SPAD.neXt.Interfaces
         public static void RemoveWhere<TKey, TValue>(
             this ConcurrentDictionary<TKey, TValue> hashtable, Predicate<TKey, TValue> p)
         {
-            foreach (KeyValuePair<TKey, TValue> value in hashtable.ToList().Where(value => p(value)))
-                hashtable.Remove(value.Key);
+            foreach (var value in hashtable.Where(v=> p(v)).Select(v =>v.Key).ToList())
+                hashtable.Remove(value);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -340,17 +347,7 @@ namespace SPAD.neXt.Interfaces
             TValue value;
             if ((key == null) || !dict.ContainsKey(key))
                 return false;
-            while (!dict.TryRemove(key, out value))
-            {
-                tries++;
-                if (tries > 10)
-                {
-                    //Global.Logger.Warn("ConCurrent remove for {0} failed after 10 tries", key);
-                    return false;
-                }
-                Thread.Sleep(100);
-            }
-            return true;
+            return dict.TryRemove(key, out var _);
         }
 
         public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, TValue value)
@@ -360,17 +357,7 @@ namespace SPAD.neXt.Interfaces
             if (dict.ContainsKey(key))
                 dict.Remove(key);
             int tries = 0;
-            while (!dict.TryAdd(key, value))
-            {
-                tries++;
-                if (tries > 10)
-                {
-                    //Global.Logger.Warn("ConCurrent add for {0} failed after 10 tries", key);
-                    return false;
-                }
-                Thread.Sleep(100);
-            }
-            return true;
+            return dict.TryAdd(key, value);
         }
     }
 

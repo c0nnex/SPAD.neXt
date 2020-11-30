@@ -4,7 +4,11 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
-    public interface IDataDefinitionProperties
+    public interface IExportableDataDefinitionProperties
+    {
+
+    }
+    public interface IDataDefinitionProperties 
     {
         string Access { get; set; }
         string Category { get; set; }
@@ -33,7 +37,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool ExcludeKeyFromSearch { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
@@ -45,9 +49,14 @@ namespace SPAD.neXt.Interfaces.Configuration
         string GlobalName { get; set; }
         bool Disposable { get; set; }
         bool IsValid { get; }
+
+        bool DoesSupportControls { get; }
+        bool IsSimConnectData { get; }
+
         bool HasCustomPrimaryKey { get; }
         IValueNormalizer Normalizer { get; }
         string SortID { get; }
+        HashSet<string> AdditionalSortIDs { get; }
         SPADDefinitionTypes DefinitionType { get; set; }
         string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
@@ -56,19 +65,25 @@ namespace SPAD.neXt.Interfaces.Configuration
 
         ushort DataIndex { get; }
         bool IsProviderDataDefinition { get; }
-        object Clone();
+
+        object UserData { get; set; }
+        T GetUserData<T>();
+
         IEnumerable<string> GetIDs();
         bool HasAlternateUnits { get; }
         List<string> AlternateUnits { get; }
         string PrimaryID { get; }
 
+        object GetRawValue();
         double GetValue();
         void SetValue(double val);
         string GetValueString(string displayFormat);
-        double CheckRange(double val);
+        decimal CheckRange(decimal val);
         void FixUp();
         void ProcessOutgoing(IValueConnector connection, object data);
         object ConvertValue(object val);
+
+        
     }
 
     public interface IValueRange
@@ -79,7 +94,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool HasRange { get; }
         bool RollOver { get; }
 
-        double CheckRange(double val);
+        decimal CheckRange(decimal val);
         bool Parse(string strVal);
     }
 
@@ -97,6 +112,12 @@ namespace SPAD.neXt.Interfaces.Configuration
     {
         IMonitorableValue Monitorable { get; }
         bool CanMonitor { get; }
+    }
+
+    public interface IExpandable<T>
+    {
+        int ChildCount { get; set; }
+        IEnumerable<T> Expand();
     }
 
 }
