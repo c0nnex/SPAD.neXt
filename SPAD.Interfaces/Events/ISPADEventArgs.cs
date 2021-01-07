@@ -55,8 +55,10 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IAcceleratedEncoder
     {
+        
         void Reset();
         int GetAcceleration(double threshold, double timeout, double multiplier, double maxAcceleration);
+        IAcceleratedEncoder WasPressed(long tick = 0);
     }
 
     public sealed class SPADEventArgs : HandledEventArgs, ISPADEventArgs

@@ -45,6 +45,9 @@ namespace SPAD.neXt.Interfaces
 
     public interface IExtensionDevice2 : IExtensionDevice
     {
+        bool AutoRemoveInvalidEvents { get; }
+        //string DeviceConfigDirectory { get; }
+        //string DeviceCalibrationName { get; }
         string DevicePath { get; }
     }
 

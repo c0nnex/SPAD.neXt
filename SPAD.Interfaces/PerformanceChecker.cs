@@ -16,7 +16,7 @@ namespace SPAD.neXt.Interfaces
         bool doLog = false;
         ulong stTicks;
         string Name;
-
+        int marker = 0;
         static PerformanceChecker()
         {
             // DoLogPerformance = System.Environment.MachineName == "DESKTOP-40RM7LC";
@@ -28,6 +28,10 @@ namespace SPAD.neXt.Interfaces
             this.doLog = doLog;
         }
 
+        public void Mark(string info=null)
+        {
+            if (DoLogPerformance || doLog) logger?.Info($"{Name} {marker++} {info} {EnvironmentEx.TickCount64 - stTicks}ms");
+        }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

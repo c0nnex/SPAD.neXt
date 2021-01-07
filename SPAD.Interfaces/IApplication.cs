@@ -109,12 +109,12 @@ namespace SPAD.neXt.Interfaces
         void SetValueProviderStatus(IValueProvider newProvider, bool isActive);
         void OnSimulationConnected(SimulationConfiguration simConfig,IValueProvider provider);
 
-        Stream GetConfigurationFile(string filename);
-        T ReadXMLConfigurationFile<T>(string filename) where T : class, new();
-        T ReadJSONConfigurationFile<T>(string filename) where T : class, new();
+        Stream GetConfigurationFile(string filename, string cfgFile);
+        T ReadXMLConfigurationFile<T>(string filename,string cfgFile) where T : class, new();
+        T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
 
         string CreateXml(object o);
-        IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, bool preferLocal = false);
+        IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
 
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
@@ -137,4 +137,11 @@ namespace SPAD.neXt.Interfaces
         void RuntimeResolve(IApplication proxy, string baseUri);
     }
 
+    public interface ISupportsActivation
+    {
+        void Activate();
+        void Deactivate();
+
+        void Rotate(int direction);
+    }
 }

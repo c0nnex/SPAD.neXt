@@ -144,6 +144,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool CanBeDeleted { get; set; }
         bool CanTargetDevice { get; set; }
         string TargetDeviceID { get; set; }
+        string RawTargetDeviceID { get; }
         string TargetName { get; set; }
         string DataReferenceText { get; }
         bool IsInEditMode { get; set; }

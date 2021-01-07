@@ -31,6 +31,9 @@ namespace SPAD.neXt.Interfaces.Events
         IMonitorableValue GetRegisteredVariable(string tag);
         IMonitorableValue CreateMonitorableValue(string Name, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
         void RemoveRegisteredVariable(string variableName, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION);
+        List<string> GetAllMonitoredValues();
+
+
     }
 
     public interface IEventHandler
@@ -193,6 +196,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool AsBool { get; set; }
         byte AsByte { get; set; }
         double AsDouble { get; set; }
+        decimal AsDecimal { get; set; }
         short AsInt16 { get; set; }
         int AsInt32 { get; set; }
         long AsInt64 { get; set; }

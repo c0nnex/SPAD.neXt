@@ -43,6 +43,7 @@ namespace SPAD.neXt.Interfaces
         IEventContext GetCurrentEventContext();
         string GetConfigurationSetting(string key);
         void NavigateToThis();
+        void ClipboardSetData(string data);
     }
 
     public interface IPanelControl 

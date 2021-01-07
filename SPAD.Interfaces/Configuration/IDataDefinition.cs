@@ -37,7 +37,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool ExcludeKeyFromSearch { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
@@ -45,7 +45,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string DefaultNormalizer { get; set; }
         string DefaultValue { get; set; }
         string DisplayName { get; set; }
-        string DisplayString { get; }
+        string DisplayString { get; set; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
         bool IsValid { get; }
@@ -60,10 +60,11 @@ namespace SPAD.neXt.Interfaces.Configuration
         SPADDefinitionTypes DefinitionType { get; set; }
         string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
+        IDataProvider DataProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
         IValueRange Range { get; }
 
-        ushort DataIndex { get; }
+        ushort DataIndex { get; set; }
         bool IsProviderDataDefinition { get; }
 
         object UserData { get; set; }

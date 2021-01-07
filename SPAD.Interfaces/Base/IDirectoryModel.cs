@@ -33,5 +33,6 @@ namespace SPAD.neXt.Interfaces.Base
 
         string GetFilename(APPLICATION_DIRECTORY scope, string filename);
         string GetFilename(APPLICATION_DIRECTORY scope, string subDir, string filename);
+        string GetFilename(APPLICATION_DIRECTORY scope, string subDir1, string subDir2, string filename);
     }
 }

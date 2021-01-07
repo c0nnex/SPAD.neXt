@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 
         void CreateVirtualInputs(IInputDevice gameDevice);
         void Clear();
+        void Save();
         void AddDeviceSwitch(IDeviceSwitch newSwitch);
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);

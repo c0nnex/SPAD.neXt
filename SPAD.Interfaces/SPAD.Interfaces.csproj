@@ -96,6 +96,7 @@
     <Compile Include="Base\IXmlPersistance.cs" />
     <Compile Include="Callout\ICalloutManager.cs" />
     <Compile Include="Configuration\IDataDefinition.cs" />
+    <Compile Include="Configuration\IDataProvider.cs" />
     <Compile Include="Configuration\ILocalVariable.cs" />
     <Compile Include="Configuration\IProfileOptionsProvider.cs" />
     <Compile Include="DevicesConfiguration\IKnownDevices.cs" />
