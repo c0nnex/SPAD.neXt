@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces
         IPanelControl PanelControl { get; }
         Guid PanelLinkID { get; }
         bool PanelHasFocus { get; }
+        bool IsVirtualDevice { get; }
         string PanelName { get; }
         string DevicePanelID { get; }
         bool SupportsDefaultProfiles { get; set; }
@@ -44,6 +45,7 @@ namespace SPAD.neXt.Interfaces
         string GetConfigurationSetting(string key);
         void NavigateToThis();
         void ClipboardSetData(string data);
+        void RenamePage(string newName);
     }
 
     public interface IPanelControl 

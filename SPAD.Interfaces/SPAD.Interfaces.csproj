@@ -99,6 +99,7 @@
     <Compile Include="Configuration\IDataProvider.cs" />
     <Compile Include="Configuration\ILocalVariable.cs" />
     <Compile Include="Configuration\IProfileOptionsProvider.cs" />
+    <Compile Include="DevicesConfiguration\AddonDevice.cs" />
     <Compile Include="DevicesConfiguration\IKnownDevices.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitchesType.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitch.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Aircraft\ICDUScreen.cs" />
     <Compile Include="Gauges\IGaugeVersionInformation.cs" />
+    <Compile Include="ICommandDevice.cs" />
     <Compile Include="ISpecificOptions.cs" />
     <Compile Include="Gauges\IOnlineGaugeData.cs" />
     <Compile Include="Gauges\IOnlineGauge.cs" />

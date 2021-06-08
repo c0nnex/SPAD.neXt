@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
+    public delegate void DataDefinitionCreatedDelegate(IDataDefinition definition, IDataDefinition monitorableDef);
     public interface IExportableDataDefinitionProperties
     {
 
@@ -19,6 +20,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string AlternateID { get; set; }
         string PrimaryKey { get; set; }
         bool IsReadOnly { get; }
+        bool IsMonitored { get; }
         string Key { get; set; }
         string LinkedEntry { get; set; }
         string Name { get; set; }
@@ -112,6 +114,7 @@ namespace SPAD.neXt.Interfaces.Configuration
     public interface IIsMonitorable
     {
         IMonitorableValue Monitorable { get; }
+        IMonitorableValue NoCreateMonitorable { get; }
         bool CanMonitor { get; }
     }
 

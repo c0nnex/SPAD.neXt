@@ -15,6 +15,7 @@ namespace SPAD.neXt.Interfaces
         public static bool DoLogPerformance { get; set; } = false;
         bool doLog = false;
         ulong stTicks;
+        ulong stLastMark;
         string Name;
         int marker = 0;
         static PerformanceChecker()
@@ -25,12 +26,18 @@ namespace SPAD.neXt.Interfaces
         {
             Name = name;
             stTicks = EnvironmentEx.TickCount64;
+            stLastMark = stTicks;
             this.doLog = doLog;
         }
 
         public void Mark(string info=null)
         {
-            if (DoLogPerformance || doLog) logger?.Info($"{Name} {marker++} {info} {EnvironmentEx.TickCount64 - stTicks}ms");
+            if (DoLogPerformance || doLog)
+            {
+                var x = EnvironmentEx.TickCount64;
+                logger?.Info($"{Name} MARK {marker++} {info} {x - stLastMark}/{x - stTicks} ms");
+                stLastMark = x;
+            }
         }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -41,7 +48,7 @@ namespace SPAD.neXt.Interfaces
             {
                 if (disposing)
                 {
-                    if (DoLogPerformance || doLog) logger?.Info($"{Name} . {EnvironmentEx.TickCount64 - stTicks}ms");
+                    if (DoLogPerformance || doLog) logger?.Info($"{Name} DONE {EnvironmentEx.TickCount64 - stLastMark}/{EnvironmentEx.TickCount64 - stTicks} ms");
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

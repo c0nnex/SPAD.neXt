@@ -1,6 +1,8 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+
 namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
     public interface IDeviceConfiguration : IOptionsProvider
@@ -54,4 +56,24 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void ImportFrom(IInputAxis axis);
 
     }
+
+    public sealed class DeviceLocalization
+    {
+        [XmlArray(ElementName = "Entries", Namespace = "http://www.fsgs.com/SPAD", IsNullable = false)]
+        [XmlArrayItem(ElementName = "Entry")]
+        public List<DeviceLocalizationEntry> Entries { get; set; } = new List<DeviceLocalizationEntry>();
+    }
+
+    public sealed class DeviceLocalizationEntry
+    {
+        [XmlAttribute]
+        public string Id { get; set; }
+        [XmlAttribute]
+        public string Add { get; set; }
+        [XmlAttribute] 
+        public string Label { get; set; }
+        [XmlText] 
+        public string Description { get; set; }
+    }
+
 }

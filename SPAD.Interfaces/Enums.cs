@@ -114,7 +114,9 @@ namespace SPAD.neXt.Interfaces
         SEPERATOR,
         PLATEIMAGE,
         PLATELABEL,
-        SWITCHWINDOW
+        SWITCHWINDOW,
+        EXTERNAL,
+        RESTCALL
     }
     public enum DataProviderMapType
     {
@@ -129,6 +131,7 @@ namespace SPAD.neXt.Interfaces
         High =   1000,
         Low =   10000,
         Last = 100000,
+        All =  999999,
     }
 
     public enum EventSeverity
@@ -198,7 +201,8 @@ namespace SPAD.neXt.Interfaces
         ToggleBit,
         AppendChars,
         DeleteChars,
-        ClearChars
+        ClearChars,
+        SetEventValue
     }
 
     public enum SPADSoundOperation
@@ -1252,6 +1256,7 @@ namespace SPAD.neXt.Interfaces
     {
         public const string StatusMessage = "SPAD.StatusMessage";
         public const string AircraftChanged = "SPAD_Aircraft";
+        public const string ProfileChanged = "SPAD_Profile";
         public const string FSUIPCStatus = "FSUIPC.Status";
         public const string SimConnectStatus = "SimConnect.Status";
         public const string ProviderStatus = "Provider.Status";
@@ -1289,7 +1294,10 @@ namespace SPAD.neXt.Interfaces
 
 
         public const string EVENT_AIRCRAFTCHANGED = "SPAD_AIRCRAFTCHANGED";
-
+        public const string EVENT_AIRCRAFT = "SPAD_AIRCRAFT";
+        public const string EVENT_PROFILE = "SPAD_PROFILE";
+        public const string EVENT_EVENTVALUE = "SPAD_EVENTVALUE";
+        public const string EVENT_EVENTVALUERAW = "SPAD_EVENTVALUERAW";
     }
     public class Constants
     {

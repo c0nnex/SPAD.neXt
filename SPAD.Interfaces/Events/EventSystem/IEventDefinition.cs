@@ -10,6 +10,13 @@ using System.Linq;
 
 namespace SPAD.neXt.Interfaces.Events
 {
+
+    public interface IEventBaseObject
+    {
+        IEventDefinition GetParentEventDefinition();
+       
+    }
+
     public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>
     {
         string BoundTo { get; set; }
@@ -35,7 +42,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventDefinition : IEventOptions,ICloneableWithID<IEventDefinition>
+    public interface IEventDefinition : IEventOptions, ICloneableWithID<IEventDefinition>
     {
         Guid SingletonID { get; set; } 
         bool IsSingleton { get; }
@@ -76,9 +83,8 @@ namespace SPAD.neXt.Interfaces.Events
         IEventAction CreateCommandAction(string command, string parameter = null);
     }
 
-    public interface IEventCondition : IHasID
+    public interface IEventCondition : IEventBaseObject,IHasID
     {
-        IEventDefinition ParentEventDefinition { get; }
         string ConfigString { get; }
         bool IsConfigured { get; }
 
@@ -119,7 +125,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventConditions : IObservableList<IEventCondition>
     {
         string ConfigString { get; }
-        bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);
+        bool Evaluate(ISPADEventArgs e,SPADConditionBinding binding, bool debugMode);
     }
 
     public interface IEventActions : IObservableList<IEventAction>
@@ -131,9 +137,8 @@ namespace SPAD.neXt.Interfaces.Events
         IEventAction GetBySingleton(Guid id);
     }
 
-    public interface IEventAction : INotifyPropertyChanged ,IEventOptions, ICloneableWithID<IEventAction>
+    public interface IEventAction : INotifyPropertyChanged , IEventBaseObject,IEventOptions, ICloneableWithID<IEventAction>
     {
-        IEventDefinition ParentEventDefinition { get; }
         SPADEventActions ActionID { get; }
         string ConfigID { get; }
         string ConfigString { get; }

@@ -32,6 +32,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Immediate { get; set; }
         bool IsValueEvent { get; set; }
         bool IsCascadedEvent { get; set; }
+        bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
@@ -115,7 +116,7 @@ namespace SPAD.neXt.Interfaces.Events
         public bool IsValueEvent { get; set; }
         public string EventTrigger { get; set; }
         public bool IsCascadedEvent { get; set; }
-
+        public bool IsAxisEvent { get; set; }
         public object CallbackValue { get; set; }
         public bool IsDisplayEvent { get; set; }
 
@@ -310,6 +311,12 @@ namespace SPAD.neXt.Interfaces.Events
         public ISPADEventArgs WithPriority(EventPriority priority)
         {
             EventPriority = priority;
+            return this;
+        }
+
+        public ISPADEventArgs AsAxisEvent()
+        {
+            IsAxisEvent = true;
             return this;
         }
     }

@@ -63,6 +63,9 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         int InputSubPanel { get;set; }
         int InputMode { get;set; }
         bool NoCustomize { get; set; }
+        bool IsAxis { get; }
+        bool IsLever { get; }
+
         List<uint> InputVirtualHat { get; }
 
         IReadOnlyList<IDeviceConfigValue> ConfigValues { get; }

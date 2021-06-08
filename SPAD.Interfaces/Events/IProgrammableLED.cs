@@ -31,6 +31,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool LEDIsOn { get; }
         bool LongModeOn { get; set; }
         bool NoActivation { get; set; }
+        bool NoImplicitActivation { get; set; }
         Visibility LongModeVisible { get; set; }
         ulong Mask { get; set; }
         bool ShortModeOn { get; set; }

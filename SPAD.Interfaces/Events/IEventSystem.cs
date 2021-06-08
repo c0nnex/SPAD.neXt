@@ -10,8 +10,7 @@ namespace SPAD.neXt.Interfaces.Events
 {
 
     public interface IEventSystemHandler
-    {
-        
+    {       
         IEventDefinition CreateEvent(string boundTo,string trigger);
         IEventAction CreateAction(SPADEventActions action);
         IEventAction CreateAction(string action);
@@ -35,6 +34,7 @@ namespace SPAD.neXt.Interfaces.Events
         void StartRecording();
         IEnumerable<IMonitorableValue> StopRecording();
 
+        void WatchDataDefinitionCreation(string dataDefinition, DataDefinitionCreatedDelegate callback, bool isGlobal = false);
         void RaiseEvent(string eventName, ISPADEventArgs e);
     }
 
@@ -92,6 +92,11 @@ namespace SPAD.neXt.Interfaces.Events
         public static IDataDefinition GetDataDefinition(string id)
         {
             return EventSystemHandler.GetDataDefinition(id);
+        }
+
+        public static void WatchDataDefinitionCreation(string dataDefinition, DataDefinitionCreatedDelegate callback, bool isGlobal = false)
+        {
+            EventSystemHandler.WatchDataDefinitionCreation(dataDefinition, callback, isGlobal);
         }
 
         public static IEnumerable<IDynamicNormalizer> GetDynamicNormalizers()

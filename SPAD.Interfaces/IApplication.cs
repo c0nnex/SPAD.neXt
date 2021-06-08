@@ -16,7 +16,7 @@ using System.IO;
 namespace SPAD.neXt.Interfaces
 {
 
-    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }
@@ -115,7 +115,7 @@ namespace SPAD.neXt.Interfaces
 
         string CreateXml(object o);
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
-
+        IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
         ISerializableOption GetApplicationOption(string optionKey);
@@ -124,6 +124,13 @@ namespace SPAD.neXt.Interfaces
 
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
+    }
+
+    public interface IActionManager
+    {
+        void RegisterActionProvider(IActionProvider provider);
+        IReadOnlyList<IActionProvider> GetRegisteredActionProviders();
+
     }
 
     public interface IApplicationConfiguration
