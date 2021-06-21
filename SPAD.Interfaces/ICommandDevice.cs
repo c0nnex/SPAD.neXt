@@ -33,7 +33,7 @@ namespace SPAD.neXt.Interfaces
     {
         IEventAction ActionEvent { get; }
         ISPADBaseEvent BaseEvent { get;  }
-        IDeviceSwitch DeviceSwith { get;  }
+        IDeviceSwitch DeviceSwitch { get;  }
         IDeviceConfigValue SwitchConfiguration { get;}
         IEventDefinition EventDefinition { get; }
         IDeviceProfile DeviceProfile { get;  }

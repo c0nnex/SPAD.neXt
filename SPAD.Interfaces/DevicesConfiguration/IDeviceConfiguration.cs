@@ -11,7 +11,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
        
         
         string Name { get; }
-        string PublishName { get; }
+        string PublishName { get; set; }
         string Panel { get; }
         string ProductID { get; }
         IDeviceVendor Vendor { get; }

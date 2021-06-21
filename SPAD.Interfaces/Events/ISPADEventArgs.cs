@@ -28,7 +28,7 @@ namespace SPAD.neXt.Interfaces.Events
         IDeviceProfile DeviceProfile { get; set; }
         IMonitorableValue MonitorableValue { get; set; }
         Guid Sender { get; }
-
+        Guid ExecutionContext { get; }
         bool Immediate { get; set; }
         bool IsValueEvent { get; set; }
         bool IsCascadedEvent { get; set; }
@@ -126,6 +126,7 @@ namespace SPAD.neXt.Interfaces.Events
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
         public EventOperations EventOperation { get; set; } = EventOperations.Normal;
         public Guid Sender { get; set; } = Guid.Empty;
+        public Guid ExecutionContext { get; set; } = Guid.Empty;
         public EventPriority EventPriority { get; set; } = EventPriority.Low;
         public EventSeverity EventSeverity { get; set; } = EventSeverity.Verbose;
         private SPADEventArgs() { }
@@ -193,7 +194,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         public override string ToString()
         {
-            return String.Format("{0} Old={1} New={2} ValueEvent={3}", FullName, Convert.ToString(OldValue), Convert.ToString(NewValue), IsValueEvent);
+            return String.Format("{0} Old={1} New={2} Switch={3} ValueEvent={4} {5}", FullName, Convert.ToString(OldValue, CultureInfo.InvariantCulture), Convert.ToString(NewValue,CultureInfo.InvariantCulture),EventSwitch, IsValueEvent,  ExecutionContext == Guid.Empty ? "" : ExecutionContext.ToString());
         }
 
         public string FullName
@@ -313,7 +314,11 @@ namespace SPAD.neXt.Interfaces.Events
             EventPriority = priority;
             return this;
         }
-
+        public ISPADEventArgs WithContext(Guid context)
+        {
+            ExecutionContext = context;
+            return this;
+        }
         public ISPADEventArgs AsAxisEvent()
         {
             IsAxisEvent = true;

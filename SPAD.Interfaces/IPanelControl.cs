@@ -81,6 +81,7 @@ namespace SPAD.neXt.Interfaces
 
         bool CreateDocumentation(IPanelDocumentation docProxy);
         bool InterceptCommand(ICommand command);
+        bool SavePanelImage(string filename);
     }
 
     public interface IPanelDocumentation

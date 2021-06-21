@@ -127,11 +127,11 @@ namespace SPAD.neXt.Interfaces
     }
     public enum EventPriority
     {
-        First =     0,
-        High =   1000,
-        Low =   10000,
+        First = 0,
+        High = 1000,
+        Low = 10000,
         Last = 100000,
-        All =  999999,
+        All = 999999,
     }
 
     public enum EventSeverity
@@ -202,8 +202,14 @@ namespace SPAD.neXt.Interfaces
         AppendChars,
         DeleteChars,
         ClearChars,
-        SetEventValue
+        SetEventValue,
+        SetEventValue_Inverted,
+        SetEventValue_Normalized,
+        SetEventValue_Normalized_Inverted,
+        SetEventValue_AxisValue,
+        SetEventValue_AxisPercent
     }
+
 
     public enum SPADSoundOperation
     {
@@ -258,7 +264,7 @@ namespace SPAD.neXt.Interfaces
         // Macro = 3
     }
 
-   
+
     public enum SPADSwitchTypes
     {
         UNKNOWN = 0x0,
@@ -441,7 +447,7 @@ namespace SPAD.neXt.Interfaces
         /// </summary>
         LongPressLock,
 
-       
+
     }
 
     public enum XmlSerilizationPurpose
@@ -458,7 +464,7 @@ namespace SPAD.neXt.Interfaces
         LICENSE,
         PROTECT,
         REMOTE
-        
+
     }
 
     public enum Keys : int
@@ -1221,7 +1227,7 @@ namespace SPAD.neXt.Interfaces
         // Summary:
         //     The CLEAR key.
         OemClear = 254,
-        
+
     }
 
     public static class InternalEvents
@@ -1318,6 +1324,16 @@ namespace SPAD.neXt.Interfaces
 
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
         public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
+
+        public static readonly List<SPADValueOperation> EventValueOperations = new List<SPADValueOperation>()
+        {
+            SPADValueOperation.SetEventValue,
+            SPADValueOperation.SetEventValue_Normalized,
+            SPADValueOperation.SetEventValue_Inverted,
+            SPADValueOperation.SetEventValue_Normalized_Inverted,
+            SPADValueOperation.SetEventValue_AxisValue,
+            SPADValueOperation.SetEventValue_AxisPercent
+        };
     }
 
     public class VendorIDs

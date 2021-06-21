@@ -20,11 +20,13 @@ namespace SPAD.neXt.Interfaces.Extension
         public string ID { get; set; }
         [XmlAttribute]
         public string Name { get; set; }
-        [XmlAttribute] 
+        [XmlAttribute]
         public string Author { get; set; }
         [XmlAttribute]
         public string Image { get; set; }
         public bool ShouldSerializeImage() => false;
+        [XmlAttribute]
+        public string PublishName { get; set; }
 
         [XmlAttribute]
         public long Created { get; set; }
