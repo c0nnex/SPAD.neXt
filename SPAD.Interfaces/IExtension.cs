@@ -45,7 +45,11 @@ namespace SPAD.neXt.Interfaces
 
     public interface IExtensionDevice2 : IExtensionDevice
     {
+        bool AutoRemoveInvalidEvents { get; }
+        //string DeviceConfigDirectory { get; }
+        //string DeviceCalibrationName { get; }
         string DevicePath { get; }
+        string DevicePublishName { get; }
     }
 
     public interface IExtensionDynamic 
@@ -54,7 +58,8 @@ namespace SPAD.neXt.Interfaces
         bool HasDeviceConfiguration { get; }
         
         bool WillHandle(IUSBDevice device);
-        
+
+        bool WillHandle(IDeviceProfile deviceProfile);
     }
 
     public interface IExtensionInfo

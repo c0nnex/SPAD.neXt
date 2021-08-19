@@ -14,7 +14,7 @@ namespace SPAD.neXt.Interfaces.Profile
         string Name { get; }
         string Filename { get; }
 
-        void SetDirty(bool isDirty = true);
+        void SetDirty(bool isDirty = true,string caller="");
         IProfileOption GetOption(string key);
         void DeleteOption(string key);
 

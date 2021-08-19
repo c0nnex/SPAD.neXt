@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
+    public delegate void DataDefinitionCreatedDelegate(IDataDefinition definition, IDataDefinition monitorableDef);
     public interface IExportableDataDefinitionProperties
     {
 
@@ -19,6 +20,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string AlternateID { get; set; }
         string PrimaryKey { get; set; }
         bool IsReadOnly { get; }
+        bool IsMonitored { get; }
         string Key { get; set; }
         string LinkedEntry { get; set; }
         string Name { get; set; }
@@ -37,7 +39,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool ExcludeKeyFromSearch { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
@@ -45,7 +47,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string DefaultNormalizer { get; set; }
         string DefaultValue { get; set; }
         string DisplayName { get; set; }
-        string DisplayString { get; }
+        string DisplayString { get; set; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
         bool IsValid { get; }
@@ -60,10 +62,11 @@ namespace SPAD.neXt.Interfaces.Configuration
         SPADDefinitionTypes DefinitionType { get; set; }
         string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
+        IDataProvider DataProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
         IValueRange Range { get; }
 
-        ushort DataIndex { get; }
+        ushort DataIndex { get; set; }
         bool IsProviderDataDefinition { get; }
 
         object UserData { get; set; }
@@ -78,11 +81,14 @@ namespace SPAD.neXt.Interfaces.Configuration
         double GetValue();
         void SetValue(double val);
         string GetValueString(string displayFormat);
+
+        string BrowserValueString { get; }
         decimal CheckRange(decimal val);
         void FixUp();
         void ProcessOutgoing(IValueConnector connection, object data);
         object ConvertValue(object val);
 
+        bool IsString { get; }
         
     }
 
@@ -111,6 +117,7 @@ namespace SPAD.neXt.Interfaces.Configuration
     public interface IIsMonitorable
     {
         IMonitorableValue Monitorable { get; }
+        IMonitorableValue NoCreateMonitorable { get; }
         bool CanMonitor { get; }
     }
 
@@ -120,4 +127,8 @@ namespace SPAD.neXt.Interfaces.Configuration
         IEnumerable<T> Expand();
     }
 
+    public interface IControlDefinition
+    {
+        int NumberOfParameters { get; set; }
+    }
 }

@@ -63,15 +63,21 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         int InputSubPanel { get;set; }
         int InputMode { get;set; }
         bool NoCustomize { get; set; }
+        bool IsAxis { get; }
+        bool IsLever { get; }
+
         List<uint> InputVirtualHat { get; }
 
         IReadOnlyList<IDeviceConfigValue> ConfigValues { get; }
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
 
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
+        IDeviceConfigValue FindConfigValue(string trigger);
         void AddConfigValue(IDeviceConfigValue cfgValue);
         IDeviceConfigValue CreateConfigValue();
         ISerializableOption GetTriggerOption(string trigger, string optionName, string defaultValue = null);
+
+        bool DoesInherit(string baseValue);
     }
 
     public interface ISimpleSwitch : IDeviceSwitch

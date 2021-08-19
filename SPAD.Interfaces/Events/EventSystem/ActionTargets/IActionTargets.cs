@@ -41,7 +41,7 @@ namespace SPAD.neXt.Interfaces.Events
         IReadOnlyList<IDataDefinition> MonitoredDataDefinitions { get; }
     }
 
-    public interface IEventActionChangeValue : IEventAction,IEventActionMonitor
+    public interface IEventActionChangeValue : IEventAction, IEventActionMonitor
     {
         object Value { get; set; }
         SPADValueOperation ValueOperation { get; set; }
@@ -51,7 +51,10 @@ namespace SPAD.neXt.Interfaces.Events
         Double ValueMin { get; set; }
         Double ValueMax { get; set; }
         bool EnableRollOver { get; set; }
+    }
 
+    public interface IEventActionSendEvent : IEventActionChangeValue
+    {
 
     }
 
@@ -80,7 +83,7 @@ namespace SPAD.neXt.Interfaces.Events
         string SoundName { get; set; }
     }
 
-    public interface IEventActionDisplayValue :  IEventActionObserve
+    public interface IEventActionDisplayValue : IEventActionObserve
     {
         string TargetDisplay { get; set; }
         string DisplayFormat { get; set; }
@@ -88,7 +91,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventActionKeyboard : IEventAction
     {
-        IKeyMacro KeyboardMacro { get;}
+        IKeyMacro KeyboardMacro { get; }
         SPADKeyboardOption MacroType { get; set; }
         void ConfigureKeyboardAction(IEnumerable<int> keys, int duration, int pause, int repeat);
     }
@@ -132,7 +135,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsPause { get; }
         int Duration { get; }
         int Pause { get; }
-        int Repeat { get;}
+        int Repeat { get; }
     }
 
     public interface IKeyboardPlayer
@@ -146,6 +149,16 @@ namespace SPAD.neXt.Interfaces.Events
         int Joystick { get; set; }
     }
 
+    public interface IEventActionExternal  : IEventAction, IEventActionMonitor 
+    {
+        Guid ProviderID { get; set; }
+        IActionProvider ActionProvider { get; }
+
+        object PrivateData { get; set; }
+        T GetPrivateData<T>() where T : class;
+        void SetPrivateData<T>(T data) where T : class;
+    }
+
     public interface IEventActionDelay : IEventAction
     {
         uint Delay { get; set; }
@@ -155,6 +168,12 @@ namespace SPAD.neXt.Interfaces.Events
     {
         string ScriptName { get; set; }
         int ScriptArgument { get; set; }
+    }
+    public interface IEventActionRestCall : IEventAction
+    {
+        string Text { get; set; }
+        string CallMethod { get; set; }
+        bool WaitForFinish { get; set; }
     }
 
     public interface IEventActionText2Speech : IEventAction
@@ -168,7 +187,7 @@ namespace SPAD.neXt.Interfaces.Events
         int Rate { get; set; }
     }
 
-    public interface IEventActionDummy :  IEventActionSingleton 
+    public interface IEventActionDummy : IEventActionSingleton
     {
         IXmlAnyObject Data { get; set; }
     }

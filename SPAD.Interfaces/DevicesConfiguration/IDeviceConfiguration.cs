@@ -1,6 +1,8 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+
 namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
     public interface IDeviceConfiguration : IOptionsProvider
@@ -9,13 +11,15 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
        
         
         string Name { get; }
-        string PublishName { get; }
+        string PublishName { get; set; }
         string Panel { get; }
         string ProductID { get; }
         IDeviceVendor Vendor { get; }
         int ProductIDAsInt { get; }
         int Order { get; }
         bool ProcessDeviceData { get; }
+        bool EnableFeatureData { get; }
+        int FeatureUpdateThrottle { get; }
         string DeviceType { get; }
         string DeviceMenu { get; }
         bool NoEventsAutoRemove { get; }
@@ -23,6 +27,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 
         void CreateVirtualInputs(IInputDevice gameDevice);
         void Clear();
+        void Save();
         void AddDeviceSwitch(IDeviceSwitch newSwitch);
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);
@@ -53,4 +58,23 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void ImportFrom(IInputAxis axis);
 
     }
+    [Serializable]
+    public sealed class DeviceLocalization
+    {
+        [XmlElement(ElementName = "Entry")]
+        public List<DeviceLocalizationEntry> Entries { get; set; } = new List<DeviceLocalizationEntry>();
+    }
+    [Serializable]
+    public sealed class DeviceLocalizationEntry
+    {
+        [XmlAttribute]
+        public string Id { get; set; }
+        [XmlAttribute]
+        public string Add { get; set; }
+        [XmlAttribute] 
+        public string Label { get; set; }
+        [XmlText] 
+        public string Description { get; set; }
+    }
+
 }

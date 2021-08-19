@@ -23,7 +23,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         bool IsDirty(short idx);
 
         event SPADEventHandler PropertyChanged;
-        event EventHandler<ISimConnectDynamicObject,HashSet<string>> DataChanged;
+        event EventHandler<ISimConnectDynamicObject,List<string>> DataChanged;
         void OnDataChanged();
         void RaiseChangedEvent(ISPADEventArgs e);
         void Reset(int idx = -1);

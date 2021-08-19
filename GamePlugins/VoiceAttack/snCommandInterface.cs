@@ -77,11 +77,15 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         private static void InitProxy()
         {
-            if (((proxy == null) || (!proxy.IsConnected)) && (!isStopped))
+            if (isStopped)
+                return;
+            if (proxy == null)
             {
                 proxy = new ServiceProxy("localhost");
                 proxy.RemoteEventReceived += Proxy_RemoteEventReceived;
-
+            }
+            if (!proxy.IsConnected)
+            {
                 var version = proxy.GetVersion();
                 if (!String.IsNullOrEmpty(version))
                 {

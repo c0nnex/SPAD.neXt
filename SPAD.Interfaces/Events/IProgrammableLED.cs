@@ -30,6 +30,8 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsOff { get; set; }
         bool LEDIsOn { get; }
         bool LongModeOn { get; set; }
+        bool NoActivation { get; set; }
+        bool NoImplicitActivation { get; set; }
         Visibility LongModeVisible { get; set; }
         ulong Mask { get; set; }
         bool ShortModeOn { get; set; }
@@ -45,6 +47,8 @@ namespace SPAD.neXt.Interfaces.Events
         string EventLongOffName { get; set; }
         string EventHeldName { get; set; }
         bool NeedsCallout { get; }
+
+        void SetLongPressThreshold(int newThreshold);
 
         bool IsHeldModeEnabled { get; }
         void EnableHeldMode();

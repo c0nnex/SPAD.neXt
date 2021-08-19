@@ -16,7 +16,7 @@ using System.IO;
 namespace SPAD.neXt.Interfaces
 {
 
-    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }
@@ -31,6 +31,7 @@ namespace SPAD.neXt.Interfaces
         bool IsLicenseValid { get; }
         bool IsFeatureLicensed(string feature);
         string ApplicationVersion { get; }
+        bool ProgrammingMode { get; }
         void FatalError();
         string GetLicenseID(string feature);
         bool CheckRegisteredFeature();
@@ -109,13 +110,13 @@ namespace SPAD.neXt.Interfaces
         void SetValueProviderStatus(IValueProvider newProvider, bool isActive);
         void OnSimulationConnected(SimulationConfiguration simConfig,IValueProvider provider);
 
-        Stream GetConfigurationFile(string filename);
-        T ReadXMLConfigurationFile<T>(string filename) where T : class, new();
-        T ReadJSONConfigurationFile<T>(string filename) where T : class, new();
+        Stream GetConfigurationFile(string filename, string cfgFile);
+        T ReadXMLConfigurationFile<T>(string filename,string cfgFile) where T : class, new();
+        T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
 
         string CreateXml(object o);
-        IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, bool preferLocal = false);
-
+        IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
+        IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
         ISerializableOption GetApplicationOption(string optionKey);
@@ -124,6 +125,13 @@ namespace SPAD.neXt.Interfaces
 
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
+    }
+
+    public interface IActionManager
+    {
+        void RegisterActionProvider(IActionProvider provider);
+        IReadOnlyList<IActionProvider> GetRegisteredActionProviders();
+
     }
 
     public interface IApplicationConfiguration
@@ -137,4 +145,11 @@ namespace SPAD.neXt.Interfaces
         void RuntimeResolve(IApplication proxy, string baseUri);
     }
 
+    public interface ISupportsActivation
+    {
+        void Activate();
+        void Deactivate();
+
+        void Rotate(int direction,string source, object additionalInfo);
+    }
 }

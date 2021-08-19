@@ -108,6 +108,7 @@ namespace SPAD.neXt.Interfaces
         event InputEventhandler AxisChanged;
         event InputEventhandler ButtonDown;
         event InputEventhandler ButtonUp;
+        event EventHandler<IInputDevice, ulong> InputUpdateCompleted;
         bool IsGamePad { get; set; }
         uint RegisterCustomIndex(string targetName, uint customIndex, bool hasPriority);
         uint RegisterCustomIndex(string targetName, Enum customIndex, bool hasPriority);

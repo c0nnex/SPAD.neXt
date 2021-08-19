@@ -117,7 +117,7 @@ namespace System.Collections.ObjectModel
 namespace SPAD.neXt.Interfaces
 {
     public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
-
+    public delegate void EventHandler<TEventType, TEventArg1, TEventArg2>(TEventType sender, TEventArg1 arg1, TEventArg2 e);
     public static class SPADExtensions
     {
         #region Enums

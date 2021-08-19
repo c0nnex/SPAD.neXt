@@ -10,8 +10,7 @@ namespace SPAD.neXt.Interfaces.Events
 {
 
     public interface IEventSystemHandler
-    {
-        
+    {       
         IEventDefinition CreateEvent(string boundTo,string trigger);
         IEventAction CreateAction(SPADEventActions action);
         IEventAction CreateAction(string action);
@@ -26,6 +25,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         long GetDataDefinitionsIteration();
         IDataDefinition GetDataDefinition(string id);
+        IDataDefinition GetControlDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
         IDataDefinition CreateNewLocal(string name, string displaynormalizer, object defaultValue = null);
         IEnumerable<string> GetKnownNormalizers(string startWith = null);
@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
         void StartRecording();
         IEnumerable<IMonitorableValue> StopRecording();
 
+        void WatchDataDefinitionCreation(string dataDefinition, DataDefinitionCreatedDelegate callback, bool isGlobal = false);
         void RaiseEvent(string eventName, ISPADEventArgs e);
     }
 
@@ -92,6 +93,14 @@ namespace SPAD.neXt.Interfaces.Events
         public static IDataDefinition GetDataDefinition(string id)
         {
             return EventSystemHandler.GetDataDefinition(id);
+        }
+        public static IDataDefinition GetControlDefinition(string id)
+        {
+            return EventSystemHandler.GetControlDefinition(id);
+        }
+        public static void WatchDataDefinitionCreation(string dataDefinition, DataDefinitionCreatedDelegate callback, bool isGlobal = false)
+        {
+            EventSystemHandler.WatchDataDefinitionCreation(dataDefinition, callback, isGlobal);
         }
 
         public static IEnumerable<IDynamicNormalizer> GetDynamicNormalizers()

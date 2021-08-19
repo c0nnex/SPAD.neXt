@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand profilePublishCommand = new RoutedCommand("SPAD_neXt.Profile_Publish", typeof(SPADCommands));
         private static RoutedCommand profileReconvertCommand = new RoutedCommand("SPAD_neXt.Profile_Reconvert", typeof(SPADCommands));
         private static RoutedCommand profileRateCommand = new RoutedCommand("SPAD_neXt.Profile_Rate", typeof(SPADCommands));
+        private static RoutedCommand profileUnpublishCommand = new RoutedCommand("SPAD_neXt.Profile_Unpublish", typeof(SPADCommands));
 
         private static RoutedCommand _CopyThisCommand = new RoutedCommand("SPAD_neXt.CopyThis", typeof(SPADCommands));
         private static RoutedCommand _CopyAllCommand = new RoutedCommand("SPAD_neXt.CopyAll", typeof(SPADCommands));
@@ -121,6 +122,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileEditDevicesCommand { get { return profileEditDevicesCommand; } }
         public static RoutedCommand ProfilePublishCommand { get { return profilePublishCommand; } }
         public static RoutedCommand ProfileReconvertCommand { get { return profileReconvertCommand; } }
+        public static RoutedCommand ProfileUnpublishCommand { get { return profileUnpublishCommand; } }
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
 
         public static RoutedCommand ShowNotificationsCommand { get; } = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));

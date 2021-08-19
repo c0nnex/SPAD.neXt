@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces
         IPanelControl PanelControl { get; }
         Guid PanelLinkID { get; }
         bool PanelHasFocus { get; }
+        bool IsVirtualDevice { get; }
         string PanelName { get; }
         string DevicePanelID { get; }
         bool SupportsDefaultProfiles { get; set; }
@@ -43,6 +44,8 @@ namespace SPAD.neXt.Interfaces
         IEventContext GetCurrentEventContext();
         string GetConfigurationSetting(string key);
         void NavigateToThis();
+        void ClipboardSetData(string data);
+        void RenamePage(string newName);
     }
 
     public interface IPanelControl 
@@ -78,6 +81,7 @@ namespace SPAD.neXt.Interfaces
 
         bool CreateDocumentation(IPanelDocumentation docProxy);
         bool InterceptCommand(ICommand command);
+        bool SavePanelImage(string filename);
     }
 
     public interface IPanelDocumentation

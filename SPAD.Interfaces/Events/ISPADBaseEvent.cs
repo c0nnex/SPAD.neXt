@@ -19,9 +19,10 @@ namespace SPAD.neXt.Interfaces.Events
         IEventDefinitions EventDefinitions { get; set; }
         IDeviceProfile LinkedDeviceProfile { get; }
 
+        Guid EventExecutionContext { get; }
         void SetGaugeEvent(bool isGaugeEvent);
 
-        void ActivateEvent(IDeviceProfile deviceProfile);
+        void ActivateEvent(IDeviceProfile deviceProfile, Guid? executionContext = null);
         void DeactivateEvent(IDeviceProfile deviceProfile);
         void Configure(IDeviceProfile deviceProfile);
 

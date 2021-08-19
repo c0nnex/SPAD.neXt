@@ -16,6 +16,7 @@ namespace SPAD.neXt.Interfaces
     public interface IDynamicExpression : IDisposable, IHasErrorInfo, IExternalExpression
     {
         string Name { get; }
+        string Expression { get; }
         object Evaluate();
         bool EvaluateBool();
         bool Compile();
