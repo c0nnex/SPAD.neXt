@@ -81,11 +81,14 @@ namespace SPAD.neXt.Interfaces.Configuration
         double GetValue();
         void SetValue(double val);
         string GetValueString(string displayFormat);
+
+        string BrowserValueString { get; }
         decimal CheckRange(decimal val);
         void FixUp();
         void ProcessOutgoing(IValueConnector connection, object data);
         object ConvertValue(object val);
 
+        bool IsString { get; }
         
     }
 
@@ -124,4 +127,8 @@ namespace SPAD.neXt.Interfaces.Configuration
         IEnumerable<T> Expand();
     }
 
+    public interface IControlDefinition
+    {
+        int NumberOfParameters { get; set; }
+    }
 }

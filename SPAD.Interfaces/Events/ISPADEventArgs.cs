@@ -250,7 +250,9 @@ namespace SPAD.neXt.Interfaces.Events
                     return (T)((object)new Guid(this[key]));
                 if (typeof(T) == typeof(Version))
                     return (T)((object)new Version(this[key]));
-                return (T) Convert.ChangeType(this[key], typeof(T));
+                if (typeof(T).IsEnum)
+                    return (T)Enum.Parse(typeof(T), val);
+                return (T) Convert.ChangeType(val, typeof(T));
             }
             catch 
             {

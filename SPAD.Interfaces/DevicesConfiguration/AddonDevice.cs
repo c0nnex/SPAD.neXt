@@ -1,4 +1,5 @@
 ﻿
+using SPAD.neXt.Interfaces.Base;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -127,6 +128,12 @@ namespace SPAD.neXt.Interfaces.Extension
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
 
+        [XmlElement(ElementName = "Option")]
+        [Category("Options")]
+        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
+        
+        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
+
         [XmlAttribute]
         [Category("Position")]
         public double Width { get; set; }
@@ -170,6 +177,23 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return null;
         }
+
+        public T GetOption<T>(string key, T defaultValue = default(T))
+        {
+            var opt = Options.FirstOrDefault(o => o.Key == key);
+
+            if (opt == null)
+                return defaultValue;
+
+            try
+            {
+                return (T)Convert.ChangeType(opt.Value, typeof(T));
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
     }
 
     [Serializable]
@@ -177,6 +201,7 @@ namespace SPAD.neXt.Interfaces.Extension
     {
         [XmlAttribute]
         public string Key { get; set; }
+        [XmlAttribute]
         public string Value { get; set; }
 
         public AddonDeviceOption()

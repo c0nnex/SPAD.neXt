@@ -86,7 +86,6 @@ namespace SPAD.neXt.Interfaces
         OFFSET = 0x1,
         CONTROL = 0x2,
         ALL = 0x3
-
     }
 
     public enum SPADEventActions
@@ -275,6 +274,7 @@ namespace SPAD.neXt.Interfaces
         LED = 0x00000008,
         DISPLAY = 0x00000010,
         VALUESWITCH = 0x00000020,
+        LED_3COL = 0x00000040,
         ZZ_HAS_MODE = 0x10000000
     }
 
@@ -1271,6 +1271,7 @@ namespace SPAD.neXt.Interfaces
         public const string RequestAttention = "SPAD.RequestAttention";
         public const string ExtractXplane = "SPAD.ExtractXplane";
         public const string ProfileLoaded = "SPAD.ProfileLoaded";
+        public const string ProgrammingModeChanged = "SPAD.ProgrammingModeChanged";
     }
     public static class OptionNames
     {

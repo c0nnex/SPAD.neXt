@@ -53,6 +53,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         void Subscribe(IMonitorableValue monitorableValue);
         void Unsubscribe(IMonitorableValue monitorableValue);
+
+        IObserverTicket AsStatic();
     }
 
     public interface IValueTranscriber

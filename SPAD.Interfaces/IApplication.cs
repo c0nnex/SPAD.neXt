@@ -31,6 +31,7 @@ namespace SPAD.neXt.Interfaces
         bool IsLicenseValid { get; }
         bool IsFeatureLicensed(string feature);
         string ApplicationVersion { get; }
+        bool ProgrammingMode { get; }
         void FatalError();
         string GetLicenseID(string feature);
         bool CheckRegisteredFeature();
@@ -149,6 +150,6 @@ namespace SPAD.neXt.Interfaces
         void Activate();
         void Deactivate();
 
-        void Rotate(int direction);
+        void Rotate(int direction,string source, object additionalInfo);
     }
 }

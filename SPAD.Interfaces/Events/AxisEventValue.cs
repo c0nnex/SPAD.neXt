@@ -10,6 +10,7 @@ namespace SPAD.neXt.Interfaces.Events
     public class AxisEventValue : IConvertible
     {
         public int RawValue;
+        public float NormalizedRawValue;
         public int NormalizedValue;
         public int InvertedRawValue;
         public int InvertedNormalizedValue;
@@ -34,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
             InvertedRawValue = axis.MaximumValue - axis.RawValue + axis.MinimumValue;
             InvertedNormalizedValue = (int)axis.Rescale(1 - axis.Value, 0, 1, 16383, -16383);
             AxisValue = axis.Value;
+            NormalizedRawValue = axis.Normalize(RawValue, axis.MinimumValue, axis.MaximumValue);
         }
 
         public AxisEventValue(IInputAxis axis, int rawValue, float value)

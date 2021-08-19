@@ -76,6 +76,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void AddConfigValue(IDeviceConfigValue cfgValue);
         IDeviceConfigValue CreateConfigValue();
         ISerializableOption GetTriggerOption(string trigger, string optionName, string defaultValue = null);
+
+        bool DoesInherit(string baseValue);
     }
 
     public interface ISimpleSwitch : IDeviceSwitch

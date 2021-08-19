@@ -19,7 +19,8 @@ namespace SPAD.neXt.Interfaces.Base
         string ScriptsDirectory { get; }
         string CacheDirectory { get; }
         bool IsDetailedModel { get; }
-
+        bool HasError { get; }
+        string GetErrorString();
         string ParseName(string nameIn, Dictionary<string, string> additionalValues = null);
         string TokenizeName(string nameIn, Dictionary<string, string> additionalValues = null);
 

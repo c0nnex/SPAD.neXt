@@ -25,6 +25,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         long GetDataDefinitionsIteration();
         IDataDefinition GetDataDefinition(string id);
+        IDataDefinition GetControlDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
         IDataDefinition CreateNewLocal(string name, string displaynormalizer, object defaultValue = null);
         IEnumerable<string> GetKnownNormalizers(string startWith = null);
@@ -93,7 +94,10 @@ namespace SPAD.neXt.Interfaces.Events
         {
             return EventSystemHandler.GetDataDefinition(id);
         }
-
+        public static IDataDefinition GetControlDefinition(string id)
+        {
+            return EventSystemHandler.GetControlDefinition(id);
+        }
         public static void WatchDataDefinitionCreation(string dataDefinition, DataDefinitionCreatedDelegate callback, bool isGlobal = false)
         {
             EventSystemHandler.WatchDataDefinitionCreation(dataDefinition, callback, isGlobal);
