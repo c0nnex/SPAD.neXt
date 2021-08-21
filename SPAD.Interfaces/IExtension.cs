@@ -62,6 +62,11 @@ namespace SPAD.neXt.Interfaces
         bool WillHandle(IDeviceProfile deviceProfile);
     }
 
+    public interface IExtensionDynamicEnable
+    {
+        bool IsEnabled(IApplication app,IUSBDevice device);
+    }
+
     public interface IExtensionInfo
     {
         string Name { get; }
