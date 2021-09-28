@@ -16,16 +16,16 @@ namespace System
     {
         public static string Right(this string inStr, int numChars)
         {
-            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
-                return inStr;
-            return inStr.Substring(inStr.Length - numChars, numChars);
+            if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
+                return String.Empty;
+            return inStr.Substring(inStr.Length - Math.Min(numChars,inStr.Length), Math.Min(numChars, inStr.Length));
         }
 
         public static string Left(this string inStr, int numChars)
         {
-            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
-                return inStr;
-            return inStr.Substring(0, numChars);
+            if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
+                return String.Empty;
+            return inStr.Substring(0,Math.Min(numChars,inStr.Length));
         }
 
         public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0)
@@ -118,6 +118,7 @@ namespace SPAD.neXt.Interfaces
 {
     public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2>(TEventType sender, TEventArg1 arg1, TEventArg2 e);
+    public delegate void EventHandler<TEventType, TEventArg1, TEventArg2, TEventArg3>(TEventType sender, TEventArg1 arg1, TEventArg2 arg2, TEventArg3 e);
     public static class SPADExtensions
     {
         #region Enums

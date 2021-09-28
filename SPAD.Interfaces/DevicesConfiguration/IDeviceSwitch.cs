@@ -39,6 +39,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool IsSingleton { get; }
         bool CanRename { get;  } 
         string Parameter { get;set; }
+        string EnableConfig { get; set; }
         SPADEventValueComparator ComparatorOverride { get; }
         IReadOnlyList<ISerializableOption> Options { get; }
         IReadOnlyList<string> DisabledConfigs { get; }

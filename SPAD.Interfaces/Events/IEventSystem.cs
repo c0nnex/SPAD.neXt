@@ -6,6 +6,20 @@ using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
+namespace SPAD.neXt
+{
+    public class EventArgsMessage : EventArgs
+    {
+        public string Message { get; private set; }
+
+        public EventArgsMessage(string msg) : base()
+        {
+            Message = msg;
+        }
+    }
+}
+
 namespace SPAD.neXt.Interfaces.Events
 {
 

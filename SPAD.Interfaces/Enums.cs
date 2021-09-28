@@ -1326,6 +1326,7 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
         public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
 
+        public const int FIP_MAX_VARIABLES = 1024;
         public static readonly List<SPADValueOperation> EventValueOperations = new List<SPADValueOperation>()
         {
             SPADValueOperation.SetEventValue,

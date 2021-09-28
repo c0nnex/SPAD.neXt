@@ -126,6 +126,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
 
         public static RoutedCommand ShowNotificationsCommand { get; } = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
+        public static RoutedCommand ShowStatusMessageCommand { get; } = new RoutedCommand("SPAD_neXt._ShowStatusMessageCommand", typeof(SPADCommands));
         public static RoutedCommand DebugModeCommand { get; } = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
         public static RoutedCommand ProgrammingCommand { get; } = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }

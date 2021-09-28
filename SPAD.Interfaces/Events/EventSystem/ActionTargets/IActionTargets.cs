@@ -83,8 +83,16 @@ namespace SPAD.neXt.Interfaces.Events
         string SoundName { get; set; }
     }
 
+    public enum ActionDisplayTypes
+    {
+        Data,
+        Static,
+        Exp,
+        Rpn
+    }
     public interface IEventActionDisplayValue : IEventActionObserve
     {
+        ActionDisplayTypes DisplayType { get; set; }
         string TargetDisplay { get; set; }
         string DisplayFormat { get; set; }
     }

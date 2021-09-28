@@ -119,7 +119,7 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
-        ISerializableOption GetApplicationOption(string optionKey);
+        ISerializableOption GetApplicationOption<T>(string optionKey,T defaultVal = default(T));
 
         IExternalExpression CreateExpression(string name, string expression);
 

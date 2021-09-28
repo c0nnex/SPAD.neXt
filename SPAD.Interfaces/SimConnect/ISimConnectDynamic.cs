@@ -24,6 +24,9 @@ namespace SPAD.neXt.Interfaces.SimConnect
 
         event SPADEventHandler PropertyChanged;
         event EventHandler<ISimConnectDynamicObject,List<string>> DataChanged;
+        event EventHandler<ISimConnectDynamicObject, ISimConnectDynamicObject> OnBeginUpdate;
+        event EventHandler<ISimConnectDynamicObject, ISimConnectDynamicObject> OnEndUpdate;
+
         void OnDataChanged();
         void RaiseChangedEvent(ISPADEventArgs e);
         void Reset(int idx = -1);
@@ -50,6 +53,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         short InternalIndex { get; set; }
         void OnPropertyChanged(object oldValue, object newValue);
         event SPADEventHandler PropertyChanged;
+        event EventHandler<IDynamicSimConnectDataItem, object> DataValueChanged;
         void SetVal(object obj, object val);
         ISimConnectDynamicObject Parent { get; }
         string ToString();

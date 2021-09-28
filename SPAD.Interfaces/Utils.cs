@@ -32,7 +32,7 @@ namespace SPAD.neXt.Interfaces
 
         public static long TickCountLong
         {
-            get { return (long)GetTickCount64(); }
+            get { return unchecked((long)GetTickCount64()); }
         }
 
         public static string WindowsVersion

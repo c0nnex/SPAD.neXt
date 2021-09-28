@@ -85,6 +85,7 @@
     <Compile Include="Base\Comparators\ComparatorBase.cs" />
     <Compile Include="Base\Comparators\ComparatorEqual.cs" />
     <Compile Include="Base\Comparators\ComparatorLess.cs" />
+    <Compile Include="Base\IDataCaching.cs" />
     <Compile Include="Base\IDirectoryModel.cs" />
     <Compile Include="Base\IDynamicExpression.cs" />
     <Compile Include="Base\ILocalizable.cs" />
