@@ -46,6 +46,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         IReadOnlyList<string> EnabledConfigs { get; }
 
         bool IsConfigAllowed(string id);
+        string SubMenuName { get; set; }
     }
 
     public interface IDeviceSwitch : IGameDeviceInput

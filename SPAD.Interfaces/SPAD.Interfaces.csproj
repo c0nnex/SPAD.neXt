@@ -101,6 +101,7 @@
     <Compile Include="Configuration\ILocalVariable.cs" />
     <Compile Include="Configuration\IProfileOptionsProvider.cs" />
     <Compile Include="DevicesConfiguration\AddonDevice.cs" />
+    <Compile Include="DevicesConfiguration\GenericDevice.cs" />
     <Compile Include="DevicesConfiguration\IKnownDevices.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitchesType.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitch.cs" />

@@ -117,7 +117,6 @@ namespace SPAD.neXt.Interfaces
         string CreateXml(object o);
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
         IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
-        ISpecificOptions GetSpecificOptions(Guid id);
         HashSet<string> GetConfigurationSet(string name);
         ISerializableOption GetApplicationOption<T>(string optionKey,T defaultVal = default(T));
 

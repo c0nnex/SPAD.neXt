@@ -12,6 +12,9 @@ using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Extension
 {
+    public interface IAddonDevicePreInitialize
+    { }
+
     [Serializable]
     public class AddonDevice
     {
@@ -154,6 +157,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public string Tag;
         public object Data;
         public event EventHandler<AddonDeviceDisplayData, string> OnValueUpdated;
+        public event EventHandler<AddonDeviceDisplayData, string> OnDeviceUpdate;
 
         public bool IsRow => Index == -1;
         protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length)
@@ -166,11 +170,14 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = "".PadRight(Length);
         }
 
-        protected void RaiseOnValueUpdated()
+        protected void RaiseOnValueUpdated(bool sendToDevice = true)
         {
+            if (sendToDevice)
+                OnDeviceUpdate?.Invoke(this, Value);
             OnValueUpdated?.Invoke(this, Value);
         }
-        public abstract void UpdateValue(string newValue);
+        public abstract void UpdateValue(string newValue, bool sendToDevice = true);      
+
     }
 
     public class AddonDeviceDisplayRow : AddonDeviceDisplayData
@@ -203,30 +210,31 @@ namespace SPAD.neXt.Interfaces.Extension
             Segments.Add(segment);
         }
 
-        public override void UpdateValue(string newValue)
+        public override void UpdateValue(string newValue, bool sendToDevice)
         {
             newValue = newValue.PadRight(Length).Left(Length);
             foreach (var item in Segments)
             {
                 var segVal = newValue.Substring(item.Index * item.Length, item.Length);
-                item.UpdateValue(segVal);
+                item.UpdateValue(segVal,sendToDevice);
             }
-            RaiseOnValueUpdated();
-        }
+            RaiseOnValueUpdated(sendToDevice);
+        }        
     }
 
     public class AddonDeviceDisplaySegment : AddonDeviceDisplayData
     {
         public AddonDeviceDisplaySegment(string tag, string eventID, int rowIndex, int index, int length) : base(tag, eventID, rowIndex, index, length)
         {
+            Value = "".PadRight(length);
         }
 
-        public override void UpdateValue(string newValue)
+        public override void UpdateValue(string newValue, bool sendToDevice)
         {
             if (newValue != Value)
             {
                 Value = newValue.PadRight(Length).Left(Length);
-                RaiseOnValueUpdated();
+                RaiseOnValueUpdated(sendToDevice);
             }
         }
 
@@ -274,7 +282,8 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlIgnore]
         public AddonDeviceDisplay Display { get; private set; } = null;
-
+        [XmlIgnore]
+        public bool NeedMapping { get; set; } = true;
         public void FixUp()
         {
             if (IsDisplay)
@@ -338,6 +347,11 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultValue;
             }
         }
+
+        public bool HasOption(string key)
+        {
+            return Options.Any(o => String.Compare(o.Key, key, true) == 0);
+        }
     }
 
     [Serializable]
@@ -373,7 +387,10 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlAttribute]
         public string Out { get; set; }
-
+        [XmlAttribute]
+        public string DisplayAs { get; set; }
+        [XmlAttribute]
+        public string StateStore { get; set; }
         public AddonDeviceCommandMapping() { }
         public AddonDeviceCommandMapping(string tag, string @in, string @out)
         {

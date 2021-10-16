@@ -67,6 +67,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         KEY_DEP_ARR,
         KEY_ALTN,
         KEY_VNAV,
+        KEY_N1_LIMIT,
         KEY_FIX,
         KEY_LEGS,
         KEY_HOLD,
@@ -152,12 +153,13 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         }
     }
 
-
+    public delegate void RenderCDUCellDelegate(int row, int col, byte symbol, CDU_COLOR color, CDU_FLAG flags);
     /// <summary>
     /// Interface to read CDU content (if supported by aircraft)
     /// </summary>
     public interface ICDUScreen
     {
+        
         /// <summary>
         /// Powerstatus of CDU
         /// </summary>
@@ -203,6 +205,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// <param name="colNumber">Column number ( 0 - 23 )</param>
         /// <returns><see cref="CDU_Cell"/> with cell content</returns>
         CDU_Cell GetCell(int rowNumber, int colNumber);
+
+        void GetCDUContent(RenderCDUCellDelegate renderCallback);
 
         /// <summary>
         /// Send a key to the CDU

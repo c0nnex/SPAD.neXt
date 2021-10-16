@@ -18,12 +18,12 @@ namespace SPAD.neXt.Interfaces
     {
         string GetScopeID();
         Guid GetScopeGuid();
-        object GetVariableDefault(string varName, VARIABLE_SCOPE scope);
+        object GetVariableDefault(string varName);
     }
 
     public interface IGaugeDataProvider : IRenderFrameBase, IDataCacheValueProvider
     {
-       
+        
     }
 
     public interface IDataCacheConsumer
@@ -32,27 +32,36 @@ namespace SPAD.neXt.Interfaces
         void SetCacheDirty();
     }
 
-    public interface IDataCacheProvider : IDataCacheValueProvider, IDisposable 
+    public interface IDataCacheProvider : IDataCacheValueProvider
     {
-        event EventHandler<string, IEnumerable<int>> OnCacheInvalidated;
         int CountDataItems { get; }
-        void RegisterTransformFunction(Func<string, string> fnTransformVariable);
         void GetCacheData(ref object[] data);
-        IDataCacheProvider CreateChildCache(string cacheID);
+        
+        IDataCacheValueProvider CreateChildCache(string cacheID);
+
         void RegisterChildCache(IDataCacheConsumer dataCacheConsumer);
         void UnregisterChildCache(IDataCacheConsumer dataCacheConsumer);
-        void BeginCacheConfigUpdate();
-        void EndCacheConfigUpdate();
+        
         int AddToCache(string variableName, IDataCacheConsumer notifyObject, ICacheScopeProvider scopeObject);
+        double GetMasterValue(int dataIndex);
     }
 
-    public interface IDataCacheValueProvider
+    public interface IDataCacheValueProvider : IDisposable
     {
+        event EventHandler<string, IEnumerable<int>> OnCacheInvalidated;
         string CacheID { get; }
 
         double GetNumericValue(int dataIndex);
         object GetValue(int dataIndex);
         void UpdateCache();
+        void SetCacheDirty();
+        void ClearCache();
         int RegisterCacheValue(string variableName, ICacheScopeProvider scopeObject);
+        void RegisterTransformFunction(Func<string, string> fnTransformVariable);
+
+        Dictionary<int, string> GetCacheInfomation();
+        HashSet<int> GetDirtySet();
+        void BeginCacheConfigUpdate();
+        void EndCacheConfigUpdate();
     }
 }
