@@ -18,6 +18,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
 
         IReadOnlyDictionary<string, string> Dump();
         bool IsKnown(string offset);
+        IDynamicSimConnectDataItem IsKnown(string name, string units);
         object GetValue(string index);
         void SetValue(string index, object value);
         bool IsDirty(short idx);

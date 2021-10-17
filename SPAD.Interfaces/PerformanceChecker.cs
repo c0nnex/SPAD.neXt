@@ -41,6 +41,12 @@ namespace SPAD.neXt.Interfaces
             }
             OnMark?.Invoke(this, String.IsNullOrEmpty(userMsg) ? info : userMsg);
         }
+
+        public void Reset()
+        {
+            stTicks = EnvironmentEx.TickCount64;
+            stLastMark = stTicks;
+        }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
