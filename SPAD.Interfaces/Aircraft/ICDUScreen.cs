@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.neXt.Interfaces.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,26 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         Right = 1,
         FirstOfficer = 1,
         Center = 2,
+        Custom = 99,
+    }
+
+    public enum CDU_LED 
+    {
+        CALL,
+        FAIL,
+        MSG,
+        OFST,
+        EXEC,
+    }
+
+    public enum CDU_SPECIAL_CHAR : byte
+    {
+        BallotBox = 0xea,
+        ArrowUp = 0xa3,
+        ArrowDown = 0xa4,
+        ArrowLeft = 0xa1,
+        ArrowRight = 0xa2,
+        Degree = 0xb0
     }
 
     public enum CDU_KEYS
@@ -120,6 +141,11 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         KEY_DEL,
         KEY_SLASH,
         KEY_CLR,
+        KEY_CLB,
+        KEY_CRZ,
+        KEY_DES,
+        KEY_ATC,
+        KEY_BRT_DIM
     }
 
     /// <summary>
@@ -132,7 +158,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// (hex A1 / dec 161) is a left arrow 
         /// (hex A2 / dec 162) is a right arrow
         /// </summary>
-        public char Symbol { get;  set; }
+        public byte Symbol { get;  set; }
 
         /// <summary>
         /// Cell color <see cref="CDU_COLOR"/>
@@ -151,7 +177,29 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         {
             get { return (Symbol == '\0') || (Symbol == ' '); }
         }
+
+        public CDU_Cell()
+        {
+        }
+
+        public CDU_Cell(int row, int column,byte symbol, CDU_COLOR color, CDU_FLAG flags)
+        {
+            Symbol = symbol;
+            Color = color;
+            Flags = flags;
+            Row = row;
+            Column = column;
+        }
+
+        public List<byte> ToArray() => Symbol == '\0' || Symbol == ' ' ? new List<byte>() : new List<byte> { (byte)Symbol, (byte)Color, (byte)Flags };
     }
+
+    public sealed class CduLedData
+    {
+        public CDU_NUMBER CduNumber;
+        public CDU_LED Led;
+        public ICDUScreen Screen;
+    }    
 
     public delegate void RenderCDUCellDelegate(int row, int col, byte symbol, CDU_COLOR color, CDU_FLAG flags);
     /// <summary>
@@ -169,18 +217,17 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// CDU Data is valid (provided)
         /// </summary>
         bool IsValid { get; }
-
+        int RowCount { get; }
+        int ColumnCount { get; }
         List<List<byte>> ToArray();
-
-        /// <summary>
-        /// Subscribable event if content of CDU screen changed
-        /// </summary>
-        event SPADEventHandler<ICDUScreen,EventArgs> CDUChanged;
 
         /// <summary>
         /// Identifier of this CDU
         /// </summary>
         CDU_NUMBER CDUNumber { get; }
+
+        int GetLedStatus(CDU_LED led);
+        void SetLedStatus(CDU_LED led, int isOn);
 
         /// <summary>
         /// Get content of a CDU row
@@ -189,15 +236,20 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// <param name="startOffset">Starting offset ( 0 - 23 )</param>
         /// <param name="endOffset">End offset ( 0 - 23 )</param>
         /// <returns>Content of CDU row</returns>
-        string GetRow(int rowNumber, int startOffset = 0, int endOffset = 23);
+        string GetColorRow(int rowNumber);
+        string GetColorRow(int rowNumber, int startOffset);
+        string GetColorRow(int rowNumber, int startOffset, int endOffset);
+        string GetRow(int rowNumber);
+        string GetRow(int rowNumber, int startOffset );
+        string GetRow(int rowNumber, int startOffset , int endOffset );
 
-        /// <summary>
-        /// Get content of a CDU column
-        /// </summary>
-        /// <param name="colNumber">Column number ( 0 - 23 )</param>
-        /// <returns>Content of CDU column of all rows</returns>
-        string GetCol(int colNumber);
-
+        /*        /// <summary>
+                /// Get content of a CDU column
+                /// </summary>
+                /// <param name="colNumber">Column number ( 0 - 23 )</param>
+                /// <returns>Content of CDU column of all rows</returns>
+                string GetCol(int colNumber);
+        */
         /// <summary>
         /// Get a single CDU cell value
         /// </summary>
@@ -207,12 +259,135 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         CDU_Cell GetCell(int rowNumber, int colNumber);
 
         void GetCDUContent(RenderCDUCellDelegate renderCallback);
-
+        void GetCDURow(int sourceRow, int targetRow, RenderCDUCellDelegate renderCallback);
         /// <summary>
         /// Send a key to the CDU
         /// </summary>
         /// <param name="key">Key to send <see cref="CDU_KEYS"/></param>
         void SendKey(CDU_KEYS key);
-        void SendCDUKey(uint key);
+
+    }
+
+    public abstract class GenericCDUScreen : ICDUScreen
+    {
+        protected List<List<byte>> EmptyScreen;
+        protected Dictionary<CDU_LED, int> LedStatus = new Dictionary<CDU_LED, int>();
+        protected ILogger logger;
+        public int RowCount { get; private set; }
+        public int ColumnCount { get; private set; }
+        public bool IsValid { get; set; }
+        public string Provider { get; set; }
+        //public ICDUValueProvider ValueProvider { get; set; }
+        protected IApplication ApplicationProxy { get; private set; }
+
+        protected CDU_Cell[] Cells;
+
+        public abstract CDU_NUMBER CDUNumber { get; }
+        public abstract bool IsPowered { get; }
+        public abstract void SendKey(CDU_KEYS key);
+
+        public abstract void ImportData();
+        public GenericCDUScreen(int rows, int cols, IApplication appProxy)
+        {
+            ApplicationProxy = appProxy;
+            logger = ApplicationProxy?.GetLogger("Aircraft.CDU");
+            RowCount = rows;
+            ColumnCount = cols;
+            Cells = new CDU_Cell[rows * cols];
+            EmptyScreen = new List<List<byte>>(rows * cols);
+            for (int i = 0; i < rows * cols; i++)
+            {
+                EmptyScreen.Add(null);
+            }
+            foreach (CDU_LED item in Enum.GetValues(typeof(CDU_LED)))
+            {
+                LedStatus[item] = 0;
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"CDU {CDUNumber} IsValid {IsValid} IsPowered {IsPowered} Provider {Provider} Title {GetRow(0)}";
+        }
+
+        public int GetLedStatus(CDU_LED led)
+        {
+            return LedStatus[led];
+        }
+
+        public void SetLedStatus(CDU_LED led, int isOn)
+        {
+            LedStatus[led] = isOn;
+            ApplicationProxy?.CurrentAircraft?.UpdateLedStatus(CDUNumber, led, isOn);
+        }
+
+        public List<List<byte>> ToArray()
+        {
+            if (!IsPowered)
+                return EmptyScreen;
+            var rval = new List<List<byte>>(RowCount * ColumnCount);
+            for (int row = 0; row < RowCount; row++)
+            {
+                for (int col = 0; col < ColumnCount; col++)
+                {
+                    rval.Add(Cells[row * ColumnCount + col].ToArray());
+                }
+            }
+            return rval;
+        }
+
+        public void GetCDUContent(RenderCDUCellDelegate renderCallback)
+        {
+            for (int row = 0; row < RowCount; row++)
+            {
+                for (int col = 0; col < ColumnCount; col++)
+                {
+                    var colData = Cells[row * ColumnCount + col];
+                    renderCallback(row, col, colData.Symbol, colData.Color, colData.Flags);
+                }
+            }
+        }
+
+        public void GetCDURow(int sourceRow, int targetRow,RenderCDUCellDelegate renderCallback)
+        {
+            for (int col = 0; col < ColumnCount; col++)
+            {
+                var colData = Cells[sourceRow * ColumnCount + col];
+                renderCallback(targetRow, col, colData.Symbol, colData.Color, colData.Flags);
+            }
+        }
+
+        public CDU_Cell GetCell(int rowNumber, int colNumber)
+        {
+            if (!IsValid || (rowNumber < 0) || (colNumber < 0) || (rowNumber >= RowCount) || (colNumber >= ColumnCount))
+                return null;
+            return Cells[rowNumber * ColumnCount + colNumber];
+        }
+        public string GetRow(int rowNumber) => GetRow(rowNumber, 0, ColumnCount - 1);
+        public string GetRow(int rowNumber, int startOffset) => GetRow(rowNumber, startOffset, ColumnCount - 1);
+        public string GetRow(int rowNumber, int startOffset, int endOffset)
+        {
+            if (!IsValid || (rowNumber < 0) || (startOffset < 0) || (startOffset >= ColumnCount) || (rowNumber >= RowCount) || (endOffset < 0) || (endOffset >= ColumnCount))
+                return String.Empty;
+            String retStr = "";
+            for (int i = startOffset; i <= endOffset; i++)
+            {
+                retStr += (char)Cells[rowNumber * ColumnCount + i].Symbol;
+            }
+            return retStr;
+        }
+        public string GetColorRow(int rowNumber) => GetColorRow(rowNumber, 0, ColumnCount - 1);
+        public string GetColorRow(int rowNumber, int startOffset) => GetColorRow(rowNumber, startOffset, ColumnCount - 1);
+        public string GetColorRow(int rowNumber, int startOffset, int endOffset)
+        {
+            if (!IsValid || (rowNumber < 0) || (startOffset < 0) || (startOffset >= ColumnCount) || (rowNumber >= RowCount) || (endOffset < 0) || (endOffset >= ColumnCount))
+                return String.Empty;
+            String retStr = "";
+            for (int i = startOffset; i <= endOffset; i++)
+            {
+                retStr += (char)Cells[rowNumber * ColumnCount + i].Color;
+            }
+            return retStr;
+        }
     }
 }

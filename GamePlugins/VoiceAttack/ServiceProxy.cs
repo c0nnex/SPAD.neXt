@@ -18,21 +18,21 @@ using System.Threading.Tasks;
 namespace SPAD.neXt.GamePlugins.VoiceAttack
 {
 
-    class ServiceProxy 
+    class ServiceProxy
     {
         static int DefaultTimeout = 5000;
 
         protected Connection Connection;
         protected string RemoteVersion = "unknown";
         public event EventHandler<string> RemoteEventReceived;
-        
-        public ServiceProxy(string hostname) 
+
+        public ServiceProxy(string hostname)
         {
             NetworkComms.AppendGlobalConnectionEstablishHandler(OnConnectionEstablished, true);
             NetworkComms.AppendGlobalConnectionCloseHandler(OnConnectionClosed);
             NetworkComms.IgnoreUnknownPacketTypes = false;
             // NetworkComms.DefaultSendReceiveOptions = new SendReceiveOptions<NetworkingDataContracts.NetworkingDataContractSerializer>();
-            
+
         }
 
         public virtual bool IsConnected
@@ -54,20 +54,24 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 
         private void OnConnectionClosed(Connection connection)
         {
+#if !STANDALONE
             vaProxy.WriteToLog($"Connection Closed {connection?.ConnectionInfo?.RemoteEndPoint}","red");
+#endif
             RemoteEventReceived?.Invoke(this, "SN_CONNECTION_CLOSED");
             Connection = null;
-            
+
         }
 
         private void OnConnectionEstablished(Connection connection)
         {
-           // logger.Info($"New Connection To {connection.ConnectionInfo.RemoteEndPoint}");
+            // logger.Info($"New Connection To {connection.ConnectionInfo.RemoteEndPoint}");
 
-            var res = connection.SendReceiveObject<NetworkingDataContracts.NetworkConnect, NetworkingDataContracts.NetworkConnectResponse>(new NetworkingDataContracts.NetworkConnect() {
+            var res = connection.SendReceiveObject<NetworkingDataContracts.NetworkConnect, NetworkingDataContracts.NetworkConnectResponse>(new NetworkingDataContracts.NetworkConnect()
+            {
                 ClientName = "VoiceAttack",
                 RemoteApiVersion = NetworkingDataContracts.ContractConstants.RemoteApiVersion,
-                ContractName = "VA", ContractVersion = Assembly.GetExecutingAssembly().GetName().Version
+                ContractName = "VA",
+                ContractVersion = Assembly.GetExecutingAssembly().GetName().Version
             });
             if ((res == null) || (res.Result != RemoteServiceResult.CONNECTION_OK))
             {
@@ -85,7 +89,9 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
 #endif
                         break;
                     default:
+#if !STANDALONE
                         vaProxy.WriteToLog($"Unknown Response: {res.Result}");
+#endif
                         break;
                 }
                 connection.CloseConnection(false);
@@ -123,7 +129,7 @@ namespace SPAD.neXt.GamePlugins.VoiceAttack
         {
             try
             {
-                if ( ! TryToConnect() )
+                if (!TryToConnect())
                     return new RemoteServiceResponse { HasError = true, Error = "No Connection" };
                 return Connection.SendReceiveObject<NetworkEvent, RemoteServiceResponse>("RS.EMULATEEVENT", "RemoteServiceResponse", DefaultTimeout,
                     new NetworkEvent(targetDevice, targetEvent, eventTrigger).WithData("PARAMETER", eventParameter));

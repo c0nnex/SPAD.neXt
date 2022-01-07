@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+
+    public interface IExtensible
+    {
+        T GetExtension<T>(Type type) where T : IXmlAnyObject;
+        bool HasExtension<T>() where T : IXmlAnyObject;
+
+    }
+
     public interface ICloneableWithID<T> : IDisposable,IHasID, ICloneable<T> where T : class
     {
     }

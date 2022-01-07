@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
+    public interface IEpsilonManager 
+    {
+        float GetEpsilon(string dataName, string unitName, float wantedEpsilon = 0);
+        float GetEpsilon(string dataName, string unitName, bool forGauge = false, float wantedEpsilon = 0);
+    }
     public delegate void DataDefinitionCreatedDelegate(IDataDefinition definition, IDataDefinition monitorableDef);
     public interface IExportableDataDefinitionProperties
     {
@@ -19,6 +24,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string ID { get;  }
         string AlternateID { get; set; }
         string PrimaryKey { get; set; }
+        bool IsDeprecated { get; set; }
         bool IsReadOnly { get; }
         bool IsMonitored { get; }
         string Key { get; set; }

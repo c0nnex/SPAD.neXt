@@ -46,6 +46,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         IReadOnlyList<string> EnabledConfigs { get; }
 
         bool IsConfigAllowed(string id);
+        bool IsConfigEnabled(string id);
         string SubMenuName { get; set; }
     }
 
@@ -72,7 +73,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 
         IReadOnlyList<IDeviceConfigValue> ConfigValues { get; }
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
-
+        bool HasPrivateOption(string optionName);
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
         IDeviceConfigValue FindConfigValue(string trigger);
         void AddConfigValue(IDeviceConfigValue cfgValue);

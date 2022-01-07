@@ -2,6 +2,7 @@
 using SPAD.neXt.Interfaces;
 using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.Extension;
+using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Threading.Tasks;
 
@@ -30,12 +31,18 @@ namespace SPAD.Extensions.Generic
     public class GenericCommand
     {
         public string Command;
+        public string Parameter;
         public int WaitAfterSend = 0;
 
         public GenericCommand(string command, int waitAfterSend = 0)
         {
             Command = command;
             WaitAfterSend = waitAfterSend;
+        }
+ 
+        public GenericCommand(string command,string parameter=null, int waitAfterSend = 0) : this(command,waitAfterSend)
+        {
+            Parameter = parameter;
         }
     }
 
@@ -44,12 +51,16 @@ namespace SPAD.Extensions.Generic
         Task<bool> LearnInput(AddonDeviceElement addonDeviceElement);
     }
 
+    
+
     public interface IGenericCommandDevice : IDisposable
     {
         event EventHandler<object, string> OnLog;
         event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseEvent;
+        event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseTunerEvent;
         event EventHandler<IGenericCommandDevice, string> OnCommandReceived;
         event EventHandler<IGenericCommandDevice, IGenericCommandDevice> OnConfigurationCompleted;
+        event EventHandler<IGenericCommandDevice, string> OnConfigurationFailed;
         event EventHandler<IGenericCommandDevice, bool> OnConnectionStateChanged;
         string DeviceVendor { get; } // GUID of Vendor (e.g. ShakePrint / RealSimGear , mapped to realname via ressource)
         string DeviceName { get; } // Readable Name of Device
@@ -63,7 +74,7 @@ namespace SPAD.Extensions.Generic
         AddonDevice AddonDevice { get; }
         bool IsConnected { get; }
 
-        void Connect();
+        Task<bool> Connect();
         void Disconnect();
         void SendCommand(GenericCommand sendCommand);
         void CreateDevice(IApplication applicationProxy, GenericSettings settings);
@@ -74,7 +85,7 @@ namespace SPAD.Extensions.Generic
         void OnVirtualPowerChanged(bool newPowerState);
 
         void OnLedStatusChanged(string tag, bool newState);
-
+        void OnPageActivated(IDeviceProfile profile,IDevicePage page);
     }
 
 }

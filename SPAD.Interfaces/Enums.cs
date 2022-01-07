@@ -190,6 +190,14 @@ namespace SPAD.neXt.Interfaces
         MinMax
     }
 
+    public enum XPLANE_ROLE : uint  // 1 for master, 2 for extern visual, 3 for IOS
+    {
+        UNKOWN,
+        MASTER,
+        VISUAL,
+        IOS
+    }
+
     public enum SPADValueOperation
     {
         Set,
@@ -300,6 +308,20 @@ namespace SPAD.neXt.Interfaces
     public enum JoystickAxis
     {
         AxisX, AxisY, AxisZ, AxisRX, AxisRY, AxisRZ
+    }
+
+    public enum DeviceInputTypes
+    {
+        Button,
+        Axis,
+        HatSwitch,
+        VirtualHatSwitch,
+        ModeSwitch,
+        Switch,
+        Led,
+        Display,
+        Encoder,
+        Unkown
     }
 
     public enum JoystickInputTypes
@@ -1298,8 +1320,12 @@ namespace SPAD.neXt.Interfaces
         public const string TRANSPONDER2_DIGIT_3 = "TC2DIGIT3";
         public const string TRANSPONDER2_DIGIT_4 = "TC2DIGIT4";
 
-
-
+        public const string CDU_0_AVAILABLE = "CDU_0_AVAILABLE";
+        public const string CDU_1_AVAILABLE = "CDU_1_AVAILABLE";
+        public const string CDU_2_AVAILABLE = "CDU_2_AVAILABLE";
+        public const string CDU_0_PREFIX = "CDU_0_";
+        public const string CDU_1_PREFIX = "CDU_1_";
+        public const string CDU_2_PREFIX = "CDU_2_";
         public const string EVENT_AIRCRAFTCHANGED = "SPAD_AIRCRAFTCHANGED";
         public const string EVENT_AIRCRAFT = "SPAD_AIRCRAFT";
         public const string EVENT_PROFILE = "SPAD_PROFILE";

@@ -29,17 +29,22 @@ namespace SPAD.neXt.Interfaces
     public interface IDataCacheConsumer
     {
         void NotifyDirtyValue(int idx);
-        void SetCacheDirty();
+        void SetCacheDirty();       
+        void ResizeCache(int newSize);
+
     }
 
     public interface IDataCacheProvider : IDataCacheValueProvider
     {
         int CountDataItems { get; }
-        void GetCacheData(ref object[] data);
+        int CacheSize { get; }
+
+        long GetCacheData(ref object[] data, long myIteration = -1);
         
         IDataCacheValueProvider CreateChildCache(string cacheID);
 
         void RegisterChildCache(IDataCacheConsumer dataCacheConsumer);
+        void UnsubscribeChildCache(IDataCacheConsumer dataCacheConsumer);
         void UnregisterChildCache(IDataCacheConsumer dataCacheConsumer);
         
         int AddToCache(string variableName, IDataCacheConsumer notifyObject, ICacheScopeProvider scopeObject);
@@ -53,8 +58,9 @@ namespace SPAD.neXt.Interfaces
 
         double GetNumericValue(int dataIndex);
         object GetValue(int dataIndex);
-        void UpdateCache();
+        bool UpdateCache();
         void SetCacheDirty();
+        bool IsCacheDirty { get; }
         void ClearCache();
         int RegisterCacheValue(string variableName, ICacheScopeProvider scopeObject);
         void RegisterTransformFunction(Func<string, string> fnTransformVariable);
@@ -63,5 +69,7 @@ namespace SPAD.neXt.Interfaces
         HashSet<int> GetDirtySet();
         void BeginCacheConfigUpdate();
         void EndCacheConfigUpdate();
+
+        void UpdateValue(int dataIndex, object newVal);
     }
 }

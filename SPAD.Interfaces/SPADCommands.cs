@@ -60,6 +60,8 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandRunProgram { get; } = new RoutedCommand("SPAD_neXt.RunProgram", typeof(SPADCommands));
         public static RoutedCommand CommandConfigureSwitch { get; } = new RoutedCommand("SPAD_neXt.Device_ConfigureSwitch", typeof(SPADCommands));
 
+        public static RoutedCommand CommandSendCDUKey { get; } = new RoutedCommand("SPAD_neXt.SendCDUKey", typeof(SPADCommands));
+
         private static List<RoutedCommand> _ExposedCommands = new List<RoutedCommand>();
         public static IEnumerable<RoutedCommand> ExposedCommands
         {
@@ -86,6 +88,7 @@ namespace SPAD.neXt.Interfaces
             _ExposedCommands.Add(CommandRemoteEvent);
             _ExposedCommands.Add(CommandSendMessage);
             _ExposedCommands.Add(CommandRunProgram);
+            _ExposedCommands.Add(CommandSendCDUKey);
         }
 
         /// <summary>
@@ -108,6 +111,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand SwitchSettingsCommand => switchSettingsCommand;
         public static RoutedCommand CopyThisCommand { get { return _CopyThisCommand; } }
         public static RoutedCommand CopyAllCommand { get { return _CopyAllCommand; } }
+        public static RoutedCommand CopyPageCommand { get; } = new RoutedCommand("SPAD_neXt.CopyPage", typeof(SPADCommands));
         public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
         public static RoutedCommand PasteCommand { get { return _PasteCommand; } }
         public static RoutedCommand PublishProfileCommand { get { return _PublishProfileCommand; } }
@@ -124,7 +128,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileReconvertCommand { get { return profileReconvertCommand; } }
         public static RoutedCommand ProfileUnpublishCommand { get { return profileUnpublishCommand; } }
         public static RoutedCommand ProfileRateCommand { get { return profileReconvertCommand; } }
-
+        public static RoutedCommand ProfileUpgradeCommand { get; } = new RoutedCommand("SPAD_neXt.Profile_Upgrade", typeof(SPADCommands));
         public static RoutedCommand ShowNotificationsCommand { get; } = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
         public static RoutedCommand ShowStatusMessageCommand { get; } = new RoutedCommand("SPAD_neXt._ShowStatusMessageCommand", typeof(SPADCommands));
         public static RoutedCommand DebugModeCommand { get; } = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));

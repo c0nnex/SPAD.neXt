@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         string TypeName { get; }
         bool IsClientStructure { get; }
         int CountDataItems { get; }
-
+        bool IsGaugeObject { get; set; }
         IReadOnlyDictionary<string, string> Dump();
         bool IsKnown(string offset);
         IDynamicSimConnectDataItem IsKnown(string name, string units);

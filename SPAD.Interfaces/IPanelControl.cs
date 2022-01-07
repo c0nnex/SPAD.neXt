@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SPAD.neXt.Interfaces
 {
@@ -35,7 +37,7 @@ namespace SPAD.neXt.Interfaces
 
         void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
-
+        void AddPagingSupport();
         void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         UserControl AddDropDownCommand(string buttonName, string buttonTag, ICommand command,string mainbuttonLabel = null);
         Button AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
@@ -48,12 +50,30 @@ namespace SPAD.neXt.Interfaces
         void RenamePage(string newName);
     }
 
+    public interface IPublishCustomize
+    {
+        string CustomizePublishname(string defaultName);
+    }
+
+    public interface IPanelService
+    {
+
+    }
+
+    public interface IPanelImageService : IPanelService
+    {
+        ImageSource GetImage(string id);
+    }
+
     public interface IPanelControl 
     {
         event EventHandler<IPanelDeviceEventArgs> EmulatedDeviceReportReceived;
+        
         void OnEmulateDeviceReport(IPanelDeviceEventArgs e);
 
         void InitializePanel(IPanelHost hostControl, string panelLabel);
+        bool NeedsAsyncInitialize { get; }
+        Task<bool> InitializePanelAsync();
         void DeinitializePanel();
         void SetExtension(IExtensionPanel ctrl);
         void PanelGotFocus();
@@ -82,6 +102,8 @@ namespace SPAD.neXt.Interfaces
         bool CreateDocumentation(IPanelDocumentation docProxy);
         bool InterceptCommand(ICommand command);
         bool SavePanelImage(string filename);
+
+        T GetService<T>(string id = null) where T : class, IPanelService;
     }
 
     public interface IPanelDocumentation
@@ -93,18 +115,51 @@ namespace SPAD.neXt.Interfaces
         void AddEventDocumentation(ISPADBaseEvent evt);
     }
 
-    public interface IProfileEventProvider
+    public interface IProfileEventProvider 
     {
         PanelOptions PanelOptions {get;}
         ISPADBaseEvent FindEvent(string bound);
         void AddEvent(ISPADBaseEvent evt, bool permanent = true);
+        void AddPage(IDevicePage page);
+        
+        void RemovePage(IDevicePage page);
+        IDevicePage FindPage(Guid id);
+        IDevicePage GetDefaultPage();
         bool IsValidEvent(string eventName);
         void RemoveAllEvents();
+        void RemoveAllPages();
         bool RemoveEvent(string bound);
-
         IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
         bool IsCommandSupported(string commandName);
 
+        
+    }
 
+    public interface IDevicePage : IExtensible
+    {
+        Guid ID { get;  }
+        bool IsDefaultPage { get; set; }
+        string PageName { get; }
+        IReadOnlyList<ISPADBaseEvent> Events { get; }
+
+        void SetID(Guid newGuid);
+        void AddEvent(IDeviceProfile profile, ISPADBaseEvent evtIn);
+        bool AddUpgradedEvent(ISPADBaseEvent evtIn);
+
+        ISPADBaseEvent FindEvent(string bound);
+        void RemoveAllEvents(IDeviceProfile profile);
+        bool RemoveEvent(IDeviceProfile profile, string bound);
+
+        void PageDeactivated(IDeviceProfile profile);
+        void PageActivated(IDeviceProfile profile);
+    }
+
+    public interface IProfilePageEventProvider
+    {
+        ISPADBaseEvent FindEvent(string bound);
+        void AddEvent(ISPADBaseEvent evt);
+        bool IsValidEvent(string eventName);
+        void RemoveAllEvents();
+        bool RemoveEvent(string bound);
     }
 }

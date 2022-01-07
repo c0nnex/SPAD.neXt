@@ -15,8 +15,16 @@ using System.IO;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IServiceSingleton
+    {
+        Type CreateService();
+        void StartService();
+        void StartServiceFinal();
+        void StopService();
+    }
 
-    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager
+    public interface IServiceSingletonNoStartup { }
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }
@@ -35,11 +43,12 @@ namespace SPAD.neXt.Interfaces
         void FatalError();
         string GetLicenseID(string feature);
         bool CheckRegisteredFeature();
-        UInt32 GetAuthorID();
+        ulong GetAuthorID();
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
         void RegisterSimulationConnected(EventHandler<SimulationConfiguration, IValueProvider> simulationConnected);
         void RegisterNonDeleteableAction(Guid id);
 
+        T GetService<T>() where T : class;
         // SimConnect Special
         //TODO: Remove FSUIPC add General
         ISimConnectDynamicObject GetSimConnectDataObject(string id, bool clear);
@@ -113,6 +122,8 @@ namespace SPAD.neXt.Interfaces
         Stream GetConfigurationFile(string filename, string cfgFile);
         T ReadXMLConfigurationFile<T>(string filename,string cfgFile) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
+        T LoadXMLSettingsFile<T>(string filename) where T : class, new();
+        void SaveXMLSettingsFile<T>(string filename, T dataObject) where T : class, new();
 
         string CreateXml(object o);
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
@@ -132,6 +143,12 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<IActionProvider> GetRegisteredActionProviders();
 
     }
+
+    public interface ICacheManager
+    {
+        IDataCacheValueProvider CreateDisplayCache(string id);
+    }
+
 
     public interface IApplicationConfiguration
     {

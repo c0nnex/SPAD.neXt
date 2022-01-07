@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string DeviceType { get; }
         string DeviceMenu { get; }
         bool NoEventsAutoRemove { get; }
+        bool PageSupport { get; set; }
         bool HasDeviceSwitch(string name);
 
         void CreateVirtualInputs(IInputDevice gameDevice);
@@ -32,6 +33,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);
         IDeviceSwitch CreateDeviceSwitch();
+
+        string TransformSwitchNameForResources(string switchName);
     }
 
     public interface IDeviceCalibration
@@ -71,8 +74,12 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         public string Id { get; set; }
         [XmlAttribute]
         public string Add { get; set; }
+        [XmlAttribute]
+        public string All { get; set; }
         [XmlAttribute] 
         public string Label { get; set; }
+        [XmlAttribute]
+        public string Config { get; set; }
         [XmlText] 
         public string Description { get; set; }
     }

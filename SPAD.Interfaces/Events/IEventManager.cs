@@ -26,7 +26,7 @@ namespace SPAD.neXt.Interfaces.Events
         void UnregisterTag(string tag);
         IMonitorableValue GetValueByTag(string tag);
         void ForceUpdate(string tag);
-
+        void RerouteVariable(string target, string routedTarget);
         bool IsRegisteredVariable(string tag);
         IMonitorableValue GetRegisteredVariable(string tag);
         IMonitorableValue CreateMonitorableValue(string Name, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
@@ -143,7 +143,7 @@ namespace SPAD.neXt.Interfaces.Events
         IEnumerable<string> GetAllValueNames(Func<string,bool> predicate = null);
         void StartUpdates();
     }
-
+  
     public interface ISimulationInterface
     {
         bool IsConnected { get; }

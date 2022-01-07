@@ -23,6 +23,13 @@ namespace SPAD.neXt.Interfaces
         Guid ID { get; }
     }
 
+    public interface IProfileUpgradeWorker
+    {
+        bool UpgradeProfile(IApplication ApplicationProxy, IDeviceProfile DeviceProfile);
+    }
+
+
+
     public interface IExtensionPanel
     {
         string Name { get; }

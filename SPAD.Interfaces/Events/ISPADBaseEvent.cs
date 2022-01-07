@@ -22,7 +22,7 @@ namespace SPAD.neXt.Interfaces.Events
         Guid EventExecutionContext { get; }
         void SetGaugeEvent(bool isGaugeEvent);
 
-        void ActivateEvent(IDeviceProfile deviceProfile, Guid? executionContext = null);
+        void ActivateEvent(IDeviceProfile deviceProfile, Guid executionContext);
         void DeactivateEvent(IDeviceProfile deviceProfile);
         void Configure(IDeviceProfile deviceProfile);
 

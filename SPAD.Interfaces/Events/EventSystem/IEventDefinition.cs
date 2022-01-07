@@ -148,9 +148,10 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsNew { get; }
         bool CanBeDeleted { get; set; }
         bool CanTargetDevice { get; set; }
+        bool CanTargetSwitch { get; set; }
         string TargetDeviceID { get; set; }
         string RawTargetDeviceID { get; }
-        string TargetName { get; set; }
+        string TargetSwitchName { get; set; }
         string DataReferenceText { get; }
         bool IsInEditMode { get; set; }
         void AddParserValue(string key, string value);

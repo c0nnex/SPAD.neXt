@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Extension
@@ -64,19 +65,30 @@ namespace SPAD.neXt.Interfaces.Extension
                     m.Tag = item.Tag;
                     DeviceCommandMappingDict[m.In] = m;
                 }
+
+
                 if (item.IsDisplay)
                 {
                     for (int r = 0; r < item.Display.Rows; r++)
                     {
                         var dspRowID = item.Tag + "_ROW_" + (r + 1);
-                        var dspRow = new AddonDeviceDisplayRow(item.Tag,dspRowID, r, -1, item.Display.Length);
-
+                        if (!Enum.TryParse<TextAlignment>(item.GetOption("RowAlign", "Right"), true, out var tAlign))
+                            tAlign = TextAlignment.Right;
+                        var dspRow = new AddonDeviceDisplayRow(item.Tag,dspRowID, r, -1, item.Display.Length,tAlign);
+                        dspRow.DeviceDisplayIndex = item.DeviceCommandIndex;
                         DeviceDisplayDict[dspRowID] = dspRow;
-
+                        var segAlign = item.GetOption("SegmentAlign", "Right").Split(',');
                         for (int i = 0; i < item.Display.Segments; i++)
                         {
                             var dspSegID = dspRowID + "_SEGMENT_" + (i + 1);
-                            var dspSeg = new AddonDeviceDisplaySegment(item.Tag,dspSegID, r, i, item.Display.SegmentLength);
+                            TextAlignment sAlign = tAlign;
+                            if (i < segAlign.Length)
+                            {
+                                if (!Enum.TryParse<TextAlignment>(segAlign[i], true, out sAlign))
+                                    sAlign = tAlign;
+                            }
+
+                            var dspSeg = new AddonDeviceDisplaySegment(item.Tag,dspSegID, r, i, item.Display.SegmentLength,sAlign);
                             dspRow.AddSegment(dspSeg);
                             DeviceDisplayDict[dspSegID] = dspSeg;
                         }
@@ -113,7 +125,7 @@ namespace SPAD.neXt.Interfaces.Extension
             return newTag;
         }
 
-        public void SetOption<T>(string key, T value) where T : class
+        public void SetOption<T>(string key, T value) 
         {
             Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
@@ -125,6 +137,9 @@ namespace SPAD.neXt.Interfaces.Extension
             try
             {
                 var v = Options.FirstOrDefault(o => String.Compare(key, o.Key, true) == 0);
+                if (v == null)
+                    return defaultValue;
+                
                 if (v != null)
                     return (T)Convert.ChangeType(v.Value, typeof(T), CultureInfo.InvariantCulture);
             }
@@ -158,15 +173,21 @@ namespace SPAD.neXt.Interfaces.Extension
         public object Data;
         public event EventHandler<AddonDeviceDisplayData, string> OnValueUpdated;
         public event EventHandler<AddonDeviceDisplayData, string> OnDeviceUpdate;
-
+        public TextAlignment TextAlignment = TextAlignment.Right;
         public bool IsRow => Index == -1;
-        protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length)
+        public int DisplayCacheIndex = -1;
+        public int DeviceDisplayIndex = 0;
+        public Func<string, int, string> PadMe = (input, len) => input == null ? "".PadRight(len).Left(len) : input.PadRight(len).Left(len);
+        protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment)
         {
             Tag = tag;
             EventID = eventID;
             RowIndex = rowIndex;
             Index = index;
             Length = length;
+            TextAlignment = alignment;
+            if (alignment == TextAlignment.Left)
+                PadMe = (input, len) => input == null ? "".PadLeft(len).Right(len)  : input.PadLeft(len).Right(len);
             Value = "".PadRight(Length);
         }
 
@@ -184,7 +205,7 @@ namespace SPAD.neXt.Interfaces.Extension
     {
         public List<AddonDeviceDisplaySegment> Segments = new List<AddonDeviceDisplaySegment>();
 
-        public AddonDeviceDisplayRow(string tag, string eventID, int rowIndex, int index, int length) : base(tag, eventID, rowIndex, index, length)
+        public AddonDeviceDisplayRow(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length,alignment)
         {
         }
 
@@ -212,11 +233,18 @@ namespace SPAD.neXt.Interfaces.Extension
 
         public override void UpdateValue(string newValue, bool sendToDevice)
         {
-            newValue = newValue.PadRight(Length).Left(Length);
-            foreach (var item in Segments)
+            newValue = PadMe(newValue,Length);
+            if (Segments.Count > 0)
             {
-                var segVal = newValue.Substring(item.Index * item.Length, item.Length);
-                item.UpdateValue(segVal,sendToDevice);
+                foreach (var item in Segments)
+                {
+                    var segVal = newValue.Substring(item.Index * item.Length, item.Length);
+                    item.UpdateValue(segVal, sendToDevice);
+                }
+            }
+            else
+            {
+                Value = newValue;
             }
             RaiseOnValueUpdated(sendToDevice);
         }        
@@ -224,16 +252,17 @@ namespace SPAD.neXt.Interfaces.Extension
 
     public class AddonDeviceDisplaySegment : AddonDeviceDisplayData
     {
-        public AddonDeviceDisplaySegment(string tag, string eventID, int rowIndex, int index, int length) : base(tag, eventID, rowIndex, index, length)
+        public AddonDeviceDisplaySegment(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length,alignment)
         {
             Value = "".PadRight(length);
         }
 
         public override void UpdateValue(string newValue, bool sendToDevice)
         {
-            if (newValue != Value)
+            var nVal = PadMe(newValue,Length);
+            if (nVal != Value)
             {
-                Value = newValue.PadRight(Length).Left(Length);
+                Value = nVal;
                 RaiseOnValueUpdated(sendToDevice);
             }
         }
@@ -253,7 +282,9 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Data")]
         public string Inherit { get; set; }
-
+        [XmlAttribute]
+        [Category("Data")]
+        public int DeviceCommandIndex { get; set; } = -1;
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
@@ -279,11 +310,32 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlIgnore]
         public bool IsDisplay => Type == "DISPLAY";
+        [XmlIgnore]
+        public bool IsInput { get; set; } = true;
 
         [XmlIgnore]
         public AddonDeviceDisplay Display { get; private set; } = null;
         [XmlIgnore]
         public bool NeedMapping { get; set; } = true;
+
+        [XmlIgnore]
+        public DeviceInputTypes InputType
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case "DISPLAY": return DeviceInputTypes.Display;
+                    case "ENCODER": return DeviceInputTypes.Encoder;
+                    case "PUSHBUTTON": return DeviceInputTypes.Button;
+                    case "SWITCH": return DeviceInputTypes.Switch;
+                    case "LED": return DeviceInputTypes.Led;
+                    default:
+                        return DeviceInputTypes.Unkown;
+                }
+            }
+        }
+
         public void FixUp()
         {
             if (IsDisplay)
@@ -302,6 +354,8 @@ namespace SPAD.neXt.Interfaces.Extension
 
         public AddonDeviceCommandMapping GetOrCreateMapping(string inStr, string outStr)
         {
+            if (inStr == "UNKNOWN")
+                return null;
             var oVal = Mappings.FirstOrDefault(v => v.Out == outStr);
             if (oVal != null)
                 return oVal;
@@ -352,6 +406,27 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);
         }
+
+        public void AddInherit(string baseClass)
+        {
+            if (String.IsNullOrEmpty(Inherit))
+            {
+                Inherit = baseClass;
+                return;
+            }
+            var oI = new HashSet<string>(Inherit.Split(','));
+            oI.Add(baseClass);
+            Inherit = String.Join(",", oI);
+        }
+        public bool DoesInherit(string baseClass)
+        {
+            if (String.IsNullOrEmpty(Inherit))
+            {
+                return false;
+            }
+            var oI = new HashSet<string>(Inherit.Split(','));
+            return oI.Contains(baseClass);
+        }
     }
 
     [Serializable]
@@ -369,6 +444,18 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             Key = key;
             Value = value;
+        }
+
+        public T GetValue<T>() where T:IConvertible
+        {
+            try
+            {
+                return (T)Convert.ChangeType(Value, typeof(T),CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return default;
+            }
         }
     }
     [Serializable]

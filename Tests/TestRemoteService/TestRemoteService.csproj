@@ -19,9 +19,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;STANDALONE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,18 +49,20 @@
     <Compile Include="..\..\GamePlugins\VoiceAttack\ServiceProxy.cs">
       <Link>ServiceProxy.cs</Link>
     </Compile>
-    <Compile Include="..\..\SPAD.Interfaces\Enums.cs">
-      <Link>Enums.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SPAD.Interfaces\ServiceContract\IRemoteService.cs">
-      <Link>IRemoteService.cs</Link>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SPAD.Interfaces\SPAD.Interfaces.csproj">
+      <Project>{a05fdeab-7ae3-4da9-b584-1aa95b426579}</Project>
+      <Name>SPAD.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\..\SharedCode\NetworkingDataContracts\NetworkingDataContracts.projitems" Label="Shared" />
+  <Import Project="..\..\..\SharedCode\NetworkComms\NetworkComms.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

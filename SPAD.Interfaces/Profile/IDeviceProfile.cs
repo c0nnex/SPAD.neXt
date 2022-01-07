@@ -12,7 +12,10 @@ using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Profile
 {
-    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider,IDisposable, IObservableProvider<ISPADEventArgs>
+    
+
+
+    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible, IObservableProvider<ISPADEventArgs>
     {
         string VendorID { get; }
         string ProductID { get; }
@@ -21,20 +24,19 @@ namespace SPAD.neXt.Interfaces.Profile
         string DeviceTypeID { get; }
         int DeviceIndex { get; }
         string DeviceProfileID { get; }
-        string DeviceSerial { get; }       
+        string DeviceSerial { get; }
         bool DeviceActive { get; }
         int Version { get; }
-        
+
         IDeviceConfiguration DeviceConfiguration { get; }
         IPanelHost PanelHost { get; }
-        
-        string DeviceName { get; }
 
-        IReadOnlyList<ISPADBaseEvent> Events { get; }
+        string DeviceName { get; }
+        string LoggerName { get; }
 
         event EventHandler DeviceActivated;
         event EventHandler DeviceDeactivated;
-     
+
         event PropertyChangedEventHandler OptionChanged;
 
         void ActivateDevice();
@@ -45,9 +47,23 @@ namespace SPAD.neXt.Interfaces.Profile
 
         bool UpdateEventConfiguration(bool ignoreNoAutoRemove);
         bool UpdateEventConfiguration(ISPADBaseEvent evt);
-        void UpdateEventTarget(ISPADBaseEvent evt);
         void SetDeviceSerial(string serial);
-        T GetExtension<T>(Type type) where T : IXmlAnyObject;
-        bool HasExtension<T>() where T : IXmlAnyObject;
+
+        /* Pages Stuff */
+        event EventHandler<IDeviceProfile, IDevicePage> PageAdded;
+        event EventHandler<IDeviceProfile, IDevicePage> PageRemoved;
+        event EventHandler<IDeviceProfile, IDevicePage> PageActivated;
+        event EventHandler<IDeviceProfile, IDevicePage> PageDeactivated;
+        event EventHandler<IDeviceProfile, IDevicePage> PageChanged;
+        int CountPages { get; }
+        Guid ActivePage { get; }
+        IReadOnlyList<IDevicePage> PageList { get; }
+        IDevicePage CurrentPage { get; }
+
+        void ResetPageEvents();
+        IDevicePage SwitchToPage(int pageNum, bool isRelative = false);
+        IDevicePage SwitchToPage(Guid pageId);
+
+        IDevicePage CreatePage(string pageName, Guid? id = null);
     }
 }
