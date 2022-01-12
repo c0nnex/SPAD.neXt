@@ -242,6 +242,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
           <xs:element minOccurs="0" maxOccurs="1" name="Scale" type="Position" />
           <xs:element minOccurs="0" maxOccurs="1" name="DirectionVector" type="Position" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Failures" type="Failures"/>
         </xs:all>
   </xs:complexType>
   <xs:complexType name="Rotate">
