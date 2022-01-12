@@ -250,8 +250,35 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Value" type="ValueDefinition" />
           <xs:element minOccurs="0" maxOccurs="1" name="ImageRotationDegrees" type="xs:int" />
           <xs:element minOccurs="0" maxOccurs="1" name="currentAngle" type="xs:double" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Failures" type="Failures"/>
         </xs:all>
   </xs:complexType>
+  <xs:complexType name="Failures">
+    <xs:all>
+      <xs:element minOccurs="0" maxOccurs="1" name="NONE" type="Failure"  />
+      <xs:element minOccurs="0" maxOccurs="1" name="SYSTEM_ENGINE" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SYSTEM_PITOT_STATIC" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SYSTEM_VACUUM" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_ADF" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_AIRSPEED" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_ALTIMETER" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_COMMUNICATIONS" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_FUEL_INDICATORS" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_GYRO_HEADING" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_MAGNETIC_COMPASS" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_NAVIGATION_VOR1" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_NAVIGATION_VOR2" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_TRANSPONDER" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_TURN_COORDINATOR" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_VERTICAL_SPEED" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_ELECTRICAL_PANEL" type="Failure" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GAUGE_ELECTRICAL_AVIONICS" type="Failure" />
+      </xs:all>
+  </xs:complexType>
+    <xs:complexType name="Failure">
+      <xs:attribute name="Name" type="xs:string" />
+      <xs:attribute name="Action" type="Fail_Action" />
+    </xs:complexType>
   <xs:complexType name="GaugeImage">
     <xs:all>
           <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
@@ -263,11 +290,17 @@
           <xs:element minOccurs="0" maxOccurs="1" name="ID" type="xs:string" />
         </xs:all>
         <xs:attribute name="PointsTo" type="ImageDirection"  />
+        <xs:attribute name="DegreesPointsTo" type="xs:double" />
         <xs:attribute name="Name" type="xs:string" />
-        <xs:attribute name="ImageSizes" type="xs:string" />
+        <xs:attribute name="ImageSizes" type="ImageSizes" />
         <xs:attribute name="Alpha" type="xs:boolean" />
         <xs:attribute name="Dynamic" type="xs:string" />
   </xs:complexType>
+  <xs:simpleType name="ImageSizes">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]+,[0-9]+,[0-9]+,[0-9]+"></xs:pattern>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="ImageDirection">
     <xs:restriction base="xs:string">
       <xs:enumeration value="East" />
@@ -275,6 +308,15 @@
       <xs:enumeration value="West" />
       <xs:enumeration value="North" />
       <xs:enumeration value="Invalid" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Fail_Action">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Freeze" />
+      <xs:enumeration value="Zero" />
+      <xs:enumeration value="Cover" />
+      <xs:enumeration value="NoDraw" />
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="MaskImage">
