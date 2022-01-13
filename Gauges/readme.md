@@ -10,6 +10,8 @@ Gauges XSD file in this repository is used to validate format of the gauge xml f
 
 Information on SPAD.neXt extensions can be found [here](https://www.spadnext.com/wiki/gauges:spad.next_extensions).
 
+FS 2004 tutorial on creating gauges [here](http://fs2x.com/Tutorials_files/XML%20Gauge%20Programming%20for%20FS2004.%20Chapter%201.%20Main%20Body%20Sections%20V2_0.pdf)
+
 ## Images
 Images are stored under the main guage directory in a sub directory named **1024**.  
 The Saitek FIP has a display resolution of 320 x 240
