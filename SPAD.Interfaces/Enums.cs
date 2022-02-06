@@ -80,6 +80,14 @@ namespace SPAD.neXt.Interfaces
         CUSTOM = 0x1000000,
     }
 
+    public enum SimulationGamestate
+    {
+        Menu,
+        Loading,
+        Briefing,
+        Flying
+    }
+
     [Flags]
     public enum SPADDefinitionTypes
     {

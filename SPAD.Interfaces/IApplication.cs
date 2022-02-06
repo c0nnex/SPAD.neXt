@@ -10,13 +10,24 @@ using SPAD.neXt.Interfaces.Profile;
 using SPAD.neXt.Interfaces.SimConnect;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IDataMonitorValue : IDisposable
+    {
+        event PropertyChangedEventHandler DataValueChanged;
+        string ID { get; }
+        int NumChanges { get; }
+        TimeSpan LastChange { get; }
+        object Value { get; set; }
+    }
+
     public interface IServiceSingleton
     {
+        Guid ServiceID { get; }
         Type CreateService();
         void StartService();
         void StartServiceFinal();
@@ -24,6 +35,13 @@ namespace SPAD.neXt.Interfaces
     }
 
     public interface IServiceSingletonNoStartup { }
+
+    public interface IServiceSingletonDelayed { }
+
+    public interface IWebImageService
+    {
+        void SetImage(string name, byte[] image);
+    }
     public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager
     {
         Guid ConsumerID { get; }
@@ -49,6 +67,7 @@ namespace SPAD.neXt.Interfaces
         void RegisterNonDeleteableAction(Guid id);
 
         T GetService<T>() where T : class;
+        T GetService<T>(Guid serviceId);
         // SimConnect Special
         //TODO: Remove FSUIPC add General
         ISimConnectDynamicObject GetSimConnectDataObject(string id, bool clear);
@@ -86,7 +105,7 @@ namespace SPAD.neXt.Interfaces
 
         bool RegisterValueProvider(string tag, IValueProvider provider);
         bool RegisterExternalValueProvider(IValueProvider provider);
-        bool UnregisterValueProvider(string tag,IValueProvider provider);
+        bool UnregisterValueProvider(string tag, IValueProvider provider);
         IEnumerable<IValueProviderInfomation> GetRegisteredValueProviders();
         IValueProvider GetValueProvider(string tag);
 
@@ -117,10 +136,10 @@ namespace SPAD.neXt.Interfaces
         IValueProvider GetActiveValueProvider();
 
         void SetValueProviderStatus(IValueProvider newProvider, bool isActive);
-        void OnSimulationConnected(SimulationConfiguration simConfig,IValueProvider provider);
+        void OnSimulationConnected(SimulationConfiguration simConfig, IValueProvider provider);
 
         Stream GetConfigurationFile(string filename, string cfgFile);
-        T ReadXMLConfigurationFile<T>(string filename,string cfgFile) where T : class, new();
+        T ReadXMLConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
         T LoadXMLSettingsFile<T>(string filename) where T : class, new();
         void SaveXMLSettingsFile<T>(string filename, T dataObject) where T : class, new();
@@ -129,12 +148,14 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
         IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         HashSet<string> GetConfigurationSet(string name);
-        ISerializableOption GetApplicationOption<T>(string optionKey,T defaultVal = default(T));
+        ISerializableOption GetApplicationOption<T>(string optionKey, T defaultVal = default(T));
 
         IExternalExpression CreateExpression(string name, string expression);
 
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
+        IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
+        void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
     }
 
     public interface IActionManager
@@ -153,7 +174,7 @@ namespace SPAD.neXt.Interfaces
     public interface IApplicationConfiguration
     {
         bool ExecuteConfiguration(IApplication app);
-        
+
     }
 
     public interface IResolvesAtRuntime
@@ -166,6 +187,13 @@ namespace SPAD.neXt.Interfaces
         void Activate();
         void Deactivate();
 
-        void Rotate(int direction,string source, object additionalInfo);
+        void Rotate(int direction, string source, object additionalInfo);
+    }
+
+    public interface IMonitorWindow : IApplicationConfiguration
+    {
+        void Show();
+        void Setup(IApplication proxy, IEnumerable<IDataMonitorValue> profVals, string placementName = null);
     }
 }
+

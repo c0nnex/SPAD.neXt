@@ -28,11 +28,12 @@ namespace System
             return inStr.Substring(0,Math.Min(numChars,inStr.Length));
         }
 
-        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0)
+        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";
             int bytesLength = bytes.Length - startOffset;
-
+            if (numBytes > 0)
+                bytesLength = numBytes - startOffset;
             char[] HexChars = "0123456789ABCDEF".ToCharArray();
 
             int firstHexColumn =

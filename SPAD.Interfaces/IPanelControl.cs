@@ -104,6 +104,7 @@ namespace SPAD.neXt.Interfaces
         bool SavePanelImage(string filename);
 
         T GetService<T>(string id = null) where T : class, IPanelService;
+        void RaiseEvent(string switchName, ISPADEventArgs eArgs);
     }
 
     public interface IPanelDocumentation

@@ -27,6 +27,9 @@ namespace SPAD.neXt.Interfaces.Events
         Visibility CurrentUIStateInverted { get; set; }
         object Data { get; }
         I GetData<I>() where I : class;
+        I GetRoutedToData<I>() where I : class;
+        I GetUIRoutedToData<I>() where I : class;
+
         bool IsOff { get; set; }
         bool LEDIsOn { get; }
         bool LongModeOn { get; set; }
@@ -38,8 +41,12 @@ namespace SPAD.neXt.Interfaces.Events
         Visibility ShortModeVisible { get; set; }
         string Tag { get; }
         string TargetTag { get; }
+        bool HasUITargetTag { get; }
+        string UITargetTag { get; }
+        bool UINoReleaseUpdate { get; }
+        string Label { get; }
         string EventPressName { get; set; }
-        string EventLongPressName { get; set; } 
+        string EventLongPressName { get; set; }
         string EventReleaseName { get; set; }
         string EventShortOnName { get; set; }
         string EventShortOffName { get; set; }

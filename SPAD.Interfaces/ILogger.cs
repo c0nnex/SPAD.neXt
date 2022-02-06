@@ -58,6 +58,7 @@ namespace SPAD.neXt.Interfaces.Logging
          bool IsWarnEnabled { get; }
 
         string Name { get; }
+        string LoggerName { get; set; }
 
         void Trace(string message, params object[] args);
         void Debug(string message, params object[] args);
@@ -78,7 +79,7 @@ namespace SPAD.neXt.Interfaces.Logging
         void Trace(Func<string> p);
         void Debug(Func<string> p);
         void Info(Func<string> p);
-
+        void Warn(Func<string> p);
     }
 
 

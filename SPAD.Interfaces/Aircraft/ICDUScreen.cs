@@ -18,6 +18,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         MAGENTA = 3,
         AMBER = 4,
         RED = 5,
+        BLUE = 6,
+        DARKGREEN = 7,
     }
 
     /// <summary>
@@ -26,6 +28,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
     [Flags]
     public enum CDU_FLAG
     {
+        NONE = 0x0,
         /// <summary>
         /// small font, including that used for line headers
         /// </summary>
@@ -37,7 +40,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// <summary>
         /// dimmed character color indicating inop/unused entries
         /// </summary>
-        UNUSED = 0x04,
+        INOP = 0x04,
     }
 
     public enum CDU_NUMBER
@@ -48,6 +51,13 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         FirstOfficer = 1,
         Center = 2,
         Custom = 99,
+    }
+
+    public enum CDU_ROW_JUSTIFY
+    {
+        Left,
+        Right,
+        Center
     }
 
     public enum CDU_LED 
@@ -66,7 +76,11 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         ArrowDown = 0xa4,
         ArrowLeft = 0xa1,
         ArrowRight = 0xa2,
-        Degree = 0xb0
+        Degree = 0xb0,
+        Celsius = 0xb1,
+        Fahrenheit = 0xb2,
+        Checkmark = 0xb3,
+        Cursor = 0xb4
     }
 
     public enum CDU_KEYS
@@ -294,6 +308,10 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             RowCount = rows;
             ColumnCount = cols;
             Cells = new CDU_Cell[rows * cols];
+            for (int i = 0; i < rows*cols; i++)
+            {
+                Cells[i] = new CDU_Cell();
+            }
             EmptyScreen = new List<List<byte>>(rows * cols);
             for (int i = 0; i < rows * cols; i++)
             {
@@ -348,6 +366,14 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             }
         }
 
+        public void ClearRow(int rowNumber)
+        {
+            for (int col = 0; col < ColumnCount; col++)
+            {
+                Cells[rowNumber * ColumnCount + col] = new CDU_Cell();
+            }
+        }
+
         public void GetCDURow(int sourceRow, int targetRow,RenderCDUCellDelegate renderCallback)
         {
             for (int col = 0; col < ColumnCount; col++)
@@ -356,6 +382,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
                 renderCallback(targetRow, col, colData.Symbol, colData.Color, colData.Flags);
             }
         }
+
+        public void SetCell(int row, int col, CDU_Cell cellData) => Cells[row * ColumnCount + col] = cellData;
 
         public CDU_Cell GetCell(int rowNumber, int colNumber)
         {
