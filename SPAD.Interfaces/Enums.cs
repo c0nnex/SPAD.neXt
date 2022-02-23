@@ -77,6 +77,7 @@ namespace SPAD.neXt.Interfaces
         RAILWORKS = 2048,
         P3Dv5 = 4096,
         MSFS = 8192,
+        FGFS = 16384, // FlightGear
         CUSTOM = 0x1000000,
     }
 
@@ -478,6 +479,18 @@ namespace SPAD.neXt.Interfaces
         LongPressLock,
 
 
+    }
+
+    
+
+    public enum REMOTE_SOCKET_COMMAND
+    {
+        
+        PushImage = 1,
+        PushImageNonFlipped,
+        PushImageRaw,
+        PushImageRawNonFlipped,
+        LedChange,
     }
 
     public enum XmlSerilizationPurpose

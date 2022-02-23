@@ -1,5 +1,7 @@
 ﻿
+using SPAD.neXt.Interfaces.Aircraft.CDU;
 using SPAD.neXt.Interfaces.Base;
+using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,12 +11,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Extension
 {
     public interface IAddonDevicePreInitialize
     { }
+
+    public interface ICustomDisplayProvider
+    {
+        UserControl CreateDisplay(string tag); 
+    }
+
 
     [Serializable]
     public class AddonDevice
@@ -74,8 +83,10 @@ namespace SPAD.neXt.Interfaces.Extension
                         var dspRowID = item.Tag + "_ROW_" + (r + 1);
                         if (!Enum.TryParse<TextAlignment>(item.GetOption("RowAlign", "Right"), true, out var tAlign))
                             tAlign = TextAlignment.Right;
-                        var dspRow = new AddonDeviceDisplayRow(item.Tag,dspRowID, r, -1, item.Display.Length,tAlign);
+                        var dspRow = new AddonDeviceDisplayRow(item.Tag, dspRowID, r, -1, item.Display.Length, tAlign);
                         dspRow.DeviceDisplayIndex = item.DeviceCommandIndex;
+                        dspRow.NoPadding = item.GetOption<bool>("NoPadding", false);
+                        dspRow.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", false);
                         DeviceDisplayDict[dspRowID] = dspRow;
                         var segAlign = item.GetOption("SegmentAlign", "Right").Split(',');
                         for (int i = 0; i < item.Display.Segments; i++)
@@ -88,7 +99,8 @@ namespace SPAD.neXt.Interfaces.Extension
                                     sAlign = tAlign;
                             }
 
-                            var dspSeg = new AddonDeviceDisplaySegment(item.Tag,dspSegID, r, i, item.Display.SegmentLength,sAlign);
+                            var dspSeg = new AddonDeviceDisplaySegment(item.Tag, dspSegID, r, i, item.Display.SegmentLength, sAlign);
+                            dspSeg.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", false);
                             dspRow.AddSegment(dspSeg);
                             DeviceDisplayDict[dspSegID] = dspSeg;
                         }
@@ -111,6 +123,17 @@ namespace SPAD.neXt.Interfaces.Extension
             return new AddonDeviceElement() { Tag = newTag };
         }
 
+        public AddonDeviceElement AddInput(AddonDeviceElement addonDeviceElement)
+        {
+            var input = Inputs.FirstOrDefault(x => x.Tag == addonDeviceElement.Tag);    
+            if (input == null)
+            {
+                Inputs.Add(addonDeviceElement);
+                return addonDeviceElement;
+            }
+            return input;
+        }
+
         public string CreateNewTag(string baseName)
         {
             int i = 0;
@@ -125,23 +148,22 @@ namespace SPAD.neXt.Interfaces.Extension
             return newTag;
         }
 
-        public void SetOption<T>(string key, T value) 
+        public void SetOption<T>(string key, T value)
         {
             Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
                 Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
         }
 
-        public T GetOption<T>(string key, T defaultValue = default(T))
+        public T GetOption<T>(string key, T defaultValue = default(T)) where T: IConvertible
         {
             try
             {
                 var v = Options.FirstOrDefault(o => String.Compare(key, o.Key, true) == 0);
                 if (v == null)
                     return defaultValue;
-                
-                if (v != null)
-                    return (T)Convert.ChangeType(v.Value, typeof(T), CultureInfo.InvariantCulture);
+
+                return v.GetValue<T>();
             }
             catch
             {
@@ -164,6 +186,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
     public abstract class AddonDeviceDisplayData
     {
+        protected ILogger logger;
         public int RowIndex;
         public int Index;
         public int Length;
@@ -177,6 +200,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool IsRow => Index == -1;
         public int DisplayCacheIndex = -1;
         public int DeviceDisplayIndex = 0;
+        public bool NoPadding = false;
+        public bool NoSegmentRowEvents = false;
         public Func<string, int, string> PadMe = (input, len) => input == null ? "".PadRight(len).Left(len) : input.PadRight(len).Left(len);
         protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment)
         {
@@ -187,59 +212,80 @@ namespace SPAD.neXt.Interfaces.Extension
             Length = length;
             TextAlignment = alignment;
             if (alignment == TextAlignment.Left)
-                PadMe = (input, len) => input == null ? "".PadLeft(len).Right(len)  : input.PadLeft(len).Right(len);
+                PadMe = (input, len) => input == null ? "".PadLeft(len).Right(len) : input.PadLeft(len).Right(len);
             Value = "".PadRight(Length);
         }
 
         protected void RaiseOnValueUpdated(bool sendToDevice = true)
         {
+            logger?.Debug($"DisplayOnValueUpdated {this} {sendToDevice}");
             if (sendToDevice)
                 OnDeviceUpdate?.Invoke(this, Value);
             OnValueUpdated?.Invoke(this, Value);
         }
-        public abstract void UpdateValue(string newValue, bool sendToDevice = true);      
+        public abstract void UpdateValue(string newValue, bool sendToDevice = true);
 
+        public void SetLogger(ILogger logger)
+        {
+            this.logger = logger;
+        }
     }
 
     public class AddonDeviceDisplayRow : AddonDeviceDisplayData
     {
         public List<AddonDeviceDisplaySegment> Segments = new List<AddonDeviceDisplaySegment>();
 
-        public AddonDeviceDisplayRow(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length,alignment)
+        public AddonDeviceDisplayRow(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length, alignment)
         {
         }
 
         public void Segment_ValueUpdated(AddonDeviceDisplayData segment, string newValue)
         {
-            if (Segments.Count > 1)
+            if (!NoPadding)
             {
-                var oldValue = Value.PadRight(Length);
-                Value = oldValue.Left(segment.Index * segment.Length);
-                Value += newValue;
-                Value += oldValue.Right(Length - (segment.Index * segment.Length) - segment.Length);
+                if (Segments.Count > 1)
+                {
+                    var oldValue = Value.PadRight(Length);
+                    Value = oldValue.Left(segment.Index * segment.Length);
+                    Value += newValue;
+                    Value += oldValue.Right(Length - (segment.Index * segment.Length) - segment.Length);
+                }
+                else
+                {
+                    Value = newValue.PadRight(Length).Left(Length);
+                }
             }
             else
             {
-                Value = newValue.PadRight(Length).Left(Length);
+                // TODO Compose segments unpadded
             }
             RaiseOnValueUpdated();
         }
 
         public void AddSegment(AddonDeviceDisplaySegment segment)
         {
-            segment.OnValueUpdated += Segment_ValueUpdated;
+            if (!NoSegmentRowEvents)
+                segment.OnValueUpdated += Segment_ValueUpdated;
             Segments.Add(segment);
         }
 
         public override void UpdateValue(string newValue, bool sendToDevice)
         {
-            newValue = PadMe(newValue,Length);
-            if (Segments.Count > 0)
+            logger?.Debug($"UpdateRow {EventID} old '{Value}' new '{newValue}' {sendToDevice}");
+            if (!NoPadding)
             {
-                foreach (var item in Segments)
+                newValue = PadMe(newValue, Length);
+                if (Segments.Count > 0)
                 {
-                    var segVal = newValue.Substring(item.Index * item.Length, item.Length);
-                    item.UpdateValue(segVal, sendToDevice);
+                    foreach (var item in Segments)
+                    {
+                        var segVal = newValue.Substring(item.Index * item.Length, item.Length);
+                        item.UpdateValue(segVal, sendToDevice);
+                    }
+                }
+                else
+                {
+                    Value = newValue;
                 }
             }
             else
@@ -247,24 +293,34 @@ namespace SPAD.neXt.Interfaces.Extension
                 Value = newValue;
             }
             RaiseOnValueUpdated(sendToDevice);
-        }        
+        }
+
+        public override string ToString()
+        {
+            return $"DisplayRow {RowIndex} '{Value}'";
+        }
     }
 
     public class AddonDeviceDisplaySegment : AddonDeviceDisplayData
     {
-        public AddonDeviceDisplaySegment(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length,alignment)
+        public AddonDeviceDisplaySegment(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment) : base(tag, eventID, rowIndex, index, length, alignment)
         {
             Value = "".PadRight(length);
         }
 
         public override void UpdateValue(string newValue, bool sendToDevice)
         {
-            var nVal = PadMe(newValue,Length);
-            if (nVal != Value)
-            {
-                Value = nVal;
-                RaiseOnValueUpdated(sendToDevice);
-            }
+            var nVal = newValue;
+            if (!NoPadding)
+               nVal= PadMe(newValue, Length);
+            logger?.Debug($"UpdateSegment {EventID} old '{Value}' new '{nVal}' {sendToDevice}");
+            Value = nVal;
+            RaiseOnValueUpdated(sendToDevice);
+        }
+
+        public override string ToString()
+        {
+            return $"DisplaySegment {RowIndex}:{Index} '{Value}'";
         }
 
     }
@@ -285,6 +341,8 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Data")]
         public int DeviceCommandIndex { get; set; } = -1;
+        public bool ShouldSerializeDeviceCommandIndex() => DeviceCommandIndex != -1;
+
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
@@ -335,6 +393,8 @@ namespace SPAD.neXt.Interfaces.Extension
                 }
             }
         }
+
+        public bool HasPosition => Width != 0 || Height != 0 || Left != 0 || Top != 0;
 
         public void FixUp()
         {
@@ -407,6 +467,12 @@ namespace SPAD.neXt.Interfaces.Extension
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);
         }
 
+        public AddonDeviceElement WithOption(string key, object value)  
+        {
+            if (!HasOption(key))
+                Options.Add(new AddonDeviceOption(key, value.ToString()));
+            return this;
+        }
         public void AddInherit(string baseClass)
         {
             if (String.IsNullOrEmpty(Inherit))
@@ -446,11 +512,23 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = value;
         }
 
-        public T GetValue<T>() where T:IConvertible
+        public T GetValue<T>() where T : IConvertible
         {
             try
             {
-                return (T)Convert.ChangeType(Value, typeof(T),CultureInfo.InvariantCulture);
+                object res;
+                if (typeof(T) == typeof(Guid))
+                {
+                    res = Guid.Parse(Value);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    res = Value == "1" || String.Compare(Value, "true", true) == 0;
+                }
+                else
+                    res = Convert.ChangeType(Value, typeof(T),CultureInfo.InvariantCulture);
+                return (T)res; 
             }
             catch
             {

@@ -17,6 +17,7 @@ namespace SPAD.neXt.Interfaces.Aircraft
         ICDUScreen GetCDU(CDU_NUMBER cduNumber);
         void SetCDU(CDU_NUMBER cduNumber, GenericCDUScreen cduData);
         void UpdateLedStatus(CDU_NUMBER cduNumber, CDU_LED led, int isOn);
+        void RenderCDU(CDU_NUMBER cduNumber);
     }
 
 

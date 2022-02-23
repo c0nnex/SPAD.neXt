@@ -45,6 +45,7 @@ namespace SPAD.neXt.Interfaces.Events
         string UITargetTag { get; }
         bool UINoReleaseUpdate { get; }
         string Label { get; }
+        bool RefreshContext { get; set; }
         string EventPressName { get; set; }
         string EventLongPressName { get; set; }
         string EventReleaseName { get; set; }
@@ -70,5 +71,6 @@ namespace SPAD.neXt.Interfaces.Events
         CancellationTokenSource StartWaiting();
         void StopWaiting();
         bool UpdateSequence();
+
     }
 }

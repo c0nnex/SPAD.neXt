@@ -19,8 +19,14 @@ namespace SPAD.neXt.Interfaces
         bool IsExtensionEnabled(IApplication app);
         IExtensionInfo GetExtensionInformation();
         IPanelControl CreateControl(IExtensionPanel ctrl);
+        void DisposeControl(IPanelControl ctrl);
         IApplicationConfiguration CreateConfiguration(string ctrl);
         Guid ID { get; }
+    }
+
+    public interface IExtensionDynamicDevice
+    {
+        void CreateDynamicDevice(string protocol,string name, Guid id);
     }
 
     public interface IProfileUpgradeWorker
@@ -88,7 +94,7 @@ namespace SPAD.neXt.Interfaces
         string ResourceKeyRoot { get;  }
         // TODO: SPAD.neXt.Pages.SettingsPage.additionalSettings.Add(new neXt.Pages.SettingsLink { Name = "Saitek Switchpanel", Page = "/Pages/Settings/ConfigDeviceSettings.xaml#k=CFGSAITEKSWITCHPANEL;o=Saitek.SwitchPanel." });
         bool HasProfileOptions { get;  }
-
+        int ProfileOptionsOrder { get; }
         IReadOnlyList<IExtensionProfileOption> ProfileOptions { get; }
         IReadOnlyList<IExtensionDevice> Devices { get; }
         IReadOnlyList<IExtensionPanel> Panels { get; }

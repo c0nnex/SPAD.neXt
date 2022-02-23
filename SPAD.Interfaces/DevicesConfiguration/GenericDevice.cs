@@ -3,6 +3,7 @@ using SPAD.neXt.Interfaces;
 using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.Extension;
 using SPAD.neXt.Interfaces.Profile;
+using SPAD.neXt.Interfaces.Transport;
 using System;
 using System.Threading.Tasks;
 
@@ -10,11 +11,13 @@ namespace SPAD.Extensions.Generic
 {
     public class GenericSettings
     {
+        public Guid ID { get; set; } = Guid.Empty;
         public string Protocol { get; set; }
         public string PortName { get; set; }
 
         public  IPanelControl PanelBaseControl { get; set; }
         public IPanelDevice   AttachedDevice { get; set; }
+        public ITransport Transport { get; set; }
         public GenericSettings() { }
         public GenericSettings(string portName,string protocol)
         {
@@ -62,6 +65,9 @@ namespace SPAD.Extensions.Generic
         event EventHandler<IGenericCommandDevice, IGenericCommandDevice> OnConfigurationCompleted;
         event EventHandler<IGenericCommandDevice, string> OnConfigurationFailed;
         event EventHandler<IGenericCommandDevice, bool> OnConnectionStateChanged;
+
+        string[] GetLogBuffer();
+
         string DeviceVendor { get; } // GUID of Vendor (e.g. ShakePrint / RealSimGear , mapped to realname via ressource)
         string DeviceName { get; } // Readable Name of Device
         string DeviceIdentifier { get; } // GUID of Device

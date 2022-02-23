@@ -32,15 +32,33 @@ namespace SPAD.neXt.Interfaces
         void StartService();
         void StartServiceFinal();
         void StopService();
+        bool IsEnabled { get; }
     }
 
     public interface IServiceSingletonNoStartup { }
 
     public interface IServiceSingletonDelayed { }
 
-    public interface IWebImageService
+    public interface IWebVirtualDeviceService 
     {
-        void SetImage(string name, byte[] image);
+        IWebVirtualDevice VirtualDeviceRegister(string deviceTag, string deviceName, string deviceType, string deviceIndexPage, object deviceConfigObject = null);
+    }
+    public interface IWebVirtualDevice
+    {
+        event EventHandler<bool> DeviceNeedsUpdate;
+        object DeviceConfig { get; }
+        string DeviceIndexPage { get; }
+        string DeviceName { get; }
+        string DeviceTag { get; }
+        string DeviceType { get; }
+        bool IsEnabled { get; }
+        bool IsInUse { get; }
+        void Disable();
+        void Enable();
+
+        void UpdateConfig(object newConfig, bool notifyClient = true);
+        void UpdateData(string dataTag, object data, bool notifyClients = true);
+        void UpdateImage(string imageTag, byte[] image, string imageType = "image/bmp", bool notifyClients = true);
     }
     public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager
     {
@@ -89,8 +107,8 @@ namespace SPAD.neXt.Interfaces
 
         // Gauge Stuff
         IArchive OpenArchive(string archivename);
-        IReadOnlyList<IOnlineGauge> GetGauges(DateTime limes);
-        IOnlineGaugeData DownloadGauge(string id);
+        IOnlineGaugeList GetGauges(DateTime limes);
+        IOnlineGaugeData DownloadGauge(Guid id);
         IGaugeVersionInformation GetGaugeVersionInformation(Guid gaugeId);
         GaugeVersionStatus GetGaugeVersionStatus(Guid gaugeId, Version localVersion);
 
@@ -156,6 +174,8 @@ namespace SPAD.neXt.Interfaces
         bool IsBuild(string buildName);
         IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
+
+        object GetNamedObject(Guid id);
     }
 
     public interface IActionManager
@@ -170,6 +190,10 @@ namespace SPAD.neXt.Interfaces
         IDataCacheValueProvider CreateDisplayCache(string id);
     }
 
+    public interface IApplicationConfiguration2 : IApplicationConfiguration
+    {
+        void SetContext(string key,string context);    
+    }
 
     public interface IApplicationConfiguration
     {

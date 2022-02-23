@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 
 namespace SPAD.neXt.Interfaces.Events
@@ -20,7 +21,7 @@ namespace SPAD.neXt.Interfaces.Events
         object NewValue { get; }
         object OldValue { get; }
         string TargetDevice { get; }
-        ulong EventMarker { get; }
+        long EventMarker { get; }
         EventPriority EventPriority { get; } 
         EventSeverity EventSeverity { get; } 
         string this[string key] { get; set; }
@@ -47,6 +48,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         ISPADEventArgs Clone();
         T GetData<T>(string key, T defaultValue = default(T));
+        ISPADEventArgs WithData(string key, object data);
     }
 
     public interface IHandledEventArgs
@@ -69,11 +71,11 @@ namespace SPAD.neXt.Interfaces.Events
         public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         public static new SPADEventArgs Empty = new SPADEventArgs();
-        private static ulong EventMarkerCounter = 0;
+        private static long EventMarkerCounter = 0;
         public string EventSwitch { get; set; }
         public string EventName { get; set; }
         public IInputElement CommandTarget { get; set; }
-        public ulong EventMarker { get; private set; }
+        public long EventMarker { get; private set; }
         public object OldValue
         {
             get
@@ -134,7 +136,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         public SPADEventArgs(string eventName)
         {
-            EventMarker = EventMarkerCounter++;
+            EventMarker = Interlocked.Increment(ref EventMarkerCounter);
             EventName = eventName;
             EventTrigger = String.Empty;
             string[] args = eventName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -149,15 +151,9 @@ namespace SPAD.neXt.Interfaces.Events
             CallbackValue = null;
         }
 
-        public SPADEventArgs(string boundTo, string trigger)
+        public SPADEventArgs(string boundTo, string trigger) : this(boundTo)
         {
-            EventMarker = EventMarkerCounter++;
-            EventName = boundTo;
             EventTrigger = trigger;
-            this.Handled = false;
-            Immediate = false;
-            IsValueEvent = false;
-            CallbackValue = null;
         }
 
         public SPADEventArgs(string eventName, object newValue, object oldValue)
@@ -228,6 +224,12 @@ namespace SPAD.neXt.Interfaces.Events
         }
 
         public SPADEventArgs WithData(string key,object value)
+        {
+            AddData(key, value);
+            return this;
+        }
+
+        ISPADEventArgs ISPADEventArgs.WithData(string key, object value)
         {
             AddData(key, value);
             return this;

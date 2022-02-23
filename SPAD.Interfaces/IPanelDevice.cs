@@ -11,10 +11,14 @@ using System.Windows.Threading;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface IPanelDevice
+    public interface IRemovableDevice
     {
         event EventHandler DeviceAttached;
         event EventHandler DeviceRemoved;
+    }
+
+    public interface IPanelDevice : IRemovableDevice
+    {
         event EventHandler<IPanelDeviceEventArgs> DeviceReportReceived;
 
         IDeviceConfiguration DeviceConfiguration { get; }

@@ -155,6 +155,7 @@
     <Compile Include="SimConnect\ISimConnectDynamic.cs" />
     <Compile Include="SimulationConfiguration.cs" />
     <Compile Include="SPADCommands.cs" />
+    <Compile Include="Transport\ITransport.cs" />
     <Compile Include="UI\IConfigurationDialog.cs" />
     <Compile Include="UI\IDialConfigurationDialog.cs" />
     <Compile Include="Utils.cs" />

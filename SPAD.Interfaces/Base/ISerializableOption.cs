@@ -11,6 +11,8 @@ namespace SPAD.neXt.Interfaces.Base
         string Key { get; set; }
         T GetValue<T>();
         bool SetValue(object value);
+
+        
     }
 
     public interface ISerializableOption : ISerializableOptionBase

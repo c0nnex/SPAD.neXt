@@ -12,6 +12,8 @@ namespace SPAD.neXt.Interfaces
 
     public sealed class BooleanEventArgs : EventArgs
     {
+        public static readonly BooleanEventArgs True = new BooleanEventArgs(true);
+        public static readonly BooleanEventArgs False = new BooleanEventArgs(false);
         public bool Value { get; }
         public BooleanEventArgs()
         {

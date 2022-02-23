@@ -74,6 +74,7 @@ namespace SPAD.neXt.Interfaces.Events
     {
         string CommandParameter { get; set; }
         string CommandName { get; set; }
+        bool CommandRunAsAdmin { get; set; }
     }
 
     public interface IEventActionPlaySound : IEventAction

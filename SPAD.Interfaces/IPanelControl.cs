@@ -32,8 +32,8 @@ namespace SPAD.neXt.Interfaces
         bool ShowDialog(string dialogName, ISPADBaseEvent evt, EventHandler configHandler = null);
 
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars);
-        void UpdatePanelVariable(string name, double value);
-        double GetPanelVariable(string name);
+        void UpdatePanelVariable(string name, object value);
+        object GetPanelVariable(string name);
 
         void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
@@ -48,6 +48,7 @@ namespace SPAD.neXt.Interfaces
         void NavigateToThis();
         void ClipboardSetData(string data);
         void RenamePage(string newName);
+        void RemoveThisPanel();
     }
 
     public interface IPublishCustomize
@@ -65,7 +66,7 @@ namespace SPAD.neXt.Interfaces
         ImageSource GetImage(string id);
     }
 
-    public interface IPanelControl 
+    public interface IPanelControl : IDisposable
     {
         event EventHandler<IPanelDeviceEventArgs> EmulatedDeviceReportReceived;
         
