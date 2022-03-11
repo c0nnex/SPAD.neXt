@@ -65,5 +65,10 @@ namespace SPAD.neXt.Interfaces.Profile
         IDevicePage SwitchToPage(Guid pageId);
 
         IDevicePage CreatePage(string pageName, Guid? id = null);
+
+        bool HasActivationEvents { get; }
+        void RegisterActivationEvent(string eventName);
+        void UnregisterActivationEvent(string eventName);
+        void ExecuteActivationEvents(bool isPageSwitch = false);
     }
 }

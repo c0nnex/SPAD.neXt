@@ -54,11 +54,16 @@ namespace SPAD.neXt.Interfaces.Events
         string EventLongOnName { get; set; }
         string EventLongOffName { get; set; }
         string EventHeldName { get; set; }
+
+
+        string EventSwitchOnName { get; set; }
+        string EventSwitchOffName { get; set; }
         bool NeedsCallout { get; }
 
         void SetLongPressThreshold(int newThreshold);
 
         bool IsHeldModeEnabled { get; }
+        bool IsSwitch { get; }
         void EnableHeldMode();
         void DisableHeldMode();
 

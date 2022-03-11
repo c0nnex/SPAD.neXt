@@ -21,8 +21,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         }
 
-        public AxisEventValue(InputEventArgs e) : this( e.Input as IInputAxis )
-        {
+        public AxisEventValue(AxisInputEventArgs e) : this( e.Input as IInputAxis )
+        {            
         }
 
         public AxisEventValue(IInputAxis axis)

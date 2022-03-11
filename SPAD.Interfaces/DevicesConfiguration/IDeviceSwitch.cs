@@ -75,7 +75,9 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
         bool HasPrivateOption(string optionName);
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
+        ISerializableOption SetPrivateOption(string optionName, string defaultValue = null);
         IDeviceConfigValue FindConfigValue(string trigger);
+        bool HasConfigValue(string trigger);
         void AddConfigValue(IDeviceConfigValue cfgValue);
         IDeviceConfigValue CreateConfigValue();
         ISerializableOption GetTriggerOption(string trigger, string optionName, string defaultValue = null);

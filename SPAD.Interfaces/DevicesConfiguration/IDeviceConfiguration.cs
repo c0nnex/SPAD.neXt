@@ -1,4 +1,5 @@
 ﻿using SPAD.neXt.Interfaces.Base;
+using SPAD.neXt.Interfaces.Extension;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -25,6 +26,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool NoEventsAutoRemove { get; }
         bool PageSupport { get; set; }
         bool HasDeviceSwitch(string name);
+        IList<EventMapping> EventMappings { get; }
 
         void CreateVirtualInputs(IInputDevice gameDevice);
         void Clear();
@@ -33,7 +35,6 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);
         IDeviceSwitch CreateDeviceSwitch();
-
         string TransformSwitchNameForResources(string switchName);
     }
 

@@ -6,6 +6,9 @@ using SPAD.neXt.Interfaces.Profile;
 using SPAD.neXt.Interfaces.Transport;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace SPAD.Extensions.Generic
 {
@@ -54,7 +57,17 @@ namespace SPAD.Extensions.Generic
         Task<bool> LearnInput(AddonDeviceElement addonDeviceElement);
     }
 
-    
+    public interface  IGenricCreateInteraction
+    {
+        FrameworkElement CreateInteraction(AddonDeviceElement addonDeviceElement,bool asInactive = false);
+    }
+
+    public interface IGenericCommandDeviceCallback
+    {
+        void RaiseEvent(IGenericCommandDevice device,ISPADEventArgs eventArgs);
+        void RaiseEncoderEvent(IGenericCommandDevice device, ISPADEventArgs eventArgs);
+        void RaiseAxisEvent(IGenericCommandDevice device, AxisInputEventArgs eventArgs);
+    }
 
     public interface IGenericCommandDevice : IDisposable
     {
@@ -65,7 +78,7 @@ namespace SPAD.Extensions.Generic
         event EventHandler<IGenericCommandDevice, IGenericCommandDevice> OnConfigurationCompleted;
         event EventHandler<IGenericCommandDevice, string> OnConfigurationFailed;
         event EventHandler<IGenericCommandDevice, bool> OnConnectionStateChanged;
-
+       
         string[] GetLogBuffer();
 
         string DeviceVendor { get; } // GUID of Vendor (e.g. ShakePrint / RealSimGear , mapped to realname via ressource)
@@ -91,7 +104,9 @@ namespace SPAD.Extensions.Generic
         void OnVirtualPowerChanged(bool newPowerState);
 
         void OnLedStatusChanged(string tag, bool newState);
-        void OnPageActivated(IDeviceProfile profile,IDevicePage page);
+        void OnPageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
+
+        IInput GetAttachedInput(string name);
     }
 
 }

@@ -26,7 +26,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
 
     [Serializable]
-    public class AddonDevice
+    public class AddonDevice : AddonDeviceOptionObject
     {
         [XmlAttribute]
         public string Version { get; set; }
@@ -48,8 +48,8 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlElement(ElementName = "Input")]
         public List<AddonDeviceElement> Inputs { get; set; } = new List<AddonDeviceElement>();
-        [XmlElement(ElementName = "Option")]
-        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
+        [XmlElement("EventMapping", IsNullable = false)]
+        public List<EventMapping> EventMappings { get; set; } = new List<EventMapping>();
 
 
         [XmlIgnore]
@@ -134,6 +134,19 @@ namespace SPAD.neXt.Interfaces.Extension
             return input;
         }
 
+        public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag);
+
+        public AddonDeviceElement GetOrCreateInput(string tag, Func<AddonDeviceElement> pCreate)
+        {
+            if (HasInput(tag))
+                return Inputs.FirstOrDefault(i => i.Tag == tag);
+            if (pCreate == null)
+                return null;
+            var x = pCreate();
+            Inputs.Add(x);
+            return x;
+        }
+
         public string CreateNewTag(string baseName)
         {
             int i = 0;
@@ -148,28 +161,15 @@ namespace SPAD.neXt.Interfaces.Extension
             return newTag;
         }
 
-        public void SetOption<T>(string key, T value)
+       
+
+       
+
+
+        public void UpdateDisplay(string displayTag, string value, bool sendToDevice)
         {
-            Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
-            if (value != null)
-                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
-        }
-
-        public T GetOption<T>(string key, T defaultValue = default(T)) where T: IConvertible
-        {
-            try
-            {
-                var v = Options.FirstOrDefault(o => String.Compare(key, o.Key, true) == 0);
-                if (v == null)
-                    return defaultValue;
-
-                return v.GetValue<T>();
-            }
-            catch
-            {
-
-            }
-            return defaultValue;
+            if (DeviceDisplayDict.TryGetValue(displayTag,out var display))
+                display.UpdateValue(value, sendToDevice);
         }
     }
 
@@ -327,7 +327,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
 
     [Serializable]
-    public class AddonDeviceElement
+    public class AddonDeviceElement : AddonDeviceOptionObject
     {
         [XmlAttribute]
         [Category("Data")]
@@ -347,11 +347,6 @@ namespace SPAD.neXt.Interfaces.Extension
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
 
-        [XmlElement(ElementName = "Option")]
-        [Category("Options")]
-        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
-
-        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
 
         [XmlAttribute]
         [Category("Position")]
@@ -359,12 +354,22 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Position")]
         public double Height { get; set; }
-        [XmlAttribute]
+        [XmlAttribute(AttributeName = "Canvas.Left")]
         [Category("Position")]
         public double Left { get; set; }
-        [XmlAttribute]
+        [XmlAttribute(AttributeName = "Canvas.Top")]
         [Category("Position")]
         public double Top { get; set; }
+
+        [XmlAttribute(AttributeName = "Left")]
+        [Category("Obsolete")]
+        public double _LeftOld { get => Left; set => Left=value; }
+        public bool ShouldSerialize_LeftOld() => false;
+
+        [XmlAttribute(AttributeName = "Top")]
+        [Category("Obsolete")]
+        public double _TopOld { get => Top ; set => Top = value; }
+        public bool ShouldSerialize_TopOld() => false;
 
         [XmlIgnore]
         public bool IsDisplay => Type == "DISPLAY";
@@ -388,6 +393,8 @@ namespace SPAD.neXt.Interfaces.Extension
                     case "PUSHBUTTON": return DeviceInputTypes.Button;
                     case "SWITCH": return DeviceInputTypes.Switch;
                     case "LED": return DeviceInputTypes.Led;
+                    case "AXIS": return DeviceInputTypes.Axis;
+                    case "ROTARY": return DeviceInputTypes.Rotary;
                     default:
                         return DeviceInputTypes.Unkown;
                 }
@@ -445,32 +452,11 @@ namespace SPAD.neXt.Interfaces.Extension
             return null;
         }
 
-        public T GetOption<T>(string key, T defaultValue = default(T))
-        {
-            var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
-
-            if (opt == null)
-                return defaultValue;
-
-            try
-            {
-                return (T)Convert.ChangeType(opt.Value, typeof(T));
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-
-        public bool HasOption(string key)
-        {
-            return Options.Any(o => String.Compare(o.Key, key, true) == 0);
-        }
-
+       
         public AddonDeviceElement WithOption(string key, object value)  
         {
             if (!HasOption(key))
-                Options.Add(new AddonDeviceOption(key, value.ToString()));
+                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
             return this;
         }
         public void AddInherit(string baseClass)
@@ -536,8 +522,47 @@ namespace SPAD.neXt.Interfaces.Extension
             }
         }
     }
+
+    public class AddonDeviceOptionObject
+    {
+        public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
+        {
+            var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+
+            if (opt == null)
+                return defaultValue;
+
+            try
+            {
+                return (T)opt.GetValue<T>();
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+        [XmlElement(ElementName = "Option")]
+        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
+        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
+        public bool HasOption(string key)
+        {
+            return Options.Any(o => String.Compare(o.Key, key, true) == 0);
+        }
+        public void AddOption(string key, object value)
+        {
+            if (!HasOption(key))
+                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+        }
+        public void SetOption<T>(string key, T value)
+        {
+            Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
+            if (value != null)
+                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+        }
+    }
+
     [Serializable]
-    public class AddonDeviceCommandMapping
+    public class AddonDeviceCommandMapping : AddonDeviceOptionObject
     {
         [XmlIgnore]
         public Action ActivateAction = () => { };
@@ -556,6 +581,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public string DisplayAs { get; set; }
         [XmlAttribute]
         public string StateStore { get; set; }
+
         public AddonDeviceCommandMapping() { }
         public AddonDeviceCommandMapping(string tag, string @in, string @out)
         {
@@ -569,6 +595,30 @@ namespace SPAD.neXt.Interfaces.Extension
             return $"Mapped Event {In} => {Tag}.{Out}";
         }
     }
+    [Serializable]
+    public sealed class EventMapping
+    {
+        [XmlAttribute]
+        public string EventName { get; set; }
+        [XmlAttribute]
+        public string FromTrigger { get; set; }
+        [XmlAttribute]
+        public string ToTrigger { get; set; }
 
+        [XmlAttribute]
+        public string FromEvent { get; set; }
+        [XmlAttribute]
+        public string ToEvent { get; set; }
 
+        public bool IsEventMove => !String.IsNullOrEmpty(FromEvent) && !String.IsNullOrEmpty(ToEvent);
+        public string Key
+        {
+            get
+            {
+                if (IsEventMove)
+                    return $"{FromEvent}.{FromTrigger}.{ToEvent}.{ToTrigger}";
+                return $"{EventName}.{FromTrigger}.{ToTrigger}";
+            }
+        }
+    }
 }

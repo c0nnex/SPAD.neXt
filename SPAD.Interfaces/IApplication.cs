@@ -21,7 +21,7 @@ namespace SPAD.neXt.Interfaces
         event PropertyChangedEventHandler DataValueChanged;
         string ID { get; }
         int NumChanges { get; }
-        TimeSpan LastChange { get; }
+        string  LastChange { get; }
         object Value { get; set; }
     }
 
@@ -176,6 +176,9 @@ namespace SPAD.neXt.Interfaces
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
 
         object GetNamedObject(Guid id);
+        void RegisterNamedObject(Guid id, object obj);
+        void RegisterPanelName(string deviceid, string name, string vendorID, string productID, int eventIndex, int subPanelID);
+        void CreateDynamicPanel(string url);
     }
 
     public interface IActionManager
@@ -218,6 +221,11 @@ namespace SPAD.neXt.Interfaces
     {
         void Show();
         void Setup(IApplication proxy, IEnumerable<IDataMonitorValue> profVals, string placementName = null);
+    }
+
+    public interface IDeviceEmulation
+    {
+        void EmulateClientConnect(object data);
     }
 }
 

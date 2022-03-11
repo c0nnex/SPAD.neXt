@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool isEnabled { get; set; }
         bool CannotUpgradeToEventSystem { get; }
         bool IsGaugeEvent { get; }
-
+        
         IEventDefinitions EventDefinitions { get; set; }
         IDeviceProfile LinkedDeviceProfile { get; }
 

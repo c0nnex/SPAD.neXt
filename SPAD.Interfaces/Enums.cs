@@ -330,6 +330,7 @@ namespace SPAD.neXt.Interfaces
         Led,
         Display,
         Encoder,
+        Rotary,
         Unkown
     }
 
@@ -1306,6 +1307,9 @@ namespace SPAD.neXt.Interfaces
         public const string StatusMessage = "SPAD.StatusMessage";
         public const string AircraftChanged = "SPAD_Aircraft";
         public const string ProfileChanged = "SPAD_Profile";
+        public const string PageActivated = "SPAD_PageActivated";
+        public const string PageDeactivated = "SPAD_PageDeactivated";
+         
         public const string FSUIPCStatus = "FSUIPC.Status";
         public const string SimConnectStatus = "SimConnect.Status";
         public const string ProviderStatus = "Provider.Status";
@@ -1315,6 +1319,9 @@ namespace SPAD.neXt.Interfaces
         public const string ExtractXplane = "SPAD.ExtractXplane";
         public const string ProfileLoaded = "SPAD.ProfileLoaded";
         public const string ProgrammingModeChanged = "SPAD.ProgrammingModeChanged";
+        public const string NotamUpdated = "SPAD.NotamUpdated";
+        public const string SystemUpdate = "SPAD.SystemUpdate";
+
     }
     public static class OptionNames
     {

@@ -49,6 +49,8 @@ namespace SPAD.neXt.Interfaces
         void ClipboardSetData(string data);
         void RenamePage(string newName);
         void RemoveThisPanel();
+
+        void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
     }
 
     public interface IPublishCustomize

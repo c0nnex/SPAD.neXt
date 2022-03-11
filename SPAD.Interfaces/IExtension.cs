@@ -34,7 +34,10 @@ namespace SPAD.neXt.Interfaces
         bool UpgradeProfile(IApplication ApplicationProxy, IDeviceProfile DeviceProfile);
     }
 
-
+    public interface IExtensionLateArrival
+    {
+        void InitializeLateArrival();
+    }
 
     public interface IExtensionPanel
     {
@@ -56,6 +59,16 @@ namespace SPAD.neXt.Interfaces
         Guid GetDeviceUniqueIdentifier();
     }
 
+    public interface IExtensionDeviceUpdateProfile
+    {
+        string DevicePathNew { get; }
+        string DevicePathOld { get; }
+        string ProductIdNew { get; }
+        string ProductIdOld { get; }
+        string VendorIdOld { get; }
+        string VendoridNew { get; }
+        int DeviceEventIndexNew { get; }
+    }
     public interface IExtensionDevice2 : IExtensionDevice
     {
         bool AutoRemoveInvalidEvents { get; }

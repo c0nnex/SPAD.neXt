@@ -22,14 +22,11 @@ namespace SPAD.neXt.Interfaces.Events
 
         void Raise(object sender, string eventname, ISPADEventArgs e);
 
-        void RegisterTag(string tag, IMonitorableValue monitorableValue);
-        void UnregisterTag(string tag);
-        IMonitorableValue GetValueByTag(string tag);
-        void ForceUpdate(string tag);
         void RerouteVariable(string target, string routedTarget);
         bool IsRegisteredVariable(string tag);
         IMonitorableValue GetRegisteredVariable(string tag);
         IMonitorableValue CreateMonitorableValue(string Name, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
+        IDataDefinition GetDataDefinition(string name);
         void RemoveRegisteredVariable(string variableName, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION);
         List<string> GetAllMonitoredValues();
 

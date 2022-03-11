@@ -7,27 +7,23 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Base
 {
-    public interface IDirectoryModel : IChangeTracking
+    public interface IDirectoryModel 
     {
         string ApplicationDataDirectory { get; set; }
         string ApplicationDocumentsDirectory { get; set; }
         string ApplicationMainDirectory { get; }
-        string ConfigurationDirectory { get; }
-        string LogDirectory { get; }
-        string ProfilesDirectory { get; }
-        string GaugesDirectory { get; }
-        string ScriptsDirectory { get; }
+        string ConfigurationDirectory { get; set; }
+        string LogDirectory { get; set; }
+        string ProfilesDirectory { get; set; }
+        string GaugesDirectory { get; set; }
+        string ScriptsDirectory { get; set; }
         string CacheDirectory { get; }
-        bool IsDetailedModel { get; }
         bool HasError { get; }
         string GetErrorString();
         string ParseName(string nameIn, Dictionary<string, string> additionalValues = null);
         string TokenizeName(string nameIn, Dictionary<string, string> additionalValues = null);
 
-        void SetDirectory(string dirIndex, string dirValue);
-        string GetDirectory(string dirIndex);
-
-        void RevertChanges();
+        void AcceptChanges();
         void SetupDirectories();
         
         string GetDirectory(APPLICATION_DIRECTORY scope, string subDir = null);

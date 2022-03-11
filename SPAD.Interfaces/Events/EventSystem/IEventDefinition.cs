@@ -27,7 +27,6 @@ namespace SPAD.neXt.Interfaces.Events
         void Configure(ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void Activate(string boundTo, ISPADBaseEvent baseEvent);
         void Deactivate(string boundTo, ISPADBaseEvent baseEvent);
-        void Execute(ISPADEventArgs e);
         IReadOnlyList<IEventDefinition> GetByTrigger(string trigger, bool create = true);
         IEventDefinition CreateEvent(string trigger, Guid? singletonID = null);
         IEventDefinition GetByID(Guid eventDefinitionID);
@@ -62,6 +61,7 @@ namespace SPAD.neXt.Interfaces.Events
         int Priority { get; }
         bool IgnorePowerState { get; }
         bool EnableAcceleration { get; }
+        
         IEncoderAcceleration Acceleration { get; }
 
         ISPADBaseEvent BaseEvent { get; }
@@ -69,7 +69,6 @@ namespace SPAD.neXt.Interfaces.Events
         IDeviceProfile DeviceProfile { get;  }
         
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
-        void ForceEvaluation();
         bool Activate(ISPADBaseEvent baseEvent);
         void Deactivate(ISPADBaseEvent baseEvent);
         void Execute(ISPADEventArgs e, bool force = false);
