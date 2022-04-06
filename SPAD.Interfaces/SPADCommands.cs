@@ -135,6 +135,8 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProgrammingCommand { get; } = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }
 
+        public static RoutedCommand EventDisableCommand { get; } = new RoutedCommand("SPAD_neXt.EventDisable", typeof(SPADCommands));
+        public static RoutedCommand EventEnableCommand { get; } = new RoutedCommand("SPAD_neXt.EventEnable", typeof(SPADCommands));
         /*
         public static RoutedCommand EditActionCommand { get { return editActionCommand; } }
         public static RoutedCommand DelActionCommand { get { return delActionCommand; } }

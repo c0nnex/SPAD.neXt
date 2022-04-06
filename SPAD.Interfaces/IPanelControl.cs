@@ -26,12 +26,17 @@ namespace SPAD.neXt.Interfaces
         Guid PanelLinkID { get; }
         bool PanelHasFocus { get; }
         bool IsVirtualDevice { get; }
+        bool HasPageSupport { get;  }
+
         string PanelName { get; }
         string DevicePanelID { get; }
+        string VendorID { get; }
+        string ProductID { get; }
+        string DevicePath { get; }
         bool SupportsDefaultProfiles { get; set; }
         bool ShowDialog(string dialogName, ISPADBaseEvent evt, EventHandler configHandler = null);
 
-        void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars);
+        void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars,string mainCategory = null);
         void UpdatePanelVariable(string name, object value);
         object GetPanelVariable(string name);
 

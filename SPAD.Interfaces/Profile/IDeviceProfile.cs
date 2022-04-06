@@ -39,7 +39,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
         event PropertyChangedEventHandler OptionChanged;
 
-        void ActivateDevice();
+        void ActivateDevice(IPanelHost panelHost);
         void DeactivateDevice();
 
         ISPADBaseEvent CreateEvent(string tag);

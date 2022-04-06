@@ -183,7 +183,9 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         KEY_UP,
         KEY_DOWN,
         KEY_DIV,
-        KEY_OVFY
+        KEY_OVFLY,
+        KEY_BRT,
+        KEY_DIM
     }
 
     /// <summary>
@@ -318,10 +320,12 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
 
     public interface ICDURenderer : ICDUDisplayRenderer
     {
-        int ScratchPadRow { get; }
+        // Row on Device to Display ScratchPad
+        int ScratchPadRow { get; } 
+        int RowForScratchPad { get; }
         int RowCount { get; }
         int ColumnCount { get; }
-        
+
         void RenderText(int row, string text, CDU_COLOR color, CDU_FLAG flags = CDU_FLAG.NONE, CDU_ROW_JUSTIFY justify = CDU_ROW_JUSTIFY.Center);
     }
     public abstract class GenericCDUScreen : ICDUScreen
@@ -383,8 +387,11 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
 
         public void SetLedStatus(CDU_LED led, int isOn)
         {
-            LedStatus[led] = isOn;
-            ApplicationProxy?.CurrentAircraft?.UpdateLedStatus(CDUNumber, led, isOn);
+            if (isOn != LedStatus[led])
+            {
+                LedStatus[led] = isOn;
+                ApplicationProxy?.CurrentAircraft?.UpdateLedStatus(CDUNumber, led, isOn);
+            }
         }
 
         public List<List<byte>> ToArray()
@@ -516,7 +523,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
                     if (_flag.HasFlag(CDU_FLAG.INOP))
                         str += "{inop}";
                     return str;
-                }               
+                }
             }
             public string FlagEnd
             {
@@ -535,12 +542,12 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         }
         public string GetParserRow(int rowNumber)
         {
-            if (!IsValid || (rowNumber < 0) || (rowNumber >= RowCount) )
+            if (!IsValid || (rowNumber < 0) || (rowNumber >= RowCount))
                 return String.Empty;
             String retStr = "";
 
             var cell = Cells[rowNumber * ColumnCount]; // First Char
-            cduColorStack curColor = new cduColorStack { _color = cell.Color , _flag = cell.Flags };
+            cduColorStack curColor = new cduColorStack { _color = cell.Color, _flag = cell.Flags };
             if (rowNumber % 2 == 1)
                 retStr = "{small}";
             retStr += curColor.StartTag;

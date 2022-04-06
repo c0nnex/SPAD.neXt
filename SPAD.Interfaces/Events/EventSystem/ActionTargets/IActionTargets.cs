@@ -119,6 +119,7 @@ namespace SPAD.neXt.Interfaces.Events
     {
         string Text { get; set; }
         string Color { get; set; }
+        ActionReferenceTypes TextType {get;set;}
     }
 
     public interface IEventImageData : IXmlAnyObject

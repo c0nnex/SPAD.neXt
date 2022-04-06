@@ -1374,7 +1374,7 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid EVENTACTION_DISPLAY_GUID = new Guid("{F3BD2794-9EB4-4016-ABE2-052989F775A9}");
 
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
-
+        public static readonly Guid GENERIC_EXTENSION = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
         public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
 
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");

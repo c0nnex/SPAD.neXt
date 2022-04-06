@@ -18,6 +18,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         T GetOption<T>(string key);
         T GetOptionWithDefault<T>(string key, T defaultValue);
         void RemoveOption(string key);
+        void RemoveOptions(string keyStart);
         List<IProfileOption> GetOptions(string startWith);
         bool HasOption(string key);
         void SetOption(string key, string value);

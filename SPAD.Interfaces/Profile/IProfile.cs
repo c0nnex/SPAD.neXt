@@ -20,7 +20,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
         IReadOnlyList<IDeviceProfile> Devices { get; }
         IDeviceProfile FindTarget(string targetDeviceID);
-        void Save(bool IncrementVersion = true);
+        bool Save(bool IncrementVersion = true);
         void MarkForAutoSave();
     }
 }

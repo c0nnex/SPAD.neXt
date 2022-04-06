@@ -31,7 +31,7 @@ namespace SPAD.neXt.Interfaces
         void NotifyDirtyValue(int idx);
         void SetCacheDirty();       
         void ResizeCache(int newSize);
-
+        void ClearCache();
     }
 
     public interface IDataCacheProvider : IDataCacheValueProvider

@@ -23,7 +23,6 @@ namespace SPAD.neXt.Interfaces.Events
         string ConfigString { get; }
         string Name { get; set; }
         bool DebugMode { get; set; }
-
         void Configure(ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void Activate(string boundTo, ISPADBaseEvent baseEvent);
         void Deactivate(string boundTo, ISPADBaseEvent baseEvent);
@@ -61,7 +60,8 @@ namespace SPAD.neXt.Interfaces.Events
         int Priority { get; }
         bool IgnorePowerState { get; }
         bool EnableAcceleration { get; }
-        
+        bool IsDisabled { get; set; }
+
         IEncoderAcceleration Acceleration { get; }
 
         ISPADBaseEvent BaseEvent { get; }

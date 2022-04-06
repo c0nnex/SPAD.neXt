@@ -18,7 +18,7 @@ namespace SPAD.neXt.Interfaces
 {
     public interface IDataMonitorValue : IDisposable
     {
-        event PropertyChangedEventHandler DataValueChanged;
+        event EventHandler<IDataMonitorValue, object,object> DataValueChanged; // IDataMonitoValue,newValue,OldValue
         string ID { get; }
         int NumChanges { get; }
         string  LastChange { get; }
@@ -41,6 +41,7 @@ namespace SPAD.neXt.Interfaces
 
     public interface IWebVirtualDeviceService 
     {
+        bool IsEnabled { get; }
         IWebVirtualDevice VirtualDeviceRegister(string deviceTag, string deviceName, string deviceType, string deviceIndexPage, object deviceConfigObject = null);
     }
     public interface IWebVirtualDevice
@@ -159,14 +160,14 @@ namespace SPAD.neXt.Interfaces
         Stream GetConfigurationFile(string filename, string cfgFile);
         T ReadXMLConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
-        T LoadXMLSettingsFile<T>(string filename) where T : class, new();
-        void SaveXMLSettingsFile<T>(string filename, T dataObject) where T : class, new();
+        T LoadXMLSettingsFile<T>(string filename) where T : class;
+        void SaveXMLSettingsFile<T>(string filename, T dataObject) where T : class;
 
         string CreateXml(object o);
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
         IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         HashSet<string> GetConfigurationSet(string name);
-        ISerializableOption GetApplicationOption<T>(string optionKey, T defaultVal = default(T));
+        T GetApplicationOption<T>(string optionKey, T defaultVal = default(T));
 
         IExternalExpression CreateExpression(string name, string expression);
 
@@ -176,7 +177,7 @@ namespace SPAD.neXt.Interfaces
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
 
         object GetNamedObject(Guid id);
-        void RegisterNamedObject(Guid id, object obj);
+        void RegisterNamedObject(Guid id, object obj, bool asStatic = false);
         void RegisterPanelName(string deviceid, string name, string vendorID, string productID, int eventIndex, int subPanelID);
         void CreateDynamicPanel(string url);
     }
