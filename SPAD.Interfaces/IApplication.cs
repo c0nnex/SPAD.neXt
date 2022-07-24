@@ -13,15 +13,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
     public interface IDataMonitorValue : IDisposable
     {
-        event EventHandler<IDataMonitorValue, object,object> DataValueChanged; // IDataMonitoValue,newValue,OldValue
+        event EventHandler<IDataMonitorValue, object, object> DataValueChanged; // IDataMonitoValue,newValue,OldValue
         string ID { get; }
         int NumChanges { get; }
-        string  LastChange { get; }
+        string LastChange { get; }
         object Value { get; set; }
     }
 
@@ -39,7 +42,69 @@ namespace SPAD.neXt.Interfaces
 
     public interface IServiceSingletonDelayed { }
 
-    public interface IWebVirtualDeviceService 
+    [Serializable]
+    public sealed class ImageServicePayload
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public string Subcategory { get; set; }
+        DateTime LastChange { get; set; }
+
+        private string _Hash = null;
+        public string Hash
+        {
+            get
+            {
+                if (_Hash == null)
+                {
+                    if (Data != null)
+                    {
+                        using (var md5 = MD5.Create())
+                        {
+                            _Hash = BitConverter.ToString(md5.ComputeHash(Data)).Replace("-", "").ToLower();
+                        }
+                    }
+                    else
+                        _Hash = "invalid";
+                }
+                return _Hash;
+            }
+        }
+        public byte[] Data { get; set; }
+    }
+
+    public interface IDialogService
+    {
+        bool ShowDialog(Guid dialogId);
+        bool ShowDialog(Guid dialogId, Dictionary<string, object> dialogParameters);
+        bool ShowDialog(Guid dialogId, Dictionary<string, object> dialogParameters, out object result);
+    }
+
+    public enum ImageCategory
+    {
+        Inline,
+        Device,
+        System
+    }
+    public interface IImageService
+    {
+        void PreCacheImages(Guid requestId, IEnumerable<IDeviceImage> images);
+        bool IsPreCacheCompleted(Guid requestId);
+
+        Task<bool> PutImageAsync(Guid id, string name, byte[] data, string category = null, string subCategory = null);
+        Task<bool> PutImagesAsync(IEnumerable<ImageServicePayload> payLoad);
+        Task<byte[]> GetImageAsync(Guid id,long lastChange = 0);
+        bool HasImage(Guid id, string hash = null);
+        
+        IImageInfo GetImageInformation(Guid id);
+        IImageInfo GetImageInformation(string hash);
+        IEnumerable<IImageInfo> GetImages(ImageCategory imageCategory = ImageCategory.Inline, Func<IImageInfo,bool> predicate = null);
+        IEnumerable<string> GetImageCategories(ImageCategory imageCategory = ImageCategory.Inline);
+        Task RefreshAsync();
+    }
+
+    public interface IWebVirtualDeviceService
     {
         bool IsEnabled { get; }
         IWebVirtualDevice VirtualDeviceRegister(string deviceTag, string deviceName, string deviceType, string deviceIndexPage, object deviceConfigObject = null);
@@ -81,6 +146,7 @@ namespace SPAD.neXt.Interfaces
         string GetLicenseID(string feature);
         bool CheckRegisteredFeature();
         ulong GetAuthorID();
+        bool CheckDeviceAuthor(string value);
         void RegisterApplicationReady(EventHandler<BooleanEventArgs> applicationReady);
         void RegisterSimulationConnected(EventHandler<SimulationConfiguration, IValueProvider> simulationConnected);
         void RegisterNonDeleteableAction(Guid id);
@@ -158,6 +224,7 @@ namespace SPAD.neXt.Interfaces
         void OnSimulationConnected(SimulationConfiguration simConfig, IValueProvider provider);
 
         Stream GetConfigurationFile(string filename, string cfgFile);
+        bool HasConfigurationFile(string filename, string cfgFile);
         T ReadXMLConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
         T ReadJSONConfigurationFile<T>(string filename, string cfgFile) where T : class, new();
         T LoadXMLSettingsFile<T>(string filename) where T : class;
@@ -196,7 +263,7 @@ namespace SPAD.neXt.Interfaces
 
     public interface IApplicationConfiguration2 : IApplicationConfiguration
     {
-        void SetContext(string key,string context);    
+        void SetContext(string key, string context);
     }
 
     public interface IApplicationConfiguration
@@ -205,15 +272,25 @@ namespace SPAD.neXt.Interfaces
 
     }
 
+    public interface IRuntimeResolver
+    {
+        bool HasFile(string filename);
+        Stream GetStream(string filename = null);
+        StreamReader GetStreamReader(string filename = null);
+        string GetContent(string filename = null);
+
+
+    }
+
     public interface IResolvesAtRuntime
     {
-        void RuntimeResolve(IApplication proxy, string baseUri);
+        void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver);
     }
 
     public interface ISupportsActivation
     {
-        void Activate();
-        void Deactivate();
+        void Activate(string source, object additionalInfo);
+        void Deactivate(string source, object additionalInfo);
 
         void Rotate(int direction, string source, object additionalInfo);
     }

@@ -105,6 +105,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand AddEventCommand { get { return addEventCommand; } }
         public static RoutedCommand EditEventCommand { get { return editEventCommand; } }
         public static RoutedCommand DelEventCommand { get { return delEventCommand; } }
+        public static RoutedCommand ChangeEventTriggerCommand { get; } = new RoutedCommand("SPAD_neXt.EventChangeTrigger", typeof(SPADCommands));
         public static RoutedCommand OnlineActionCommand { get { return onlineActionCommand; } }
         public static RoutedCommand ChangeLabelCommand { get { return changeLabelCommand; } }
         public static RoutedCommand DoNothingCommand { get { return doNothingCommand; } }
@@ -113,6 +114,9 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CopyAllCommand { get { return _CopyAllCommand; } }
         public static RoutedCommand CopyPageCommand { get; } = new RoutedCommand("SPAD_neXt.CopyPage", typeof(SPADCommands));
         public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
+
+        public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));
+        public static RoutedCommand InheritCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Inherit", typeof(SPADCommands));
         public static RoutedCommand PasteCommand { get { return _PasteCommand; } }
         public static RoutedCommand PublishProfileCommand { get { return _PublishProfileCommand; } }
         public static RoutedCommand PublishSnippetCommand { get { return _PublishSnippetCommand; } }
@@ -137,6 +141,9 @@ namespace SPAD.neXt.Interfaces
 
         public static RoutedCommand EventDisableCommand { get; } = new RoutedCommand("SPAD_neXt.EventDisable", typeof(SPADCommands));
         public static RoutedCommand EventEnableCommand { get; } = new RoutedCommand("SPAD_neXt.EventEnable", typeof(SPADCommands));
+
+        public static RoutedCommand EventMoveUpCommand { get; } = new RoutedCommand("SPAD_neXt.EventMoveUp", typeof(SPADCommands));
+        public static RoutedCommand EventMoveDownCommand { get; } = new RoutedCommand("SPAD_neXt.EventMoveDown", typeof(SPADCommands));
         /*
         public static RoutedCommand EditActionCommand { get { return editActionCommand; } }
         public static RoutedCommand DelActionCommand { get { return delActionCommand; } }

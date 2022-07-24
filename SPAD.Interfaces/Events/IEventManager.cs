@@ -1,6 +1,6 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
-
+using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,7 +63,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         double ConvertValue(string expression, double value);
         double ConvertUnit(double value, string unitIn, string unitOut);
-        
+
     }
 
     public interface IValueProviderInfomation
@@ -73,7 +73,7 @@ namespace SPAD.neXt.Interfaces.Events
         string Information { get; }
         string StatusInformation { get; }
         IValueProvider Provider { get; }
-        bool IsVisible { get;  }
+        bool IsVisible { get; }
         bool IsConnected { get; }
     }
 
@@ -81,7 +81,7 @@ namespace SPAD.neXt.Interfaces.Events
     {
         bool SupportsDynamicDefinitions { get; }
         bool IsConnected { get; }
-        void ForceUpdate(string dataRef,bool doMonitor);
+        void ForceUpdate(string dataRef, bool doMonitor);
         void SetValue(string dataRef, double newValue);
         void ExecuteCommand(string commandRef, uint parameter);
         void SendMessage(string message);
@@ -97,12 +97,22 @@ namespace SPAD.neXt.Interfaces.Events
         void SendCDUControl(uint control, uint parameter);
     }
 
+    public interface IStaticValueProvider
+    {
+        
+    }
+
+    public interface IDeviceValueProvider
+    {
+        string CustomizeDatadefintion(string dataRef, IDeviceProfile deviceProfile);
+    }
+
     public interface IValueProvider
     {
         string Name { get; }
         string StatusInformation { get; }
         bool IsInitialized { get; }
-        bool IsPaused { get; }    
+        bool IsPaused { get; }
         bool IsVisible { get; }
         bool IsConnected { get; }
 
@@ -112,7 +122,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
 
         void SendControl(IDataDefinition control, uint parameter);
-        
+
         void ForceUpdate(IMonitorableValue value);
         void StartMonitoring(IMonitorableValue value);
         void StopMonitoring(IMonitorableValue value);
@@ -124,27 +134,29 @@ namespace SPAD.neXt.Interfaces.Events
 
         void EventCallback(object callbackvalue);
         IDataDefinition CreateDynamic(string name, string normalizer = null, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
-        void RemoveDynamic(string name,VARIABLE_SCOPE scope);
+        void RemoveDynamic(string name, VARIABLE_SCOPE scope);
         void SendMessage(string message);
     }
 
     public interface ITransparentValueProvider
     {
-        
+
         event EventHandler DataUpdated;
         string Name { get; }
         ulong GetLastChange();
         bool HasValue(string valueName);
         double GetValue(string valueName);
         void SetValue(string valueName, double value);
-        IEnumerable<string> GetAllValueNames(Func<string,bool> predicate = null);
+        IEnumerable<string> GetAllValueNames(Func<string, bool> predicate = null);
         void StartUpdates();
     }
-  
+
     public interface ISimulationInterface
     {
         bool IsConnected { get; }
         bool HasConnectionStatusChanged { get; }
+
+        SimulationGamestate SimulationGamestate { get; }
     }
 
     public interface ISimulationController : ISimulationInterface
@@ -157,7 +169,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface ISimulationEventProvider 
+    public interface ISimulationEventProvider
     {
         /*
         event EventHandler Connected;
@@ -209,7 +221,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         bool HasChanged();
 
-        void SetValue(object newValue, int delay = 0);
+        void SetValue(object newValue, int delay = 0, Guid? sender = null);
         Decimal ChangeValue(Decimal valChange);
 
         void StartMonitoring();

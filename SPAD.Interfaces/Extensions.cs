@@ -28,6 +28,64 @@ namespace System
             return inStr.Substring(0,Math.Min(numChars,inStr.Length));
         }
 
+        public static string GetPart(this string s, int part, string splitter, string defaultVal = "")
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return defaultVal;
+            return parts[part];
+        }
+        public static T GetPart<T>(this string s, int part, string splitter, T defaultVal = default)
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return defaultVal;
+            try
+            {
+                object res;
+                if (typeof(T) == typeof(Guid))
+                {
+                    res = Guid.Parse(parts[part]);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    res = parts[part] == "1" || String.Compare(parts[part], "true", true) == 0;
+                    return (T)res;
+                }
+                res = Convert.ChangeType(parts[part], typeof(T));
+                return (T)res;
+            }
+            catch { return defaultVal; }
+        }
+
+        public static string ReplacePart(this string s, int part, string splitter, string newVal)
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return s;
+            parts[part] = newVal;
+            return String.Join(splitter, parts);
+        }
+
+        public static string SkipParts(this string s, int startPart, int numParts, string splitter)
+        {
+            var parts = new List<string>(s?.Split(new string[] { splitter }, StringSplitOptions.None));
+            while ((startPart < parts.Count) && (numParts > 0))
+            {
+                parts.RemoveAt(startPart);
+                numParts--;
+            }
+            if (parts.Count == 0)
+                return String.Empty;
+            return String.Join(splitter, parts);
+        }
+
+        public static String[] Split(this string inStr, String separator)
+        {
+            return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";

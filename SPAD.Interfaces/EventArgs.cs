@@ -24,7 +24,20 @@ namespace SPAD.neXt.Interfaces
             Value = value;
         }
     }
+    public class LedStatusEventArgs : EventArgs
+    {
+        public static readonly LedStatusEventArgs OFF = new LedStatusEventArgs(false);
+        public bool IsOn { get; set; } = false;
+        public FLASHMODE FlashMode { get; set; }
+        public object AdditionalData { get; set; }
 
+        public LedStatusEventArgs(bool isOn, FLASHMODE flashMode = FLASHMODE.FLASHMODE_STATIC, object additionalData = null)
+        {
+            IsOn = isOn;
+            FlashMode = flashMode;
+            AdditionalData = additionalData;
+        }
+    }
     public sealed class ValidationEventArgs : EventArgs
     {
         public bool IsValid { get; set; }

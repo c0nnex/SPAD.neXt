@@ -67,7 +67,7 @@ namespace SPAD.neXt.Interfaces
         private static long eventNumber;
 
         public uint CustomIndex { get; }
-        public IInput Input { get; }
+        public IInput Input { get; private set; }
         public float Value { get; }
         public bool IsTriggered { get; }
         public string Name { get; }
@@ -112,6 +112,11 @@ namespace SPAD.neXt.Interfaces
             IsStatusUpdate = isStatusUpdate;    
         }
 
+        public AxisInputEventArgs WithInput(IInput input)
+        {
+            Input = input;
+            return this;
+        }
         public override string ToString()
         {
             return $"InputEventArgs Name={Name} CustomName={CustomName} CustomIndex={CustomIndex} Triggered={IsTriggered} SwitchName={SwitchName} Index={Input?.Index}";

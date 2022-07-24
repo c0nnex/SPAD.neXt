@@ -8,9 +8,10 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
     public interface IDeviceConfiguration : IOptionsProvider
     {
+        Guid DeviceSessionId { get; }
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
-       
-        
+
+
         string Name { get; }
         string PublishName { get; set; }
         string Panel { get; }
@@ -24,6 +25,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string DeviceType { get; }
         string DeviceMenu { get; }
         bool NoEventsAutoRemove { get; }
+        bool NoCalibration { get; set; }
         bool PageSupport { get; set; }
         bool HasDeviceSwitch(string name);
         IList<EventMapping> EventMappings { get; }
@@ -45,7 +47,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void ApplyCalibration(IInputDevice joystick);
         IAxisCalibration GetAxisCalibration(IInputAxis axis);
         void ImportJoystick(IInputDevice joystick);
-        void Save();
+        void SaveToFile();
     }
 
     public interface IAxisCalibration
@@ -77,11 +79,11 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         public string Add { get; set; }
         [XmlAttribute]
         public string All { get; set; }
-        [XmlAttribute] 
+        [XmlAttribute]
         public string Label { get; set; }
         [XmlAttribute]
         public string Config { get; set; }
-        [XmlText] 
+        [XmlText]
         public string Description { get; set; }
     }
 

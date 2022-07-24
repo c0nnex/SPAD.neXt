@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Logging
 {
+    public interface ILogProvider
+    {
+        event EventHandler<string> LogEntryAdd;
+        IEnumerable<string> LogEntries { get; }
+    }
+
     public interface ILogger
     {
         //
@@ -80,6 +86,8 @@ namespace SPAD.neXt.Interfaces.Logging
         void Debug(Func<string> p);
         void Info(Func<string> p);
         void Warn(Func<string> p);
+
+        event EventHandler<SPADLogLevel, string> OnLog;
     }
 
 

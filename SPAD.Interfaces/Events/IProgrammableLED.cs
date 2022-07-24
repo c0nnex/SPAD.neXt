@@ -9,12 +9,128 @@ using System.Windows;
 
 namespace SPAD.neXt.Interfaces.Events
 {
-    public interface IProgrammableButton : INotifyPropertyChanged
+
+    public interface IProgrammableInputUIState : INotifyPropertyChanged
     {
-        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOn;
-        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOff;
-        event EventHandler<IProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeChanged;
-        event EventHandler<IProgrammableButton, bool> LongOrShortPress;
+        string Tag { get; set; }
+        Visibility Visibility { get; set; }
+        int StateValue { get; set; }
+        int StateUIValue { get; set; }
+        string StateName { get; set; }
+        string EventName { get; set; }
+        void SetVisible(bool isVisible);
+    }
+
+    public sealed class ProgrammableInputStateChangedArgs : EventArgs
+    {
+        public ProgrammableInputStateChangedArgs(string tag, int stateValue, string stateName = null, string eventName = null)
+        {
+            Tag = tag;
+            StateValue = stateValue;
+            StateName = stateName;
+            EventName = eventName;
+        }
+        public bool IsImmuneToVirtualPower { get; set; } = false;
+        public string Tag { get; set; }
+        public int StateValue { get; set; }
+        public string StateName { get; set; }
+        public string EventName { get; set; }
+
+        public int StateIndexToggle { get; set; } = 0;
+        public ProgrammableInputStateChangedArgs AsIntermediate()
+        {
+            IsIntermediate = true;
+            return this;
+        }
+        public bool IsIntermediate { get; set; }
+
+        public ProgrammableInputStateChangedArgs AsStateInit()
+        {
+            IsStateInit = true;
+            return this;
+        }
+        public bool IsStateInit { get; set; } = false;
+
+        public override string ToString()
+        {
+            return $"InputStateChanged {Tag} {StateValue} {StateName} {EventName} {IsIntermediate} {IsStateInit}";
+        }
+    }
+
+
+    public interface IProgrammableInput : INotifyPropertyChanged,IDisposable,IObjectWithOptions
+    {
+        event EventHandler<IProgrammableInput,ProgrammableInputStateChangedArgs> InputStateChanged;
+        IProgrammableInputUIState CurrentUIState { get; set; }
+
+        Guid Owner { get; set; }
+        bool NoActivation { get; set; }
+        bool NoImplicitActivation { get; set; }
+        string Tag { get; }
+        string TargetTag { get; }
+        bool HasUITargetTag { get; }
+        string UITargetTag { get; }
+        bool UINoReleaseUpdate { get; }
+        string Label { get; }
+        bool RefreshContext { get; set; }
+        string VariableName { get; set; }
+
+        I GetData<I>() where I : class;
+        I GetRoutedToData<I>() where I : class;
+        I GetUIRoutedToData<I>() where I : class;
+        void Reset();
+
+        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent);
+    }
+
+    public enum INPUT_CHANGE_DIRECTION
+    {
+        NONE,
+        CLOCKWISE,
+        COUNTERCLOCKWISE
+    }
+
+    public interface IProgrammableLabel
+    {
+        string Label { get; set; }
+    }
+
+    public interface IProgrammableRotary :  IProgrammableStatefulInput
+    {
+       
+    }
+
+    public interface IProgrammableStatefulInput : IProgrammableInput
+    {
+        IProgrammableInputUIState RegisterPostion(string positionName,string eventName, int value, int uiValue);
+        IProgrammableInputUIState GetUIStateByName(string positionName);
+        IProgrammableInputUIState GetUIStateByValue(int positionValue);
+        IProgrammableInputUIState GetUIStateByNameOrValue(string positionName,int positionValue);
+        INPUT_CHANGE_DIRECTION SetState(IProgrammableInputUIState newState, bool raiseEvent);
+        IEnumerable<string> GetStateNames();
+        IEnumerable<int> GetStateValues();
+        IEnumerable<IProgrammableInputUIState> GetStates();
+    }
+
+
+
+    public interface IProgrammableSwitch : IProgrammableInput
+    {
+        string EventSwitchOnName { get; set; }
+        string EventSwitchOffName { get; set; }
+
+        IProgrammableInputUIState UIState_SwitchON { get;  }
+        IProgrammableInputUIState UIState_SwitchOFF { get; }
+
+    }
+
+    [Obsolete("Do not use anymore. Will be unsupported in 0.9.13+")]
+    public interface IOldProgrammableButton : IProgrammableInput, INotifyPropertyChanged
+    {
+        event EventHandler<IOldProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOn;
+        event EventHandler<IOldProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeTurnedOff;
+        event EventHandler<IOldProgrammableButton, PROGRAMMABLEBUTTONSTATUS> ModeChanged;
+        event EventHandler<IOldProgrammableButton, bool> LongOrShortPress;
 
 
         long LastPressDuration { get; }
@@ -23,29 +139,17 @@ namespace SPAD.neXt.Interfaces.Events
         ulong CurrentMask { get; set; }
         PROGRAMMABLEBUTTONSTATUS CurrentMode { get; }
         PROGRAMMABLEBUTTONSTATUS DefaultMode { get; set; }
-        Visibility CurrentUIState { get; set; }
+        new Visibility CurrentUIState { get; set; }
         Visibility CurrentUIStateInverted { get; set; }
         object Data { get; }
-        I GetData<I>() where I : class;
-        I GetRoutedToData<I>() where I : class;
-        I GetUIRoutedToData<I>() where I : class;
 
         bool IsOff { get; set; }
         bool LEDIsOn { get; }
         bool LongModeOn { get; set; }
-        bool NoActivation { get; set; }
-        bool NoImplicitActivation { get; set; }
         Visibility LongModeVisible { get; set; }
         ulong Mask { get; set; }
         bool ShortModeOn { get; set; }
         Visibility ShortModeVisible { get; set; }
-        string Tag { get; }
-        string TargetTag { get; }
-        bool HasUITargetTag { get; }
-        string UITargetTag { get; }
-        bool UINoReleaseUpdate { get; }
-        string Label { get; }
-        bool RefreshContext { get; set; }
         string EventPressName { get; set; }
         string EventLongPressName { get; set; }
         string EventReleaseName { get; set; }
@@ -71,11 +175,30 @@ namespace SPAD.neXt.Interfaces.Events
         void ModeOff(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeOn(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeToggle(PROGRAMMABLEBUTTONSTATUS whichMode);
-        void Reset();
         bool SetMode(PROGRAMMABLEBUTTONSTATUS newMode);
         CancellationTokenSource StartWaiting();
         void StopWaiting();
         bool UpdateSequence();
 
+    }
+
+
+    public interface IProgrammableButton : IProgrammableInput
+    {
+
+        long LastPressDuration { get; }
+        string EventPressName { get; set; }
+        string EventShortPressName { get; set; }
+        string EventLongPressName { get; set; }
+        string EventReleaseName { get; set; }
+        string EventHeldName { get; set; }
+        bool IsLongShortEnabled { get; set; }
+        void SetLongPressThreshold(int newThreshold);
+
+        bool IsHeldModeEnabled { get; }
+        void EnableHeldMode(int frequency = -1, int threshold = -1);
+        void DisableHeldMode();
+
+        void UpdateUI();
     }
 }

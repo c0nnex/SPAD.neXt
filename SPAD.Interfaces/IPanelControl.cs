@@ -18,9 +18,8 @@ namespace SPAD.neXt.Interfaces
     public interface IPanelHost
     {
         IPanelDevice DeviceAttached { get; }
-        IDeviceConfiguration DeviceConfiguration { get; }
+        IDeviceConfiguration DeviceConfiguration { get; set; }
         IDeviceProfile DeviceProfile { get; }
-        IProfileEventProvider ProfileEventProvider { get; }
 
         IPanelControl PanelControl { get; }
         Guid PanelLinkID { get; }
@@ -34,8 +33,11 @@ namespace SPAD.neXt.Interfaces
         string ProductID { get; }
         string DevicePath { get; }
         bool SupportsDefaultProfiles { get; set; }
+        bool IsPanelCompletelyInitialized { get; }
+        string PanelNavigationFragment { get; }
         bool ShowDialog(string dialogName, ISPADBaseEvent evt, EventHandler configHandler = null);
 
+        string RegisterPanelVariable(string subCategory, string varBaseName, string mainCategory);
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars,string mainCategory = null);
         void UpdatePanelVariable(string name, object value);
         object GetPanelVariable(string name);
@@ -43,9 +45,10 @@ namespace SPAD.neXt.Interfaces
         void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
         void AddPagingSupport();
+        void HidePagingSupport();
         void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         UserControl AddDropDownCommand(string buttonName, string buttonTag, ICommand command,string mainbuttonLabel = null);
-        Button AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
+        Button AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST, string visibilityProperty = null);
         void AddPanelCheckbox(string buttonName, string buttonTag, ICommand command, bool bIsChecked, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void SetEventContext(string eventName, Point targetPoint, IInput input);
         IEventContext GetCurrentEventContext();
@@ -56,6 +59,7 @@ namespace SPAD.neXt.Interfaces
         void RemoveThisPanel();
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
+        
     }
 
     public interface IPublishCustomize
@@ -76,7 +80,7 @@ namespace SPAD.neXt.Interfaces
     public interface IPanelControl : IDisposable
     {
         event EventHandler<IPanelDeviceEventArgs> EmulatedDeviceReportReceived;
-        
+        Guid UIPanelIdentifier { get; }
         void OnEmulateDeviceReport(IPanelDeviceEventArgs e);
 
         void InitializePanel(IPanelHost hostControl, string panelLabel);
@@ -103,7 +107,7 @@ namespace SPAD.neXt.Interfaces
         bool PanelHasSettings { get; }
         bool PanelHasPowerSettings { get; }
         bool IsCommandSupported(string commandName);
-        IProfileEventProvider ProfileEventProvider { get; }
+        
 
         void ApplicationReady(BooleanEventArgs e);
 
@@ -141,7 +145,9 @@ namespace SPAD.neXt.Interfaces
         IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
         bool IsCommandSupported(string commandName);
 
-        
+        void PreparePageForExport(IDeviceProfile deviceProfile, IDevicePage devicePage);
+        bool PageImported(IDeviceProfile deviceProfile, IDevicePage devicePage);
+        Dictionary<string, string> GetPublishInformation();        
     }
 
     public interface IDevicePage : IExtensible
@@ -150,17 +156,21 @@ namespace SPAD.neXt.Interfaces
         bool IsDefaultPage { get; set; }
         string PageName { get; }
         IReadOnlyList<ISPADBaseEvent> Events { get; }
-
+        IReadOnlyList<IDeviceImage> Images { get; }
         void SetID(Guid newGuid);
         void AddEvent(IDeviceProfile profile, ISPADBaseEvent evtIn);
         bool AddUpgradedEvent(ISPADBaseEvent evtIn);
 
+        bool AddImage(IDeviceImage image);
         ISPADBaseEvent FindEvent(string bound);
         void RemoveAllEvents(IDeviceProfile profile);
         bool RemoveEvent(IDeviceProfile profile, string bound);
 
         void PageDeactivated(IDeviceProfile profile);
         void PageActivated(IDeviceProfile profile);
+
+        void PageSaveStateVariable(string varName, object value);
+        T PageRestoreStateVariable<T>(string varName, T defaultValue = default(T));
     }
 
     public interface IProfilePageEventProvider

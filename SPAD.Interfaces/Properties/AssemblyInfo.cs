@@ -11,7 +11,7 @@ using System.Windows.Markup;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SPAD.neXt.Interfaces")]
-[assembly: AssemblyCopyright("Copyright © 2014-2021 Ulrich Strauss")]
+[assembly: AssemblyCopyright("Copyright © 2014-2022 Ulrich Strauss")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,6 +26,8 @@ using System.Windows.Markup;
 [assembly: XmlnsPrefix("http://www.fsgs.com/SPAD.neXt.Interfaces", "Interfaces")]
 [assembly: XmlnsDefinition("http://www.fsgs.com/SPAD.neXt.Interfaces", "SPAD.neXt.Interfaces")]
 [assembly: XmlnsDefinition("http://www.fsgs.com/SPAD.neXt.Interfaces", "SPAD.neXt.Interfaces.Events")]
+[assembly: XmlnsDefinition("http://spadnext.com/Interfaces", "SPAD.neXt.Interfaces")]
+[assembly: XmlnsDefinition("http://spadnext.com/Interfaces", "SPAD.neXt.Interfaces.Events")]
 
 
 // Version information for an assembly consists of the following four values:
@@ -38,5 +40,5 @@ using System.Windows.Markup;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.12.32")]
-[assembly: AssemblyFileVersion("0.9.12.32")]
+[assembly: AssemblyVersion("0.9.12.66")]
+[assembly: AssemblyFileVersion("0.9.12.66")]

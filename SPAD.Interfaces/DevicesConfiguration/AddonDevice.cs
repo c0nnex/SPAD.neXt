@@ -31,9 +31,15 @@ namespace SPAD.neXt.Interfaces.Extension
         AUTHOR
     }
 
+    public class AddonDeviceColorSet : AddonDeviceOptionObject
+    {
+        public string Key { get; set; }
+    }
+
     [Serializable]
     public class AddonDevice : AddonDeviceOptionObject
     {
+
         [XmlAttribute(AttributeName = "Version")]
         public string _Version { get; set; } = "0.0";
 
@@ -54,6 +60,14 @@ namespace SPAD.neXt.Interfaces.Extension
         public string Name { get; set; }
         [XmlAttribute]
         public string Author { get; set; }
+        [XmlIgnore]
+        public ulong AuthorID { get; set; } = 0;
+        [XmlIgnore]
+        public DeviceAllowLocal AllowDeviceEdit { get; set; } = DeviceAllowLocal.NONE;
+
+        [XmlIgnore]
+        public DeviceAllowLocal AllowProfileEdit { get; set; } = DeviceAllowLocal.ANY;
+
         [XmlAttribute]
         public string PublishName { get; set; }
 
@@ -71,9 +85,18 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlElement(ElementName = "Input")]
         public List<AddonDeviceElement> Inputs { get; set; } = new List<AddonDeviceElement>();
+
+        [XmlIgnore]
+        public List<AddonDeviceElement> Outputs => Inputs.Where(ii => ii.IsOutput).ToList();
+        [XmlIgnore]
+        public List<AddonDeviceElement> InputsOnly => Inputs.Where(ii => !ii.IsOutput).ToList();
+
         [XmlElement("EventMapping", IsNullable = false)]
         public List<EventMapping> EventMappings { get; set; } = new List<EventMapping>();
-
+        [XmlElement(ElementName = "Colorset")]
+        public List<AddonDeviceColorSet> Colorsets { get; set; } = new List<AddonDeviceColorSet>();
+        [XmlElement(ElementName = "Mapping")]
+        public List<AddonDeviceCommandMapping> CommandMappings { get; set; } = new List<AddonDeviceCommandMapping>();
         [XmlElement(ElementName = "Import")]
         public List<string> Imports { get; set; } = new List<string>();
 
@@ -89,17 +112,18 @@ namespace SPAD.neXt.Interfaces.Extension
         private string variableBaseKey;
 
         [XmlIgnore]
-        public ConcurrentDictionary<string, AddonDeviceCommandMapping> DeviceCommandMappingDict = new ConcurrentDictionary<string, AddonDeviceCommandMapping>();
+        public ConcurrentDictionary<string, AddonDeviceCommandMapping> DeviceCommandMappingDict = new ConcurrentDictionary<string, AddonDeviceCommandMapping>(StringComparer.InvariantCultureIgnoreCase);
         [XmlIgnore]
-        public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>();
+        public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>(StringComparer.InvariantCultureIgnoreCase);
 
 
-        public void ProcessImports(IApplication applicationProxy, string basePath, string baseCfg)
+        public void ProcessImports(Func<string, AddonDevice> loadCallback)
         {
             foreach (var item in Imports)
             {
-                applicationProxy.GetLogger("AddonDevice").Debug("Importing " + item);
-                var importDevice = applicationProxy.ReadXMLConfigurationFile<AddonDevice>(System.IO.Path.Combine(basePath, item), baseCfg);
+                AddonDevice importDevice = null;
+                if (loadCallback != null)
+                    importDevice = loadCallback(item);
                 if (importDevice != null)
                 {
                     importDevice.Options.ForEach(option => AddOption(option.Key, option.Value));
@@ -112,16 +136,20 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             DeviceCommandMappingDict.Clear();
             DeviceDisplayDict.Clear();
-            foreach (var item in Inputs)
+            foreach (var item in InputsOnly)
             {
                 item.FixUp();
                 foreach (var m in item.Mappings)
                 {
                     m.Tag = item.Tag;
+                    m.FixUp();
                     DeviceCommandMappingDict[m.In] = m;
                 }
-
-
+               
+            }
+            foreach (var item in Outputs)
+            {
+                item.FixUp();
                 if (item.IsDisplay)
                 {
                     for (int r = 0; r < item.Display.Rows; r++)
@@ -131,9 +159,10 @@ namespace SPAD.neXt.Interfaces.Extension
                             tAlign = TextAlignment.Right;
                         var dspRow = new AddonDeviceDisplayRow(item.Tag, dspRowID, r, -1, item.Display.Length, tAlign);
                         dspRow.DeviceDisplayIndex = item.DeviceCommandIndex;
-                        dspRow.NoPadding = item.GetOption<bool>("NoPadding", false);
-                        dspRow.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", false);
+                        dspRow.NoPadding = item.GetOption<bool>("NoPadding", GetOption("DSP_NOPADDING", false));
+                        dspRow.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", GetOption("DSP_NoSegmentRowEvents", false));
                         DeviceDisplayDict[dspRowID] = dspRow;
+                        item.Display.DisplayRows.Add(dspRow);
                         var segAlign = item.GetOption("SegmentAlign", "Right").Split(',');
                         for (int i = 0; i < item.Display.Segments; i++)
                         {
@@ -146,14 +175,18 @@ namespace SPAD.neXt.Interfaces.Extension
                             }
 
                             var dspSeg = new AddonDeviceDisplaySegment(item.Tag, dspSegID, r, i, item.Display.SegmentLength, sAlign);
-                            dspSeg.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", false);
+                            dspSeg.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", dspRow.NoSegmentRowEvents);
                             dspRow.AddSegment(dspSeg);
                             DeviceDisplayDict[dspSegID] = dspSeg;
                         }
                     }
                 }
             }
-            
+            foreach (var m in CommandMappings)
+            {
+                m.FixUp();
+                DeviceCommandMappingDict[m.In] = m;
+            }
             var baseVarkey = "";
             if (HasOption("VARIABLE_KEY"))
                 baseVarkey = GetOption<string>("VARIABLE_KEY");
@@ -161,7 +194,7 @@ namespace SPAD.neXt.Interfaces.Extension
             {
                 if (!String.IsNullOrEmpty(ID))
                 {
-                    var knownDevKey = "AddonDevice."+ applicationProxy.GetApplicationOption<string>(ID);
+                    var knownDevKey = applicationProxy.GetApplicationOption<string>("AddonDevice." + ID);
                     if (!String.IsNullOrEmpty(knownDevKey))
                         baseVarkey = knownDevKey;
                 }
@@ -179,7 +212,7 @@ namespace SPAD.neXt.Interfaces.Extension
             variableBaseKey = baseVarkey;
         }
 
-        public AddonDevice WithVendor(string vendorId,string productId)
+        public AddonDevice WithVendor(string vendorId, string productId)
         {
             SetOption("VID", vendorId);
             SetOption("PID", productId);
@@ -217,6 +250,8 @@ namespace SPAD.neXt.Interfaces.Extension
         }
 
         public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag);
+        public AddonDeviceElement GetInput(string tag) => Inputs.FirstOrDefault(x =>x.Tag == tag);
+        public AddonDeviceElement GetOutput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput);
 
         public AddonDeviceElement GetOrCreateInput(string tag, Func<AddonDeviceElement> pCreate)
         {
@@ -253,6 +288,17 @@ namespace SPAD.neXt.Interfaces.Extension
             if (DeviceDisplayDict.TryGetValue(displayTag, out var display))
                 display.UpdateValue(value, sendToDevice);
         }
+
+        public void RegisterColorSet(string cIndex, AddonDeviceOptionObject cList)
+        {
+            Colorsets.RemoveAll(c => String.Compare(c.Key, cIndex, true) == 0);
+            Colorsets.Add(new AddonDeviceColorSet() { Key = cIndex, Options = cList.Options });
+        }
+
+        public AddonDeviceColorSet GetColorSet(string key)
+        {
+            return Colorsets.FirstOrDefault(c => c.Key == key);
+        }
     }
 
     public class AddonDeviceDisplay
@@ -264,6 +310,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public int SegmentLength;
 
         public string DefaultValue;
+
+        public List<AddonDeviceDisplayRow> DisplayRows = new List<AddonDeviceDisplayRow>();
     }
 
     public abstract class AddonDeviceDisplayData
@@ -429,28 +477,22 @@ namespace SPAD.neXt.Interfaces.Extension
             _PositionMasks = new int[NumPositions];
             var dta = GetOption("PositionMasks", "").Split(',');
             for (int i = 0; i < NumPositions; i++)
-            {               
+            {
                 int.TryParse(dta[i], out _PositionMasks[i]);
-            }                        
+            }
             _PositionNames = GetOption("PositionNames", "").Split(',');
         }
 
-        public override void ProcessInput(byte[] inputReport, Action<string, string, int> raiseEventCallback, bool forceRaise = false)
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
         {
             for (int i = 0; i < NumPositions; i++)
             {
                 var nVal = (inputReport[ReportIndex] & _PositionMasks[i]) != 0;
                 if (nVal)
                 {
-                    if (PositionCurrent != i || forceRaise)
+                    if (PositionCurrent != i || isStateScan)
                     {
-                        if (!forceRaise)
-                        {
-                            raiseEventCallback?.Invoke(Tag, _PositionNames[PositionCurrent] + "_VALUEOFF",0);
-                            
-                            raiseEventCallback?.Invoke(Tag, i > PositionCurrent ? "TUNER_CLOCKWISE":"TUNER_COUNTERCLOCKWISE",0);
-                        }
-                        raiseEventCallback?.Invoke(Tag, _PositionNames[i] + "_VALUEON",GetOption(_PositionNames[i]+".DIRECTION",0));
+                        raiseEventCallback?.Invoke(Tag, _PositionNames[i], _PositionMasks[i], _PositionMasks[i], isStateScan);
                         PositionCurrent = i;
                         break;
                     }
@@ -458,6 +500,21 @@ namespace SPAD.neXt.Interfaces.Extension
             }
         }
     }
+
+    public class AddonDeviceRotaryPosition
+    {
+        private int? uIValue = null;
+
+        [XmlAttribute]
+        public string Name { get; set; }
+        [XmlAttribute]
+        public int UIValue { get => uIValue.GetValueOrDefault(Value); set => uIValue = value; }
+        public bool ShouldSerializeUIValue() => uIValue.HasValue;
+        [XmlAttribute]
+        public int Value { get; set; } = 0;
+
+    }
+
 
     public class AddonDeviceButton : AddonDeviceElement
     {
@@ -472,7 +529,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
         private bool lastValue = false;
 
-        public override void ProcessInput(byte[] inputReport, Action<string, string, int> raiseEventCallback, bool forceRaise = false)
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
         {
 
             var nVal = getInputVal(inputReport);
@@ -481,7 +538,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
             if (lastValue != nVal)
             {
-                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1:0);
+                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1 : 0, nVal ? 1 : 0, isStateScan);
             }
             lastValue = nVal;
         }
@@ -503,26 +560,26 @@ namespace SPAD.neXt.Interfaces.Extension
     public class AddonDeviceSwitch : AddonDeviceElement
     {
         [XmlIgnore]
-        public int ReportIndex { get => GetOption("ReportIndex",0); set => SetOption("ReportIndex",value); }
+        public int ReportIndex { get => GetOption("ReportIndex", 0); set => SetOption("ReportIndex", value); }
         [XmlIgnore]
         public int ReportMask { get => GetOption("ReportMask", 0); set => SetOption("ReportMask", value); }
         [XmlIgnore]
         public int ReportLen { get => GetOption("ReportLen", 1); set => SetOption("ReportLen", value); }
         [XmlIgnore]
-        public bool Inverse { get => GetOption("Inverse", false); set => SetOption("Inverse", value); }               
+        public bool Inverse { get => GetOption("Inverse", false); set => SetOption("Inverse", value); }
 
         private bool lastValue = false;
-        
-        public override void ProcessInput(byte[] inputReport,Action<string,string, int> raiseEventCallback, bool forceRaise = false)
+
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
         {
-            
+
             var nVal = getInputVal(inputReport);
             if (Inverse)
                 nVal = !nVal;
 
-            if (lastValue != nVal || forceRaise)
+            if (lastValue != nVal || isStateScan)
             {
-                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE","RELEASE"), nVal ? 1 :0);
+                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1 : 0, nVal ? 1 : 0, isStateScan);
             }
             lastValue = nVal;
         }
@@ -545,6 +602,8 @@ namespace SPAD.neXt.Interfaces.Extension
     [XmlInclude(typeof(AddonDeviceSwitch))]
     [XmlInclude(typeof(AddonDeviceSwitchEncoder))]
     [XmlInclude(typeof(AddonDeviceButton))]
+
+
     public class AddonDeviceElement : AddonDeviceOptionObject
     {
         [XmlAttribute]
@@ -565,7 +624,9 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
-        public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();        
+        public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
+        [XmlElement(ElementName = "RotaryPosition")]
+        public List<AddonDeviceRotaryPosition> RotaryPositions { get; set; } = new List<AddonDeviceRotaryPosition>();
 
         [XmlAttribute]
         [Category("Position")]
@@ -573,19 +634,19 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Position")]
         public double Height { get; set; }
-        [XmlAttribute(AttributeName = "Canvas.Left")]
+        [XmlAttribute(AttributeName = "Left")]
         [Category("Position")]
         public double Left { get; set; }
-        [XmlAttribute(AttributeName = "Canvas.Top")]
+        [XmlAttribute(AttributeName = "Top")]
         [Category("Position")]
         public double Top { get; set; }
 
-        [XmlAttribute(AttributeName = "Left")]
+        [XmlAttribute(AttributeName = "Canvas.Left")]
         [Category("Obsolete")]
         public double _LeftOld { get => Left; set => Left = value; }
         public bool ShouldSerialize_LeftOld() => false;
 
-        [XmlAttribute(AttributeName = "Top")]
+        [XmlAttribute(AttributeName = "Canvas.Top")]
         [Category("Obsolete")]
         public double _TopOld { get => Top; set => Top = value; }
         public bool ShouldSerialize_TopOld() => false;
@@ -603,6 +664,9 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool IsPanelChange { get; set; } = false;
 
         [XmlIgnore]
+        public bool IsOutput => InputType == DeviceInputTypes.Display || InputType == DeviceInputTypes.Led;
+
+        [XmlIgnore]
         public DeviceInputTypes InputType
         {
             get
@@ -616,13 +680,15 @@ namespace SPAD.neXt.Interfaces.Extension
                     case "LED": return DeviceInputTypes.Led;
                     case "AXIS": return DeviceInputTypes.Axis;
                     case "ROTARY": return DeviceInputTypes.Rotary;
+                    case "SWITCH3": return DeviceInputTypes.StatefulSwitch;
+                    case "LABEL": return DeviceInputTypes.Label;
                     default:
                         return DeviceInputTypes.Unkown;
                 }
             }
         }
 
-        public bool HasPosition => Width != 0 || Height != 0 || Left != 0 || Top != 0;
+        public bool HasPosition => Left != 0 || Top != 0;
         public void SetVariableName(string varName) => VariableName = varName;
         public AddonDeviceElement WithVariableName(string varName)
         {
@@ -636,8 +702,17 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultVal;
             return val;
         }
+
+        public void RegisterRotaryPosition(string posName, int posValue, int posUIValue)
+        {
+            if (RotaryPositions.Any(x => x.Name == posName))
+                return;
+            RotaryPositions.Add(new AddonDeviceRotaryPosition() { Name = posName, Value = posValue, UIValue = posUIValue });
+        }
         public virtual void FixUp()
         {
+            if (String.IsNullOrEmpty(Inherit))
+                Inherit = "MASTER";
             if (IsDisplay)
             {
                 Display = new AddonDeviceDisplay()
@@ -651,6 +726,26 @@ namespace SPAD.neXt.Interfaces.Extension
                 };
             }
             IsPanelChange = HasOption("TARGET_PANEL");
+
+            if (HasOption("POS_NAMES"))
+            {
+                var posNames = GetOption("POS_NAMES", "").Split(new char[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
+                var posValues = GetOption("POS_VALUES", "");
+                var posUIValues = GetOption("POS_UIVALUES", "");
+                if (posNames.Length > 0)
+                {
+                    for (int i = 0; i < posNames.Length; i++)
+                    {
+                        RegisterRotaryPosition(posNames[i], posValues.GetPart(i, "#", i), posUIValues.GetPart(i, "#", i));
+                    }
+                }
+                RemoveOption("POS_NAMES");
+                RemoveOption("POS_VALUES");
+                RemoveOption("POS_UIVALUES");
+            }
+
+            var tList = RotaryPositions.OrderBy(r => r.Value).ToList();
+            RotaryPositions = tList;
         }
 
         public AddonDeviceCommandMapping GetOrCreateMapping(string inStr, string outStr)
@@ -664,11 +759,11 @@ namespace SPAD.neXt.Interfaces.Extension
             Mappings.Add(oVal);
             return oVal;
         }
-        public AddonDeviceCommandMapping CreateMapping(string inStr, string outStr)
+        public AddonDeviceCommandMapping CreateMapping(string inStr, string outStr, int activateDirection = 1)
         {
             if (inStr == "UNKNOWN")
                 return null;
-            var oVal = new AddonDeviceCommandMapping(Tag, inStr, outStr);
+            var oVal = new AddonDeviceCommandMapping(Tag, inStr, outStr, activateDirection);
             Mappings.Add(oVal);
             return oVal;
         }
@@ -740,12 +835,12 @@ namespace SPAD.neXt.Interfaces.Extension
             Width = width;
         }
 
-        public virtual void ProcessInput(byte[] inputReport, Action<string, string,int> raiseEventCallback, bool forceRaise = false)
+        public virtual void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
         { }
 
         public override string ToString()
         {
-            return $"{this.GetType()} {Type} {Tag} Options {Options.Count}";    
+            return $"{this.GetType()} {Type} {Tag} Options {Options.Count}";
         }
     }
 
@@ -778,10 +873,18 @@ namespace SPAD.neXt.Interfaces.Extension
                 }
                 if (typeof(T) == typeof(bool))
                 {
-                    res = Value == "1" || String.Compare(Value, "true", true) == 0;
+                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    return (T)res;
                 }
-                else
-                    res = Convert.ChangeType(Value, typeof(T), CultureInfo.InvariantCulture);
+                if (typeof(T) == typeof(char))
+                {
+                    res = Value.FirstOrDefault();
+                    return (T)res;
+                }
+                if (typeof(T).IsEnum)
+                    return (T)Enum.Parse(typeof(T), Value, true);
+
+                res = Convert.ChangeType(Value, typeof(T), CultureInfo.InvariantCulture);
                 return (T)res;
             }
             catch
@@ -792,12 +895,17 @@ namespace SPAD.neXt.Interfaces.Extension
 
         public override string ToString()
         {
-            return $"Option "+Key+"='"+Value+"'";
+            return Key + "=" + Value;
         }
     }
 
-    public class AddonDeviceOptionObject
+    public class AddonDeviceOptionObject : IObjectWithOptions
     {
+        [XmlElement(ElementName = "Option")]
+        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
+        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
+        public int Count => (Options == null ? 0 : Options.Count);
+
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
             var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
@@ -814,24 +922,29 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultValue;
             }
         }
-        [XmlElement(ElementName = "Option")]
-        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
-        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
+        
         public bool HasOption(string key)
         {
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);
         }
-        public void AddOption(string key, object value)
+        public void AddOption(string key, object value, int pos = -1)
         {
             if (!HasOption(key))
-                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+            {
+                if (pos == -1)
+                    Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                else
+                    Options.Insert(pos, new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+            }
         }
-        public void SetOption<T>(string key, T value)
+        public void SetOption<T>(string key, T value) where T : IConvertible
         {
             Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
                 Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
         }
+
+        public int RemoveOption(string key) => Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
 
         public void MergeOptions(AddonDeviceOptionObject src)
         {
@@ -839,6 +952,11 @@ namespace SPAD.neXt.Interfaces.Extension
             {
                 SetOption(item.Key, item.Value);
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Join(",", Options.Select(o => o.ToString()));
         }
     }
 
@@ -862,32 +980,66 @@ namespace SPAD.neXt.Interfaces.Extension
         public string DisplayAs { get; set; }
         [XmlAttribute]
         public string StateStore { get; set; }
-
+        [XmlAttribute]
+        public int StateValue { get; set; } = int.MaxValue;
+        public bool ShouldSerializeStateValue() => StateValue != int.MaxValue;
+      
         public AddonDeviceCommandMapping() { }
-        public AddonDeviceCommandMapping(string tag, string @in, string @out)
+        public AddonDeviceCommandMapping(string tag, string @in, string @out, int activateDirection = 1)
         {
             Tag = tag;
             In = @in;
             Out = @out;
+            StateValue = activateDirection;
+        }
+        public bool IsOffName(string inputName)
+        {
+            switch (inputName)
+            {
+                case "OFF": return true;
+                case "RELEASE": return true;
+                default:
+                    return false;
+            }
         }
 
         public void FixUp()
         {
-
+            if (StateValue == int.MaxValue) // No Data in config
+            {
+                StateValue = 1;
+                if (Out.StartsWith("TUNER_"))
+                {
+                    if (Out.Contains("CLOCKWISE"))
+                        StateValue = 1;
+                    else
+                        StateValue = -1;
+                }
+                else
+                {
+                    if (IsOffName(Out))
+                        StateValue = 0;
+                }
+            }
         }
 
+        public AddonDeviceCommandMapping WithDisplayAs(string str)
+        {
+            DisplayAs = str;
+            return this;
+        }
         public bool DoesStoreState => !String.IsNullOrEmpty(StateStore);
 
         public override string ToString()
         {
-            return $"Mapped Event {In} => {Tag}.{Out}";
+            return $"Mapped Event {In} => {Tag}.{Out} ({StateValue})";
         }
     }
     [Serializable]
     public sealed class EventMapping
     {
         [XmlAttribute]
-        public string EventName { get; set; }
+        public string EventName { get; set; } = "ALL";
         [XmlAttribute]
         public string FromTrigger { get; set; }
         [XmlAttribute]
@@ -897,6 +1049,10 @@ namespace SPAD.neXt.Interfaces.Extension
         public string FromEvent { get; set; }
         [XmlAttribute]
         public string ToEvent { get; set; }
+        [XmlAttribute]
+        public int Priority { get; set; } = 0;
+        [XmlAttribute]
+        public int Version { get; set; } = 0;
 
         public bool IsEventMove => !String.IsNullOrEmpty(FromEvent) && !String.IsNullOrEmpty(ToEvent);
         public string Key
@@ -907,6 +1063,10 @@ namespace SPAD.neXt.Interfaces.Extension
                     return $"{FromEvent}.{FromTrigger}.{ToEvent}.{ToTrigger}";
                 return $"{EventName}.{FromTrigger}.{ToTrigger}";
             }
+        }
+        public override string ToString()
+        {
+            return $"EventMapping {FromEvent}.{FromTrigger} => {ToEvent}.{ToTrigger} P {Priority} V {Version}";
         }
     }
 }

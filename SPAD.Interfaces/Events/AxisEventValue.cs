@@ -21,8 +21,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         }
 
-        public AxisEventValue(AxisInputEventArgs e) : this( e.Input as IInputAxis )
-        {            
+        public AxisEventValue(AxisInputEventArgs e) : this(e.Input as IInputAxis)
+        {
         }
 
         public AxisEventValue(IInputAxis axis)
@@ -76,7 +76,7 @@ namespace SPAD.neXt.Interfaces.Events
                 case SPADValueOperation.SetEventValue_AxisValue:
                     return AxisValue;
                 case SPADValueOperation.SetEventValue_AxisPercent:
-                    return Math.Max(Math.Min((int)(AxisValue * 100f),100),0);
+                    return Math.Max(Math.Min((int)(AxisValue * 100f), 100), 0);
                 default:
                     break;
             }
@@ -104,8 +104,16 @@ namespace SPAD.neXt.Interfaces.Events
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Rescale(float value, float sourceMin, float sourceMax, float targetMin, float targetMax)
         {
+            if (sourceMin > sourceMax)
+            {
+                var tmp = sourceMin;
+                sourceMin = sourceMax;
+                sourceMax = tmp;
+                tmp = targetMin;
+                targetMin = targetMax;
+                targetMax = tmp;
+            }
             value = Math.Max(sourceMin, Math.Min(value, sourceMax));
-
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
 

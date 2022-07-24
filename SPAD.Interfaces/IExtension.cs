@@ -1,4 +1,5 @@
 ﻿
+using SPAD.Extensions.Generic;
 using SPAD.neXt.Interfaces.HID;
 using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
@@ -26,12 +27,13 @@ namespace SPAD.neXt.Interfaces
 
     public interface IExtensionDynamicDevice
     {
-        void CreateDynamicDevice(string protocol,string name, Guid id);
+        GenericSettings CreateDynamicDevice(string protocol,string name, Guid id);
     }
 
     public interface IProfileUpgradeWorker
     {
-        bool UpgradeProfile(IApplication ApplicationProxy, IDeviceProfile DeviceProfile);
+        bool UpgradeProfile(IApplication applicationProxy, IDeviceProfile deviceProfile);
+        void CleanupProfile(IApplication applicationProxy, IDeviceProfile deviceProfile);
     }
 
     public interface IExtensionLateArrival
@@ -69,6 +71,12 @@ namespace SPAD.neXt.Interfaces
         string VendoridNew { get; }
         int DeviceEventIndexNew { get; }
     }
+
+    public interface IExtensionGeneric
+    {
+        GenericSettings Settings { get; }
+    }
+
     public interface IExtensionDevice2 : IExtensionDevice
     {
         bool AutoRemoveInvalidEvents { get; }

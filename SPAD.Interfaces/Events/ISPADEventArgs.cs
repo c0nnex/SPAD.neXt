@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsCascadedEvent { get; set; }
         bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
+        bool IsStateEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
         UInt64 CreationTime { get; }
@@ -121,7 +122,7 @@ namespace SPAD.neXt.Interfaces.Events
         public bool IsAxisEvent { get; set; }
         public object CallbackValue { get; set; }
         public bool IsDisplayEvent { get; set; }
-
+        public bool IsStateEvent { get; set; }
 
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
@@ -161,6 +162,7 @@ namespace SPAD.neXt.Interfaces.Events
         {
             this.oldValue = oldValue;
             this.newValue = newValue;
+            NewValueFormatted = newValue?.ToString();
         }
 
         public SPADEventArgs(string eventName, string eventTrigger, object newValue, object oldValue)
@@ -168,6 +170,7 @@ namespace SPAD.neXt.Interfaces.Events
         {
             this.oldValue = oldValue;
             this.newValue = newValue;
+            NewValueFormatted = newValue?.ToString();
         }
         /*
         public SPADEventArgs(string eventName, object newValue, object oldValue, IDeviceProfile deviceProfile)

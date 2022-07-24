@@ -48,6 +48,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool IsConfigAllowed(string id);
         bool IsConfigEnabled(string id);
         string SubMenuName { get; set; }
+
+        T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible;
     }
 
     public interface IDeviceSwitch : IGameDeviceInput
@@ -77,6 +79,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
         ISerializableOption SetPrivateOption(string optionName, string defaultValue = null);
         IDeviceConfigValue FindConfigValue(string trigger);
+        IDeviceConfigValue EnsureConfigValueExists(string valuename);
         bool HasConfigValue(string trigger);
         void AddConfigValue(IDeviceConfigValue cfgValue);
         IDeviceConfigValue CreateConfigValue();

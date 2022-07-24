@@ -45,7 +45,7 @@ namespace SPAD.neXt.Interfaces.Events
     {
         object Value { get; set; }
         SPADValueOperation ValueOperation { get; set; }
-
+        ActionReferenceTypes SourceType { get; set; }
         bool UseTriggerValue { get; set; }
         bool HasMinMax { get; set; }
         Double ValueMin { get; set; }
@@ -109,10 +109,16 @@ namespace SPAD.neXt.Interfaces.Events
     {
     }
 
-    public interface IEventActionPlateImage : IEventAction
+    public interface IEventActionWithImage
+    {
+        string Image { get; set; }
+        Guid ImageId { get; set; }
+
+    }
+
+    public interface IEventActionPlateImage : IEventAction,IEventActionWithImage
     {
         FLASHMODE FlashMode { get; set; }
-        string Image { get; set; }
     }
 
     public interface IEventActionPlateLabel : IEventActionObserve
@@ -169,6 +175,14 @@ namespace SPAD.neXt.Interfaces.Events
         void SetPrivateData<T>(T data) where T : class;
     }
 
+    public interface IEventActionLedColor
+    {
+        FLASHMODE FlashMode { get; set; }
+        string Mode { get; set; }
+        string Color { get; set; }
+    }
+
+
     public interface IEventActionDelay : IEventAction
     {
         uint Delay { get; set; }
@@ -184,6 +198,8 @@ namespace SPAD.neXt.Interfaces.Events
         string Text { get; set; }
         string CallMethod { get; set; }
         bool WaitForFinish { get; set; }
+        string Username { get; set; }
+        string Password { get; set; }
     }
 
     public interface IEventActionText2Speech : IEventAction
