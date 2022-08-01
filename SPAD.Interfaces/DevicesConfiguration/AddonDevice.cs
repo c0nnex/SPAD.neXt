@@ -676,6 +676,7 @@ namespace SPAD.neXt.Interfaces.Extension
                     case "DISPLAY": return DeviceInputTypes.Display;
                     case "ENCODER": return DeviceInputTypes.Encoder;
                     case "PUSHBUTTON": return DeviceInputTypes.Button;
+                    case "PUSHBUTTON_NOMODE": return DeviceInputTypes.Button;
                     case "SWITCH": return DeviceInputTypes.Switch;
                     case "LED": return DeviceInputTypes.Led;
                     case "AXIS": return DeviceInputTypes.Axis;

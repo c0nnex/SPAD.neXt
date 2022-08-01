@@ -21,6 +21,7 @@ namespace SPAD.neXt.Interfaces
     {
         event EventHandler<IPanelDeviceEventArgs> DeviceReportReceived;
 
+        Guid DeviceSessionId { get; }
         IDeviceConfiguration DeviceConfiguration { get; }
         IHidDeviceCapabilities Capabilities { get; }
         IHidDeviceAttributes Attributes { get; }

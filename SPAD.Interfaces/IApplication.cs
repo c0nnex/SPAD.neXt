@@ -247,6 +247,9 @@ namespace SPAD.neXt.Interfaces
         void RegisterNamedObject(Guid id, object obj, bool asStatic = false);
         void RegisterPanelName(string deviceid, string name, string vendorID, string productID, int eventIndex, int subPanelID);
         void CreateDynamicPanel(string url);
+
+        IRuntimeResolver CreateRuntimeResolver(string id);
+        IJoystickEmulator CreateVirtualJoystick(int identifier, string name, string vendorId, string productId);
     }
 
     public interface IActionManager
@@ -304,6 +307,11 @@ namespace SPAD.neXt.Interfaces
     public interface IDeviceEmulation
     {
         void EmulateClientConnect(object data);
+    }
+
+    public interface IJoystickEmulator : ICalibrateableDevice, IInputDevice
+    {
+        IInputAxis CreateAxis(string name, uint id, int min, int max);
     }
 }
 

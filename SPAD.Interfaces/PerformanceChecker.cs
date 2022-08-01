@@ -31,7 +31,7 @@ namespace SPAD.neXt.Interfaces
             this.doLog = doLog;
         }
 
-        public void Mark(string info=null, string userMsg = null)
+        public void Mark(string info=null, string userMsg = null,bool isInternal = false)
         {
             if (DoLogPerformance || doLog)
             {
@@ -39,7 +39,8 @@ namespace SPAD.neXt.Interfaces
                 logger?.Info($"{Name} MARK {marker++} {info} {x - stLastMark}/{x - stTicks} ms");
                 stLastMark = x;
             }
-            OnMark?.Invoke(this, String.IsNullOrEmpty(userMsg) ? info : userMsg);
+            if (!isInternal)
+                OnMark?.Invoke(this, String.IsNullOrEmpty(userMsg) ? info : userMsg);
         }
 
         public void Reset()

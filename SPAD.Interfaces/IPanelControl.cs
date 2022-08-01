@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces
 
         IPanelControl PanelControl { get; }
         Guid PanelLinkID { get; }
+        Guid DeviceGlobalIdentifier { get; }
         bool PanelHasFocus { get; }
         bool IsVirtualDevice { get; }
         bool HasPageSupport { get;  }
@@ -117,6 +118,9 @@ namespace SPAD.neXt.Interfaces
 
         T GetService<T>(string id = null) where T : class, IPanelService;
         void RaiseEvent(string switchName, ISPADEventArgs eArgs);
+
+        void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
+        
     }
 
     public interface IPanelDocumentation

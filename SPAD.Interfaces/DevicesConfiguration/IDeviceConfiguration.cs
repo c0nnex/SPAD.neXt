@@ -8,7 +8,6 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
     public interface IDeviceConfiguration : IOptionsProvider
     {
-        Guid DeviceSessionId { get; }
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
 
 
@@ -36,7 +35,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void AddDeviceSwitch(IDeviceSwitch newSwitch);
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);
-        IDeviceSwitch CreateDeviceSwitch();
+        IDeviceSwitch CreateDeviceSwitch(int switchVersion = 1);
         string TransformSwitchNameForResources(string switchName);
     }
 

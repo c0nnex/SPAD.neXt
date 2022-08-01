@@ -17,7 +17,7 @@ namespace SPAD.neXt.Interfaces.Events
        
     }
 
-    public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>
+    public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>, IConditionalSerialize
     {
         string BoundTo { get; set; }
         string ConfigString { get; }
