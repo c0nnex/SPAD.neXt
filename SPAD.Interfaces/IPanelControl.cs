@@ -137,14 +137,8 @@ namespace SPAD.neXt.Interfaces
         PanelOptions PanelOptions {get;}
         ISPADBaseEvent FindEvent(string bound);
         void AddEvent(ISPADBaseEvent evt, bool permanent = true);
-        void AddPage(IDevicePage page);
-        
-        void RemovePage(IDevicePage page);
-        IDevicePage FindPage(Guid id);
-        IDevicePage GetDefaultPage();
         bool IsValidEvent(string eventName);
         void RemoveAllEvents();
-        void RemoveAllPages();
         bool RemoveEvent(string bound);
         IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
         bool IsCommandSupported(string commandName);

@@ -113,6 +113,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CopyThisCommand { get { return _CopyThisCommand; } }
         public static RoutedCommand CopyAllCommand { get { return _CopyAllCommand; } }
         public static RoutedCommand CopyPageCommand { get; } = new RoutedCommand("SPAD_neXt.CopyPage", typeof(SPADCommands));
+        public static RoutedCommand RefreshPageCommand { get; } = new RoutedCommand("SPAD_neXt.RefreshPage", typeof(SPADCommands));
         public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
 
         public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));

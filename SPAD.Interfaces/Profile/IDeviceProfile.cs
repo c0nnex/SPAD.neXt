@@ -81,8 +81,16 @@ namespace SPAD.neXt.Interfaces.Profile
         IDeviceImage ImportLocalDeviceImage(string name, string source);
         void ReplaceDeviceImages(Dictionary<Guid, Guid> toReplace);
         void AddDeviceImage(IDeviceImage image);
+
+        // Pages Stuff
+        void AddPage(IDevicePage page);
+        void RemovePage(IDevicePage page);
+        IDevicePage FindPage(Guid id);
+        IDevicePage GetDefaultPage();
+        void RemoveAllPages();
+
     }
-   
+
     public interface IImageInfo
     {
         Guid Id { get; }
@@ -105,6 +113,7 @@ namespace SPAD.neXt.Interfaces.Profile
         string DisplayName { get; }
         string Source { get;  }
         bool IsSystemImage { get; }
+        bool IsLocalFile { get; }
         bool IsRef { get; }
         void AddReference();
         byte[] GetImage();

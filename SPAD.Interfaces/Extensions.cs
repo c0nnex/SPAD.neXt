@@ -45,7 +45,10 @@ namespace System
                 object res;
                 if (typeof(T) == typeof(Guid))
                 {
-                    res = Guid.Parse(parts[part]);
+                    if (Guid.TryParse(parts[part], out var resGuid))
+                        res = resGuid;
+                    else
+                        res = Guid.Empty;
                     return (T)res;
                 }
                 if (typeof(T) == typeof(bool))
