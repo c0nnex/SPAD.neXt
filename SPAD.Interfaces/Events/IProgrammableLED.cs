@@ -196,7 +196,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetLongPressThreshold(int newThreshold);
 
         bool IsHeldModeEnabled { get; }
-        void EnableHeldMode(int frequency = -1, int threshold = -1);
+        void EnableHeldMode(int frequency = -1, int threshold = -1, int heldValue = 1, string eventName = "HELD");
         void DisableHeldMode();
 
         void UpdateUI();

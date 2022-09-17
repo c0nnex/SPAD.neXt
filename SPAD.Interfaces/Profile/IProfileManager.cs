@@ -25,6 +25,7 @@ namespace SPAD.neXt.Interfaces.Profile
         Boolean,
         String,
         Integer,
-        Choice        
+        Choice,
+        Static
     }
 }

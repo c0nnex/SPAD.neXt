@@ -44,7 +44,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool ExcludeKeyFromSearch { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }

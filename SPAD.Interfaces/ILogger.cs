@@ -12,6 +12,11 @@ namespace SPAD.neXt.Interfaces.Logging
         IEnumerable<string> LogEntries { get; }
     }
 
+    public interface ILogFactory
+    {
+        ILogger GetLogger(string name);
+        ILogger GetExtensionLogger(string name);
+    }
     public interface ILogger
     {
         //

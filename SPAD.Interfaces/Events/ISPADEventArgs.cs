@@ -50,6 +50,8 @@ namespace SPAD.neXt.Interfaces.Events
         ISPADEventArgs Clone();
         T GetData<T>(string key, T defaultValue = default(T));
         ISPADEventArgs WithData(string key, object data);
+
+        bool Is(ISPADEventArgs e);
     }
 
     public interface IHandledEventArgs
@@ -331,5 +333,7 @@ namespace SPAD.neXt.Interfaces.Events
             IsAxisEvent = true;
             return this;
         }
+
+        public bool Is(ISPADEventArgs e) => FullName == e.EventName;
     }
 }

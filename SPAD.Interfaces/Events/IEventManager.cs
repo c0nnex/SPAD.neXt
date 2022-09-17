@@ -28,8 +28,7 @@ namespace SPAD.neXt.Interfaces.Events
         IMonitorableValue CreateMonitorableValue(string Name, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
         IDataDefinition GetDataDefinition(string name);
         void RemoveRegisteredVariable(string variableName, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION);
-        List<string> GetAllMonitoredValues();
-
+        List<string> GetAllMonitoredValues();        
 
     }
 
@@ -138,6 +137,12 @@ namespace SPAD.neXt.Interfaces.Events
         void SendMessage(string message);
     }
 
+    public interface ISessionValueProvider : IValueProvider
+    {
+        event EventHandler<string, bool> MonitoringChanged;
+        void UpdateValue(string name, object newVal, object oldVal, Guid sender);
+    }
+
     public interface ITransparentValueProvider
     {
 
@@ -182,7 +187,13 @@ namespace SPAD.neXt.Interfaces.Events
         void StopMonitoringEvents();
     }
 
-    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>
+    public interface ICacheableValue 
+    {
+        int CacheIndex { get; }
+        void SetCacheIndex(int idx);
+    }
+
+    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>, ICacheableValue
     {
         Guid ID { get; }
         Guid Owner { get; set; }

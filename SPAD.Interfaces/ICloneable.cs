@@ -14,6 +14,7 @@ namespace SPAD.neXt.Interfaces
         int RemoveOption(string key);
         void SetOption<I>(string key, I value) where I : IConvertible;
     }
+
     public interface IExtensible
     {
         T GetExtension<T>(Type type) where T : IXmlAnyObject;

@@ -31,13 +31,13 @@ namespace SPAD.neXt.Interfaces.Extension
         AUTHOR
     }
 
-    public class AddonDeviceColorSet : AddonDeviceOptionObject
+    public class AddonDeviceColorSet : GenericOptionObject
     {
         public string Key { get; set; }
     }
 
     [Serializable]
-    public class AddonDevice : AddonDeviceOptionObject
+    public class AddonDevice : GenericOptionObject
     {
 
         [XmlAttribute(AttributeName = "Version")]
@@ -175,6 +175,7 @@ namespace SPAD.neXt.Interfaces.Extension
                             }
 
                             var dspSeg = new AddonDeviceDisplaySegment(item.Tag, dspSegID, r, i, item.Display.SegmentLength, sAlign);
+                            dspSeg.NoPadding = item.GetOption<bool>("NoSegmentPadding", GetOption("DSP_NOPADDING", false));
                             dspSeg.NoSegmentRowEvents = item.GetOption<bool>("NoSegmentRowEvents", dspRow.NoSegmentRowEvents);
                             dspRow.AddSegment(dspSeg);
                             DeviceDisplayDict[dspSegID] = dspSeg;
@@ -289,7 +290,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 display.UpdateValue(value, sendToDevice);
         }
 
-        public void RegisterColorSet(string cIndex, AddonDeviceOptionObject cList)
+        public void RegisterColorSet(string cIndex, GenericOptionObject cList)
         {
             Colorsets.RemoveAll(c => String.Compare(c.Key, cIndex, true) == 0);
             Colorsets.Add(new AddonDeviceColorSet() { Key = cIndex, Options = cList.Options });
@@ -333,6 +334,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool NoPadding = false;
         public bool NoSegmentRowEvents = false;
         public Func<string, int, string> PadMe = (input, len) => input == null ? "".PadRight(len).Left(len) : input.PadRight(len).Left(len);
+        public Func<string, int, string> FillMe = (input, len) => input == null ? "".PadRight(len): input.PadRight(len);
         protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment)
         {
             Tag = tag;
@@ -342,7 +344,10 @@ namespace SPAD.neXt.Interfaces.Extension
             Length = length;
             TextAlignment = alignment;
             if (alignment == TextAlignment.Left)
+            {
                 PadMe = (input, len) => input == null ? "".PadLeft(len).Right(len) : input.PadLeft(len).Right(len);
+                FillMe = (input, len) => input == null ? "".PadLeft(len) : input.PadLeft(len);
+            }
             Value = "".PadRight(Length);
         }
 
@@ -443,6 +448,8 @@ namespace SPAD.neXt.Interfaces.Extension
             var nVal = newValue;
             if (!NoPadding)
                 nVal = PadMe(newValue, Length);
+            else
+                nVal = FillMe(newValue, Length);
             logger?.Debug($"UpdateSegment {EventID} old '{Value}' new '{nVal}' {sendToDevice}");
             Value = nVal;
             RaiseOnValueUpdated(sendToDevice);
@@ -604,7 +611,7 @@ namespace SPAD.neXt.Interfaces.Extension
     [XmlInclude(typeof(AddonDeviceButton))]
 
 
-    public class AddonDeviceElement : AddonDeviceOptionObject
+    public class AddonDeviceElement : GenericOptionObject
     {
         [XmlAttribute]
         [Category("Data")]
@@ -793,7 +800,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public AddonDeviceElement WithOption(string key, object value)
         {
             if (!HasOption(key))
-                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                Options.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
             return this;
         }
         public void AddInherit(string baseClass)
@@ -846,17 +853,17 @@ namespace SPAD.neXt.Interfaces.Extension
     }
 
     [Serializable]
-    public sealed class AddonDeviceOption
+    public sealed class GenericOption
     {
         [XmlAttribute]
         public string Key { get; set; }
         [XmlAttribute]
         public string Value { get; set; }
 
-        public AddonDeviceOption()
+        public GenericOption()
         {
         }
-        public AddonDeviceOption(string key, string value)
+        public GenericOption(string key, string value)
         {
             Key = key;
             Value = value;
@@ -900,10 +907,10 @@ namespace SPAD.neXt.Interfaces.Extension
         }
     }
 
-    public class AddonDeviceOptionObject : IObjectWithOptions
+    public class GenericOptionObject : IObjectWithOptions
     {
         [XmlElement(ElementName = "Option")]
-        public List<AddonDeviceOption> Options { get; set; } = new List<AddonDeviceOption>();
+        public List<GenericOption> Options { get; set; } = new List<GenericOption>();
         public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
         public int Count => (Options == null ? 0 : Options.Count);
 
@@ -933,21 +940,21 @@ namespace SPAD.neXt.Interfaces.Extension
             if (!HasOption(key))
             {
                 if (pos == -1)
-                    Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                    Options.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
                 else
-                    Options.Insert(pos, new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                    Options.Insert(pos, new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
             }
         }
         public void SetOption<T>(string key, T value) where T : IConvertible
         {
             Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
-                Options.Add(new AddonDeviceOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                Options.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
         }
 
         public int RemoveOption(string key) => Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
 
-        public void MergeOptions(AddonDeviceOptionObject src)
+        public void MergeOptions(GenericOptionObject src)
         {
             foreach (var item in src.Options)
             {
@@ -962,7 +969,7 @@ namespace SPAD.neXt.Interfaces.Extension
     }
 
     [Serializable]
-    public class AddonDeviceCommandMapping : AddonDeviceOptionObject
+    public class AddonDeviceCommandMapping : GenericOptionObject
     {
         [XmlIgnore]
         public Action ActivateAction = () => { };

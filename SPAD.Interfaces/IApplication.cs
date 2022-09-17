@@ -19,14 +19,31 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+
+    public interface INoImplicitDispose { }
+    public interface ISPAD { }
     public interface IDataMonitorValue : IDisposable
     {
         event EventHandler<IDataMonitorValue, object, object> DataValueChanged; // IDataMonitoValue,newValue,OldValue
         string ID { get; }
+        string Name { get; }
         int NumChanges { get; }
-        string LastChange { get; }
-        object Value { get; set; }
+        DateTime LastChange { get; }
+        object Value { get;  }
+        void SetValue(object newValue);
     }
+
+    public static class ServiceEvents
+    {
+        public static readonly ISPADEventArgs ApplicationStart = new SPADEventArgs("ServiceEvent", "ApplicationReady", 0, 1);
+        public static readonly ISPADEventArgs ApplicationStop = new SPADEventArgs("ServiceEvent", "ApplicationReady", 1, 0);
+        public static readonly ISPADEventArgs SimulationConnected = new SPADEventArgs("ServiceEvent", "SimulationConnected");
+        public static readonly ISPADEventArgs SimulationDisconnected = new SPADEventArgs("ServiceEvent", "SimulationConnected");
+        public static readonly ISPADEventArgs Pause = new SPADEventArgs("ServiceEvent", "Pause");
+        public static readonly ISPADEventArgs Continue = new SPADEventArgs("ServiceEvent", "Pause");
+
+    }
+
 
     public interface IServiceSingleton
     {
@@ -36,10 +53,18 @@ namespace SPAD.neXt.Interfaces
         void StartServiceFinal();
         void StopService();
         bool IsEnabled { get; }
+
+        void OnServiceEvent(ISPADEventArgs e);
     }
 
+    /// <summary>
+    /// Service will not be started automatically but on demand
+    /// </summary>
     public interface IServiceSingletonNoStartup { }
 
+    /// <summary>
+    /// Service depends on other services started and will be started after all normal services are running.
+    /// </summary>
     public interface IServiceSingletonDelayed { }
 
     [Serializable]
@@ -102,6 +127,11 @@ namespace SPAD.neXt.Interfaces
         IEnumerable<IImageInfo> GetImages(ImageCategory imageCategory = ImageCategory.Inline, Func<IImageInfo,bool> predicate = null);
         IEnumerable<string> GetImageCategories(ImageCategory imageCategory = ImageCategory.Inline);
         Task RefreshAsync();
+    }
+
+    public interface ICacheService
+    {
+        IEnumerable<IDataMonitorValue> GetDataCache(string cacheId);
     }
 
     public interface IWebVirtualDeviceService
@@ -234,7 +264,7 @@ namespace SPAD.neXt.Interfaces
         IReadOnlyList<string> GetJSONConfigurationFiles(string pattern, string cfgFile, bool preferLocal = false);
         IReadOnlyList<IDeviceSwitch> GetDefaultSwitchConfigurations();
         HashSet<string> GetConfigurationSet(string name);
-        T GetApplicationOption<T>(string optionKey, T defaultVal = default(T));
+        T GetApplicationOption<T>(string optionKey, T defaultVal = default);
 
         IExternalExpression CreateExpression(string name, string expression);
 
@@ -273,6 +303,11 @@ namespace SPAD.neXt.Interfaces
     {
         bool ExecuteConfiguration(IApplication app);
 
+    }
+
+    public interface IDeviceProfileEventConverter : IDisposable
+    {
+        bool ConvertEvent(ILogger logger, ISPADBaseEvent evt, IDeviceProfile deviceProfile, IDeviceConfiguration deviceConfiguration, IDeviceSwitch deviceSwitch, int xmlVersion, string converterParameter);
     }
 
     public interface IRuntimeResolver

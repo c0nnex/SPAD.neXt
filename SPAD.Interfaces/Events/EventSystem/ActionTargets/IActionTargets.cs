@@ -32,13 +32,17 @@ namespace SPAD.neXt.Interfaces.Events
         bool SendRaw { get; set; }
     }
 
-    public interface IEventActionMonitor
+    public interface IEventActionDoesMonitor
+    {
+        IReadOnlyList<IDataDefinition> MonitoredDataDefinitions { get; }
+    }
+
+    public interface IEventActionMonitor : IEventActionDoesMonitor
     {
         IDataDefinition TargetDataDefinition { get; set; }
         IDataDefinition SourceDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }
         string SourceDataDefinitionID { get; set; }
-        IReadOnlyList<IDataDefinition> MonitoredDataDefinitions { get; }
     }
 
     public interface IEventActionChangeValue : IEventAction, IEventActionMonitor
@@ -53,8 +57,28 @@ namespace SPAD.neXt.Interfaces.Events
         bool EnableRollOver { get; set; }
     }
 
-    public interface IEventActionSendEvent : IEventActionChangeValue
+    public interface IEventActionParameter : IObjectWithOptions
     {
+        ActionReferenceTypes ParameterType { get; set; }
+        string ParameterValue { get; set; }
+        string ConfigString { get; }
+        T GetParameterValue<T>(T defaultValue = default);
+
+        IDataDefinition ParameterDataDefinition { get; }
+        void SetData(ActionReferenceTypes referenceType, string value);
+    }
+    public interface IEventActionSendEvent : IEventAction, IEventActionDoesMonitor
+    {
+        int NumberOfParameters { get; }
+        IReadOnlyList<IEventActionParameter> Parameters { get; }
+        IEventActionParameter Parameter { get; }
+        IEventActionParameter Parameter1 { get;}
+        IEventActionParameter Parameter2 { get;}
+        IEventActionParameter Parameter3 { get;}
+        IEventActionParameter Parameter4 { get;}
+
+        IDataDefinition TargetDataDefinition { get; set; }
+        string TargetDataDefinitionID { get; set; }
 
     }
 

@@ -39,6 +39,8 @@ namespace SPAD.neXt.Interfaces.Events
         void SetBinding(string bound);
 
         void EnableHeldMode(Guid owner);
+        void StopHeldMode(Guid owner);
+        void Upgrade();
     }
 
     

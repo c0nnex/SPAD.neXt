@@ -14,7 +14,9 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventBaseObject
     {
         IEventDefinition GetParentEventDefinition();
-       
+        IDataDefinition GetDataDefinition(string definitionID);
+
+
     }
 
     public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>, IConditionalSerialize
@@ -64,6 +66,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsEnabled { get; set; }
         bool IsDeprecated { get; set; }
         bool HasWarning { get; }
+        bool EventIsRunning { get; }
         string  WarningMessage { get;  }
         IEncoderAcceleration Acceleration { get; }
 
@@ -139,7 +142,7 @@ namespace SPAD.neXt.Interfaces.Events
     {        
         string ConfigString { get; }
 
-        void Execute(IEventDefinition definition, ISPADEventArgs e);
+        bool Execute(IEventDefinition definition, ISPADEventArgs e);
 
         IEventAction GetBySingleton(Guid id);
     }
@@ -163,7 +166,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsInEditMode { get; set; }
         void AddParserValue(string key, string value);
         int TransformValue(AxisEventValue e);
-        void Execute(IEventDefinition definition, ISPADEventArgs e);
+        bool Execute(IEventDefinition definition, ISPADEventArgs e);
         bool Equals(IEventAction other);
         bool CheckConfiguration(List<string> errorContainer);
         

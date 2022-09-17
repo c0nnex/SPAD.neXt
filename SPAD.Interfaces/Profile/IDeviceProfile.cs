@@ -89,6 +89,9 @@ namespace SPAD.neXt.Interfaces.Profile
         IDevicePage GetDefaultPage();
         void RemoveAllPages();
 
+        // Temp ugly Stuff
+        void SetVariable(string varName, object value);
+        T GetVariable<T>(string varName);
     }
 
     public interface IImageInfo
