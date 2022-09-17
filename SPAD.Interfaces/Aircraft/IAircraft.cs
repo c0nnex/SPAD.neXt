@@ -9,9 +9,15 @@ namespace SPAD.neXt.Interfaces.Aircraft
 {
     public interface IAircraft
     {
+        event EventHandler<ICDUScreen, EventArgs> CDUChanged;
+        event EventHandler<CDU_NUMBER, CDU_LED, int> LEDChanged;
         string Name { get; }
 
+        void Reset();
         ICDUScreen GetCDU(CDU_NUMBER cduNumber);
+        void SetCDU(CDU_NUMBER cduNumber, GenericCDUScreen cduData);
+        void UpdateLedStatus(CDU_NUMBER cduNumber, CDU_LED led, int isOn);
+        void RenderCDU(CDU_NUMBER cduNumber);
     }
 
 

@@ -73,6 +73,7 @@
       <xs:element minOccurs="0" maxOccurs="1" name="Position" type="Position" />
 	  <xs:element minOccurs="0" maxOccurs="1" name="Shift" type="Shift" />
       <xs:element minOccurs="0" maxOccurs="1" name="Size" type="Position" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rotate" type="xs:string" />
     </xs:all>
     <xs:attribute name="Font" type="xs:string" />
     <xs:attribute name="FontSize" type="xs:float"  />
@@ -236,8 +237,8 @@
   </xs:complexType>
   <xs:complexType name="Shift">
         <xs:all>
-          <xs:element minOccurs="0" maxOccurs="1" name="X" type="xs:string" />
-          <xs:element minOccurs="0" maxOccurs="1" name="Y" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="X" type="ValueDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Y" type="ValueDefinition" />
           <xs:element minOccurs="0" maxOccurs="1" name="Value" type="ValueDefinition" />
           <xs:element minOccurs="0" maxOccurs="1" name="Nonlinearity" type="ArrayOfNonlinearityItem" />
           <xs:element minOccurs="0" maxOccurs="1" name="Scale" type="Position" />

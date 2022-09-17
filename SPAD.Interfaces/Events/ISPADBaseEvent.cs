@@ -12,20 +12,20 @@ namespace SPAD.neXt.Interfaces.Events
         string BoundTo { get; }
         string ConfigID { get; set; }
         bool isActivated { get; }
-        bool isEnabled { get; set; }
+        bool IsEnabled { get; set; }        
         bool CannotUpgradeToEventSystem { get; }
         bool IsGaugeEvent { get; }
-
+        
         IEventDefinitions EventDefinitions { get; set; }
         IDeviceProfile LinkedDeviceProfile { get; }
 
         Guid EventExecutionContext { get; }
         void SetGaugeEvent(bool isGaugeEvent);
 
-        void ActivateEvent(IDeviceProfile deviceProfile, Guid? executionContext = null);
+        void ActivateEvent(IDeviceProfile deviceProfile, Guid executionContext);
         void DeactivateEvent(IDeviceProfile deviceProfile);
         void Configure(IDeviceProfile deviceProfile);
-
+        IReadOnlyList<IEventDefinition> GetByTrigger(string trigger);
         bool IsConfiguredEventValue(string valueName);
         bool IsConfigured();
         void RaiseEvent(ISPADEventArgs e);
@@ -37,6 +37,10 @@ namespace SPAD.neXt.Interfaces.Events
         bool HasPrivateOption(string key);
         string GetXML();
         void SetBinding(string bound);
+
+        void EnableHeldMode(Guid owner);
+        void StopHeldMode(Guid owner);
+        void Upgrade();
     }
 
     

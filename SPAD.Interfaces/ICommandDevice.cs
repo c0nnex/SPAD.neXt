@@ -23,7 +23,7 @@ namespace SPAD.neXt.Interfaces
         IActionConfigurationControl GetActionConfigurationControl(IActionConfiguration actionConfiguration);
         string GetActionConfigString(IEventActionExternal action);
         void Activate(IEventActionExternal action);
-        void Execute(IEventActionExternal action);
+        bool Execute(IEventActionExternal action);
         void Deactivate(IEventActionExternal action);
 
         IReadOnlyList<IDataDefinition> GetMonitoredDataDefinitions(IEventActionExternal action);

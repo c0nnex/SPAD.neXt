@@ -11,12 +11,17 @@ using System.Windows.Threading;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface IPanelDevice
+    public interface IRemovableDevice
     {
         event EventHandler DeviceAttached;
         event EventHandler DeviceRemoved;
+    }
+
+    public interface IPanelDevice : IRemovableDevice
+    {
         event EventHandler<IPanelDeviceEventArgs> DeviceReportReceived;
 
+        Guid DeviceSessionId { get; }
         IDeviceConfiguration DeviceConfiguration { get; }
         IHidDeviceCapabilities Capabilities { get; }
         IHidDeviceAttributes Attributes { get; }
@@ -54,16 +59,16 @@ namespace SPAD.neXt.Interfaces
 
    
 
-    public delegate void InputEventhandler(IInputDevice sender, InputEventArgs e);
+    public delegate void InputEventhandler(IInputDevice sender, AxisInputEventArgs e);
     public delegate void AxisEventHandler(IInput sender, AxisEventValue e);
 
 
-    public sealed class InputEventArgs
+    public sealed class AxisInputEventArgs
     {
         private static long eventNumber;
 
         public uint CustomIndex { get; }
-        public IInput Input { get; }
+        public IInput Input { get; private set; }
         public float Value { get; }
         public bool IsTriggered { get; }
         public string Name { get; }
@@ -74,7 +79,13 @@ namespace SPAD.neXt.Interfaces
         public long EventNumber { get; }
         public ulong EventTick { get; }
 
-        public InputEventArgs(IInput input)
+        public AxisInputEventArgs()
+        {
+            EventNumber = Interlocked.Increment(ref eventNumber);
+            EventTick = EnvironmentEx.TickCount;
+        }
+
+        public AxisInputEventArgs(IInput input) : this()
         {
             Input = input;
             CustomIndex = input.CustomIndex;
@@ -89,9 +100,23 @@ namespace SPAD.neXt.Interfaces
             EventTick = input.LastEventTick;
         }
 
-        public InputEventArgs(IInput input, bool isStausUpdate) : this(input)
+        public AxisInputEventArgs(IInput input, bool isStausUpdate) : this(input)
         {
             IsStatusUpdate = isStausUpdate;
+        }
+
+        public AxisInputEventArgs(string switchName,int rawValue,float value, bool isStatusUpdate = false) : this()
+        {
+            SwitchName = switchName;    
+            RawValue=rawValue;
+            Value = value;  
+            IsStatusUpdate = isStatusUpdate;    
+        }
+
+        public AxisInputEventArgs WithInput(IInput input)
+        {
+            Input = input;
+            return this;
         }
         public override string ToString()
         {
@@ -99,7 +124,15 @@ namespace SPAD.neXt.Interfaces
         }
     }
 
-    public interface IInputDevice
+    public interface ICalibrateableDevice
+    {
+        string DeviceCalibrationName { get; }
+        IEnumerable<string> DeviceCalibrationNameAlternates { get; }
+        string VendorID { get; }
+        string ProductID { get; }
+    }
+
+    public interface IInputDevice 
     {
         string Name { get; }
         int Identifier { get; }
@@ -214,10 +247,8 @@ namespace SPAD.neXt.Interfaces
         JoystickHatDirection HatDirection { get; }
     }
 
-    public interface IGameDevice : IInputDevice, IPanelDevice
+    public interface IGameDevice : IInputDevice, IPanelDevice, ICalibrateableDevice
     {
-        string DeviceCalibrationName { get; }
-        string DeviceCalibrationNameOld { get; }
         IInputDevice InputDevice { get; }
         IPanelDevice PanelDevice { get; }
 

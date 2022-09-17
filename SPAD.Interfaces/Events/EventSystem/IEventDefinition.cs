@@ -14,20 +14,20 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventBaseObject
     {
         IEventDefinition GetParentEventDefinition();
-       
+        IDataDefinition GetDataDefinition(string definitionID);
+
+
     }
 
-    public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>
+    public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>, IConditionalSerialize
     {
         string BoundTo { get; set; }
         string ConfigString { get; }
         string Name { get; set; }
         bool DebugMode { get; set; }
-
         void Configure(ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         void Activate(string boundTo, ISPADBaseEvent baseEvent);
         void Deactivate(string boundTo, ISPADBaseEvent baseEvent);
-        void Execute(ISPADEventArgs e);
         IReadOnlyList<IEventDefinition> GetByTrigger(string trigger, bool create = true);
         IEventDefinition CreateEvent(string trigger, Guid? singletonID = null);
         IEventDefinition GetByID(Guid eventDefinitionID);
@@ -42,7 +42,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventDefinition : IEventOptions, ICloneableWithID<IEventDefinition>
+    public interface IEventDefinition : IEventOptions, ICloneableWithID<IEventDefinition>, IConditionalSerialize
     {
         Guid SingletonID { get; set; } 
         bool IsSingleton { get; }
@@ -62,14 +62,19 @@ namespace SPAD.neXt.Interfaces.Events
         int Priority { get; }
         bool IgnorePowerState { get; }
         bool EnableAcceleration { get; }
+        bool IsDisabled { get; set; }
+        bool IsEnabled { get; set; }
+        bool IsDeprecated { get; set; }
+        bool HasWarning { get; }
+        bool EventIsRunning { get; }
+        string  WarningMessage { get;  }
         IEncoderAcceleration Acceleration { get; }
 
-        ISPADBaseEvent BaseEvent { get; }
         InputModifier InputBehavior { get; set; }
+        ISPADBaseEvent BaseEvent { get; }
         IDeviceProfile DeviceProfile { get;  }
         
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
-        void ForceEvaluation();
         bool Activate(ISPADBaseEvent baseEvent);
         void Deactivate(ISPADBaseEvent baseEvent);
         void Execute(ISPADEventArgs e, bool force = false);
@@ -81,13 +86,17 @@ namespace SPAD.neXt.Interfaces.Events
         // Creating new actions
         void AddAction(IEventAction action, bool singleton = true);
         IEventAction CreateCommandAction(string command, string parameter = null);
+
+        bool IsAction(SPADEventActions actionType);
+        IEventAction GetFirstAction(SPADEventActions actionType);
+
     }
 
     public interface IEventCondition : IEventBaseObject,IHasID
     {
         string ConfigString { get; }
         bool IsConfigured { get; }
-
+        void SetDirty();
         void Activate();
         void Deactivate();
         bool CheckConfiguration(List<string> tmpError);
@@ -116,7 +125,8 @@ namespace SPAD.neXt.Interfaces.Events
         string ConditionTargetValue { get; set; }
         IDataDefinition ConditionTargetValueSource { get; set; }
         string ConditionTargetValueID { get; set; }
-        
+        ActionReferenceTypes ConditionType { get; set; }
+        IReadOnlyList<IDataDefinition> ObservedDataDefinitions { get; }
         IEventConditionSimple SelfProperty { get; }
 
         void UpdateSelfProperty();
@@ -132,12 +142,12 @@ namespace SPAD.neXt.Interfaces.Events
     {        
         string ConfigString { get; }
 
-        void Execute(IEventDefinition definition, ISPADEventArgs e);
+        bool Execute(IEventDefinition definition, ISPADEventArgs e);
 
         IEventAction GetBySingleton(Guid id);
     }
 
-    public interface IEventAction : INotifyPropertyChanged , IEventBaseObject,IEventOptions, ICloneableWithID<IEventAction>
+    public interface IEventAction : INotifyPropertyChanged , IEventBaseObject,IEventOptions, ICloneableWithID<IEventAction>, IConditionalSerialize
     {
         SPADEventActions ActionID { get; }
         string ConfigID { get; }
@@ -148,14 +158,15 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsNew { get; }
         bool CanBeDeleted { get; set; }
         bool CanTargetDevice { get; set; }
+        bool CanTargetSwitch { get; set; }
         string TargetDeviceID { get; set; }
         string RawTargetDeviceID { get; }
-        string TargetName { get; set; }
+        string TargetSwitchName { get; set; }
         string DataReferenceText { get; }
         bool IsInEditMode { get; set; }
         void AddParserValue(string key, string value);
         int TransformValue(AxisEventValue e);
-        void Execute(IEventDefinition definition, ISPADEventArgs e);
+        bool Execute(IEventDefinition definition, ISPADEventArgs e);
         bool Equals(IEventAction other);
         bool CheckConfiguration(List<string> errorContainer);
         
@@ -177,12 +188,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventContext
     {
         ISPADBaseEvent EventContext { get; }
-        ObservableCollection<IEventDefinition> EventDefinitions { get; }
         IEventDefinition EventDefintionContext { get; set; }
-        string EventDisplayName { get; }
-        string EventName { get; }
-        IInput Input { get; }
-        bool IsConfigured { get; }
     }
 
     public interface IEventOptions

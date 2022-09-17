@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SPAD.neXt.Interfaces</RootNamespace>
     <AssemblyName>SPAD.Interfaces</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -85,6 +86,7 @@
     <Compile Include="Base\Comparators\ComparatorBase.cs" />
     <Compile Include="Base\Comparators\ComparatorEqual.cs" />
     <Compile Include="Base\Comparators\ComparatorLess.cs" />
+    <Compile Include="Base\IDataCaching.cs" />
     <Compile Include="Base\IDirectoryModel.cs" />
     <Compile Include="Base\IDynamicExpression.cs" />
     <Compile Include="Base\ILocalizable.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Configuration\ILocalVariable.cs" />
     <Compile Include="Configuration\IProfileOptionsProvider.cs" />
     <Compile Include="DevicesConfiguration\AddonDevice.cs" />
+    <Compile Include="DevicesConfiguration\GenericDevice.cs" />
     <Compile Include="DevicesConfiguration\IKnownDevices.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitchesType.cs" />
     <Compile Include="DevicesConfiguration\IDeviceSwitch.cs" />
@@ -152,6 +155,7 @@
     <Compile Include="SimConnect\ISimConnectDynamic.cs" />
     <Compile Include="SimulationConfiguration.cs" />
     <Compile Include="SPADCommands.cs" />
+    <Compile Include="Transport\ITransport.cs" />
     <Compile Include="UI\IConfigurationDialog.cs" />
     <Compile Include="UI\IDialConfigurationDialog.cs" />
     <Compile Include="Utils.cs" />

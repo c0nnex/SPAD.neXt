@@ -10,11 +10,19 @@ namespace SPAD.neXt.Interfaces
 {
     public interface IConditionalSerialize
     {
-        bool ShouldSerializeThis();
+        bool ShouldSerializeThis(XmlSerilizationPurpose xmlSerilizationPurpose);
     }
     public interface IXmlAnyObject : IConditionalSerialize
     {
         
+    }
+
+    public interface IXmlCallBackOptions
+    {
+        bool EnableCallbacks { get; }
+        bool SerializeID { get; }
+        bool SerializeTarget { get; }
+        XmlSerilizationPurpose XmlSerilizationPurpose { get; }
     }
 
     public interface IXmlPersistence

@@ -4,21 +4,26 @@ using System;
 using System.Collections.Generic;
 namespace SPAD.neXt.Interfaces.Configuration
 {
+    public interface IEpsilonManager 
+    {
+        float GetEpsilon(string dataName, string unitName, float wantedEpsilon = 0);
+        float GetEpsilon(string dataName, string unitName, bool forGauge = false, float wantedEpsilon = 0);
+    }
     public delegate void DataDefinitionCreatedDelegate(IDataDefinition definition, IDataDefinition monitorableDef);
     public interface IExportableDataDefinitionProperties
     {
 
     }
-    public interface IDataDefinitionProperties 
+    public interface IDataDefinitionProperties : IBrowsableItem
     {
         string Access { get; set; }
         string Category { get; set; }
         double CorrectionFactor { get; set; }
         string Information { get;  }
         float Epsilon { get; set; }
-        string ID { get;  }
         string AlternateID { get; set; }
         string PrimaryKey { get; set; }
+        bool IsDeprecated { get; set; }
         bool IsReadOnly { get; }
         bool IsMonitored { get; }
         string Key { get; set; }
@@ -31,7 +36,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string SubCategory { get; set; }
         string TypeName { get; }
         string UnitsName { get; set; }
-        string Usage { get; set; }
+        
         string ValueType { get; set; }
         string WriteMode { get; set; }
         string WriteParameters { get; set; }
@@ -39,7 +44,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool ExcludeKeyFromSearch { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
@@ -47,7 +52,6 @@ namespace SPAD.neXt.Interfaces.Configuration
         string DefaultNormalizer { get; set; }
         string DefaultValue { get; set; }
         string DisplayName { get; set; }
-        string DisplayString { get; set; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
         bool IsValid { get; }
@@ -57,10 +61,7 @@ namespace SPAD.neXt.Interfaces.Configuration
 
         bool HasCustomPrimaryKey { get; }
         IValueNormalizer Normalizer { get; }
-        string SortID { get; }
-        HashSet<string> AdditionalSortIDs { get; }
         SPADDefinitionTypes DefinitionType { get; set; }
-        string SearchKey { get; }
         IValueProvider ValueProvider { get; set; }
         IDataProvider DataProvider { get; }
         IDataDefinition LinkedDataDefinition { get; }
@@ -82,7 +83,6 @@ namespace SPAD.neXt.Interfaces.Configuration
         void SetValue(double val);
         string GetValueString(string displayFormat);
 
-        string BrowserValueString { get; }
         decimal CheckRange(decimal val);
         void FixUp();
         void ProcessOutgoing(IValueConnector connection, object data);
@@ -121,6 +121,19 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool CanMonitor { get; }
     }
 
+    public interface IBrowsableItem
+    {
+        string BrowserValueString { get; }
+        string ID { get; }
+        string DisplayString { get; set; }
+
+        string SortID { get; }
+        HashSet<string> AdditionalSortIDs { get; }
+        string Usage { get; set; }
+        string SearchKey { get; }
+
+        
+    }
     public interface IExpandable<T>
     {
         int ChildCount { get; set; }

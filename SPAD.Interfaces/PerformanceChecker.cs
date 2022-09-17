@@ -11,6 +11,7 @@ namespace SPAD.neXt.Interfaces
 {
     public class PerformanceChecker : IDisposable
     {
+        public event EventHandler<string> OnMark;
         public static ILogger logger { get; set; }
         public static bool DoLogPerformance { get; set; } = false;
         bool doLog = false;
@@ -30,7 +31,7 @@ namespace SPAD.neXt.Interfaces
             this.doLog = doLog;
         }
 
-        public void Mark(string info=null)
+        public void Mark(string info=null, string userMsg = null,bool isInternal = false)
         {
             if (DoLogPerformance || doLog)
             {
@@ -38,6 +39,14 @@ namespace SPAD.neXt.Interfaces
                 logger?.Info($"{Name} MARK {marker++} {info} {x - stLastMark}/{x - stTicks} ms");
                 stLastMark = x;
             }
+            if (!isInternal)
+                OnMark?.Invoke(this, String.IsNullOrEmpty(userMsg) ? info : userMsg);
+        }
+
+        public void Reset()
+        {
+            stTicks = EnvironmentEx.TickCount64;
+            stLastMark = stTicks;
         }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

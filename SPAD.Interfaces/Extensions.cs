@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using System.Diagnostics;
 
 namespace System
 {
@@ -16,23 +17,85 @@ namespace System
     {
         public static string Right(this string inStr, int numChars)
         {
-            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
-                return inStr;
-            return inStr.Substring(inStr.Length - numChars, numChars);
+            if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
+                return String.Empty;
+            return inStr.Substring(inStr.Length - Math.Min(numChars,inStr.Length), Math.Min(numChars, inStr.Length));
         }
 
         public static string Left(this string inStr, int numChars)
         {
-            if (String.IsNullOrEmpty(inStr) || (inStr.Length < numChars) || (numChars <= 0))
-                return inStr;
-            return inStr.Substring(0, numChars);
+            if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
+                return String.Empty;
+            return inStr.Substring(0,Math.Min(numChars,inStr.Length));
         }
 
-        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0)
+        public static string GetPart(this string s, int part, string splitter, string defaultVal = "")
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return defaultVal;
+            return parts[part];
+        }
+        public static T GetPart<T>(this string s, int part, string splitter, T defaultVal = default)
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return defaultVal;
+            try
+            {
+                object res;
+                if (typeof(T) == typeof(Guid))
+                {
+                    if (Guid.TryParse(parts[part], out var resGuid))
+                        res = resGuid;
+                    else
+                        res = Guid.Empty;
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    res = parts[part] == "1" || String.Compare(parts[part], "true", true) == 0;
+                    return (T)res;
+                }
+                res = Convert.ChangeType(parts[part], typeof(T));
+                return (T)res;
+            }
+            catch { return defaultVal; }
+        }
+
+        public static string ReplacePart(this string s, int part, string splitter, string newVal)
+        {
+            var parts = s?.Split(new string[] { splitter }, StringSplitOptions.None);
+            if (parts == null || part >= parts.Length)
+                return s;
+            parts[part] = newVal;
+            return String.Join(splitter, parts);
+        }
+
+        public static string SkipParts(this string s, int startPart, int numParts, string splitter)
+        {
+            var parts = new List<string>(s?.Split(new string[] { splitter }, StringSplitOptions.None));
+            while ((startPart < parts.Count) && (numParts > 0))
+            {
+                parts.RemoveAt(startPart);
+                numParts--;
+            }
+            if (parts.Count == 0)
+                return String.Empty;
+            return String.Join(splitter, parts);
+        }
+
+        public static String[] Split(this string inStr, String separator)
+        {
+            return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";
             int bytesLength = bytes.Length - startOffset;
-
+            if (numBytes > 0)
+                bytesLength = numBytes - startOffset;
             char[] HexChars = "0123456789ABCDEF".ToCharArray();
 
             int firstHexColumn =
@@ -118,6 +181,7 @@ namespace SPAD.neXt.Interfaces
 {
     public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2>(TEventType sender, TEventArg1 arg1, TEventArg2 e);
+    public delegate void EventHandler<TEventType, TEventArg1, TEventArg2, TEventArg3>(TEventType sender, TEventArg1 arg1, TEventArg2 arg2, TEventArg3 e);
     public static class SPADExtensions
     {
         #region Enums
@@ -363,7 +427,219 @@ namespace SPAD.neXt.Interfaces
 
     public interface INotifyPropertyChangedHandler : INotifyPropertyChanged
     {
-        void OnPropertyChanged(string propertyName);
+        void OnNotifyPropertyChanged(string propertyName);
     }
+
+    public struct BitArray64 : IEquatable<BitArray64>
+    {
+
+        /// <summary>
+        /// Integer whose bits make up the array
+        /// </summary>
+        public ulong Bits;
+        public ulong MaxValue;
+
+        /// <summary>
+        /// Create the array with the given number of bits
+        /// </summary>
+        /// 
+        /// <param name="bits">
+        /// Bits to make up the array
+        /// </param>
+        public BitArray64(int bits)
+        {
+            Bits = 0;
+            Length = bits;
+            if (bits == 64)
+                MaxValue = ulong.MaxValue;
+            else
+                MaxValue = (1UL << bits) - 1;
+        }
+
+        public bool IsMax() => Bits == MaxValue;
+        public void Clear() => Bits = 0;
+
+        /// <summary>
+        /// Get or set the bit at the given index. For faster getting of multiple
+        /// bits, use <see cref="GetBits(ulong)"/>. For faster setting of single
+        /// bits, use <see cref="SetBit(int)"/> or <see cref="UnsetBit(int)"/>. For
+        /// faster setting of multiple bits, use <see cref="SetBits(ulong)"/> or
+        /// <see cref="UnsetBits(ulong)"/>.
+        /// </summary>
+        /// 
+        /// <param name="index">
+        /// Index of the bit to get or set
+        /// </param>
+        public bool this[int index]
+        {
+            get
+            {
+                RequireIndexInBounds(index);
+                ulong mask = 1ul << index;
+                return (Bits & mask) == mask;
+            }
+            set
+            {
+                RequireIndexInBounds(index);
+                ulong mask = 1ul << index;
+                if (value)
+                {
+                    Bits |= mask;
+                }
+                else
+                {
+                    Bits &= ~mask;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the length of the array
+        /// </summary>
+        /// 
+        /// <value>
+        /// The length of the array. Always 64.
+        /// </value>
+        public int Length;
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder(64);
+            for (int i = 0; i < Length; i++)
+            {
+                sb.Append(( (Bits & ((ulong)(1ul << i))) != 0ul)? "1" : "0");
+            }
+            return sb.ToString();
+        }
+        /// <summary>
+        /// Set a single bit to 1
+        /// </summary>
+        /// 
+        /// <param name="index">
+        /// Index of the bit to set. Asserts if not on [0:31].
+        /// </param>
+        public void SetBit(int index)
+        {
+            RequireIndexInBounds(index);
+            ulong mask = 1ul << index;
+            Bits |= mask;
+        }
+
+        /// <summary>
+        /// Set a single bit to 0
+        /// </summary>
+        /// 
+        /// <param name="index">
+        /// Index of the bit to unset. Asserts if not on [0:31].
+        /// </param>
+        public void UnsetBit(int index)
+        {
+            RequireIndexInBounds(index);
+            ulong mask = 1ul << index;
+            Bits &= ~mask;
+        }
+
+        /// <summary>
+        /// Get all the bits that match a mask
+        /// </summary>
+        /// 
+        /// <param name="mask">
+        /// Mask of bits to get
+        /// </param>
+        /// 
+        /// <returns>
+        /// The bits that match the given mask
+        /// </returns>
+        public ulong GetBits(ulong mask)
+        {
+            return Bits & mask;
+        }
+
+        /// <summary>
+        /// Set all the bits that match a mask to 1
+        /// </summary>
+        /// 
+        /// <param name="mask">
+        /// Mask of bits to set
+        /// </param>
+        public void SetBits(ulong mask)
+        {
+            Bits |= mask;
+        }
+
+        /// <summary>
+        /// Set all the bits that match a mask to 0
+        /// </summary>
+        /// 
+        /// <param name="mask">
+        /// Mask of bits to unset
+        /// </param>
+        public void UnsetBits(ulong mask)
+        {
+            Bits &= ~mask;
+        }
+
+        /// <summary>
+        /// Check if this array equals an object
+        /// </summary>
+        /// 
+        /// <param name="obj">
+        /// Object to check. May be null.
+        /// </param>
+        /// 
+        /// <returns>
+        /// If the given object is a BitArray64 and its bits are the same as this
+        /// array's bits
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            return obj is BitArray64 && Bits == ((BitArray64)obj).Bits;
+        }
+
+        /// <summary>
+        /// Check if this array equals another array
+        /// </summary>
+        /// 
+        /// <param name="arr">
+        /// Array to check
+        /// </param>
+        /// 
+        /// <returns>
+        /// If the given array's bits are the same as this array's bits
+        /// </returns>
+        public bool Equals(BitArray64 arr)
+        {
+            return Bits == arr.Bits;
+        }
+
+        /// <summary>
+        /// Get the hash code of this array
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The hash code of this array, which is the same as
+        /// the hash code of <see cref="Bits"/>.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return Bits.GetHashCode();
+        }
+
+        
+
+        /// <summary>
+        /// Assert if the given index isn't in bounds
+        /// </summary>
+        /// 
+        /// <param name="index">
+        /// Index to check
+        /// </param>
+        public void RequireIndexInBounds(int index)
+        {
+            Debug.Assert(
+                index >= 0 && index < Length ,
+                "Index out of bounds: " + index);
+        }
+   }
 }
 

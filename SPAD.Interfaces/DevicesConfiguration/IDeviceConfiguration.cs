@@ -1,4 +1,5 @@
 ﻿using SPAD.neXt.Interfaces.Base;
+using SPAD.neXt.Interfaces.Extension;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -8,8 +9,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
     public interface IDeviceConfiguration : IOptionsProvider
     {
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
-       
-        
+
+
         string Name { get; }
         string PublishName { get; set; }
         string Panel { get; }
@@ -23,7 +24,10 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         string DeviceType { get; }
         string DeviceMenu { get; }
         bool NoEventsAutoRemove { get; }
+        bool NoCalibration { get; set; }
+        bool PageSupport { get; set; }
         bool HasDeviceSwitch(string name);
+        IList<EventMapping> EventMappings { get; }
 
         void CreateVirtualInputs(IInputDevice gameDevice);
         void Clear();
@@ -31,7 +35,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void AddDeviceSwitch(IDeviceSwitch newSwitch);
         bool AddDeviceSwitch(string xmlSwitchFragment);
         IDeviceSwitch GetDeviceSwitch(string name);
-        IDeviceSwitch CreateDeviceSwitch();
+        IDeviceSwitch CreateDeviceSwitch(int switchVersion = 1);
+        string TransformSwitchNameForResources(string switchName);
     }
 
     public interface IDeviceCalibration
@@ -41,7 +46,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         void ApplyCalibration(IInputDevice joystick);
         IAxisCalibration GetAxisCalibration(IInputAxis axis);
         void ImportJoystick(IInputDevice joystick);
-        void Save();
+        void SaveToFile();
     }
 
     public interface IAxisCalibration
@@ -71,9 +76,13 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         public string Id { get; set; }
         [XmlAttribute]
         public string Add { get; set; }
-        [XmlAttribute] 
+        [XmlAttribute]
+        public string All { get; set; }
+        [XmlAttribute]
         public string Label { get; set; }
-        [XmlText] 
+        [XmlAttribute]
+        public string Config { get; set; }
+        [XmlText]
         public string Description { get; set; }
     }
 

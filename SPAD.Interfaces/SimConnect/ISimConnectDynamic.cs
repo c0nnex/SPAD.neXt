@@ -15,15 +15,19 @@ namespace SPAD.neXt.Interfaces.SimConnect
         string TypeName { get; }
         bool IsClientStructure { get; }
         int CountDataItems { get; }
-
+        bool IsGaugeObject { get; set; }
         IReadOnlyDictionary<string, string> Dump();
         bool IsKnown(string offset);
+        IDynamicSimConnectDataItem IsKnown(string name, string units);
         object GetValue(string index);
         void SetValue(string index, object value);
         bool IsDirty(short idx);
 
         event SPADEventHandler PropertyChanged;
         event EventHandler<ISimConnectDynamicObject,List<string>> DataChanged;
+        event EventHandler<ISimConnectDynamicObject, ISimConnectDynamicObject> OnBeginUpdate;
+        event EventHandler<ISimConnectDynamicObject, ISimConnectDynamicObject> OnEndUpdate;
+
         void OnDataChanged();
         void RaiseChangedEvent(ISPADEventArgs e);
         void Reset(int idx = -1);
@@ -50,6 +54,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         short InternalIndex { get; set; }
         void OnPropertyChanged(object oldValue, object newValue);
         event SPADEventHandler PropertyChanged;
+        event EventHandler<IDynamicSimConnectDataItem, object> DataValueChanged;
         void SetVal(object obj, object val);
         ISimConnectDynamicObject Parent { get; }
         string ToString();

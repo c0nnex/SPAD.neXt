@@ -6,6 +6,7 @@ namespace SPAD.neXt.Interfaces.Base
     {
         string WorkerName { get; }
         bool IsRunning { get; }
+        bool IsWorking { get; }
         TimeSpan Interval { get; }
         bool ScheduleOnTimeout { get; }
         EventWaitHandle SignalHandle { get; }
