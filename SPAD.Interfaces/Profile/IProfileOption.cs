@@ -27,6 +27,7 @@ namespace SPAD.neXt.Interfaces.Profile
         IReadOnlyList<string> Choices { get; }
 
         IExtensionProfileOption AddChoice(string choice);
+        IExtensionProfileOption WithDependsOn(string dependsOn);
         void SetDirty();
     }
 

@@ -1061,7 +1061,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public int Priority { get; set; } = 0;
         [XmlAttribute]
         public int Version { get; set; } = 0;
-
+        [XmlAttribute]
+        public string Action { get; set; } = "NONE";
         public bool IsEventMove => !String.IsNullOrEmpty(FromEvent) && !String.IsNullOrEmpty(ToEvent);
         public string Key
         {

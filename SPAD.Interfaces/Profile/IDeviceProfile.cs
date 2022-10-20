@@ -40,7 +40,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
         event PropertyChangedEventHandler OptionChanged;
 
-        void ActivateDevice(IPanelHost panelHost);
+        void ActivateDevice(IPanelHost panelHost,bool runEvents = false);
         void DeactivateDevice();
 
         ISPADBaseEvent CreateEvent(string tag);
@@ -56,6 +56,8 @@ namespace SPAD.neXt.Interfaces.Profile
         event EventHandler<IDeviceProfile, IDevicePage> PageActivated;
         event EventHandler<IDeviceProfile, IDevicePage> PageDeactivated;
         event EventHandler<IDeviceProfile, IDevicePage> PageChanged;
+        event EventHandler<IDeviceProfile, bool> DeviceProfileChange;
+
         int CountPages { get; }
         Guid ActivePage { get; }
         IReadOnlyList<IDevicePage> PageList { get; }

@@ -409,7 +409,7 @@ namespace SPAD.neXt.Interfaces
         {
             int tries = 0;
             TValue value;
-            if ((key == null) || !dict.ContainsKey(key))
+            if ((key == null))
                 return false;
             return dict.TryRemove(key, out var _);
         }

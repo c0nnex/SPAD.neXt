@@ -42,7 +42,8 @@ namespace SPAD.neXt.Interfaces.Events
             IsIntermediate = true;
             return this;
         }
-        public bool IsIntermediate { get; set; }
+        public bool IsIntermediate { get; set; } = false;
+        
 
         public ProgrammableInputStateChangedArgs AsStateInit()
         {
@@ -74,7 +75,9 @@ namespace SPAD.neXt.Interfaces.Events
         string Label { get; }
         bool RefreshContext { get; set; }
         string VariableName { get; set; }
-
+        bool EnablePressAcceleration { get; set; }
+        bool IsImmuneToStateInit { get; set; }
+        int CurrentStateValue { get; set; }
         I GetData<I>() where I : class;
         I GetRoutedToData<I>() where I : class;
         I GetUIRoutedToData<I>() where I : class;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Logging
 {
@@ -17,6 +18,37 @@ namespace SPAD.neXt.Interfaces.Logging
         ILogger GetLogger(string name);
         ILogger GetExtensionLogger(string name);
     }
+
+    public interface ILogRule
+    {
+        string Pattern { get; set; }
+        SPADLogLevel LogLevel { get; set; }
+        bool IsFinal { get; set; }
+        bool IsSyncRule { get; set; }
+    }
+
+    [Serializable]
+    public sealed class LogRule : ILogRule
+    {
+        [XmlAttribute]
+        public string Pattern { get; set; }
+        [XmlAttribute]
+        public SPADLogLevel LogLevel { get; set; } = SPADLogLevel.Debug;
+        [XmlAttribute]
+        public bool IsFinal { get; set; } = true;
+        [XmlAttribute]
+        public bool IsSyncRule { get; set; } = false;
+
+        public LogRule() { }
+        public LogRule(string pattern, SPADLogLevel logLevel = SPADLogLevel.Debug, bool isFinal = true, bool isSyncRule = false)
+        {
+            Pattern = pattern;
+            LogLevel = logLevel;
+            IsFinal = isFinal;
+            IsSyncRule = isSyncRule;
+        }
+    }
+
     public interface ILogger
     {
         //

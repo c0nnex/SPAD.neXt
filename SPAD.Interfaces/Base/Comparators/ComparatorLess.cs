@@ -11,7 +11,7 @@ namespace SPAD.neXt.Comparators
     {
         protected override bool DoesMatch(IComparable testValue)
         {
-            return compareValueLeft.CompareTo(testValue) > 0;
+            return compareValueLeft.CompareTo(testValue) > 0; // compareValueLeft > testValue -> TestValue < cLeft
         }
     }
 

@@ -116,6 +116,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand RefreshPageCommand { get; } = new RoutedCommand("SPAD_neXt.RefreshPage", typeof(SPADCommands));
 
         public static RoutedCommand ReconnectDeviceCommand { get; } = new RoutedCommand("SPAD_neXt.ReconnectDevice", typeof(SPADCommands));
+        public static RoutedCommand DisconnectDeviceCommand { get; } = new RoutedCommand("SPAD_neXt.DisconnectDevice", typeof(SPADCommands));
         public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
 
         public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));

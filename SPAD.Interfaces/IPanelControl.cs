@@ -60,7 +60,9 @@ namespace SPAD.neXt.Interfaces
         void RemoveThisPanel();
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
-        
+        void UpdateEventContextTargetPoint(Point targetPoint);
+
+
     }
 
     public interface IPublishCustomize

@@ -120,7 +120,8 @@ namespace SPAD.neXt.Interfaces.Events
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
 
-        void SendControl(IDataDefinition control, uint parameter);
+        void SendControl(IDataDefinition control, uint parameter0);
+        void SendControlEx(IDataDefinition control, uint parameter0, uint parameter1, uint parameter2, uint parameter3, uint parameter4);
 
         void ForceUpdate(IMonitorableValue value);
         void StartMonitoring(IMonitorableValue value);
@@ -154,6 +155,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetValue(string valueName, double value);
         IEnumerable<string> GetAllValueNames(Func<string, bool> predicate = null);
         void StartUpdates();
+        void Initialize(bool startUpdates=false);
     }
 
     public interface ISimulationInterface
