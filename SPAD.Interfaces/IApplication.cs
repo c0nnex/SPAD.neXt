@@ -52,6 +52,7 @@ namespace SPAD.neXt.Interfaces
         void StartService();
         void StartServiceFinal();
         void StopService();
+        void StopServiceFinal();
         bool IsEnabled { get; }
 
         void OnServiceEvent(ISPADEventArgs e);

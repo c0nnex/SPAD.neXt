@@ -23,6 +23,8 @@ namespace SPAD.Extensions.Generic
         public string Protocol { get; set; }
         public string PortName { get; set; }
 
+        private string _serialNumber = null;
+        public string SerialNumber { get => _serialNumber ?? PortName; set => _serialNumber = value; }
         public  IPanelControl PanelBaseControl { get; set; }
         public IPanelDevice   AttachedDevice { get; set; }
         public ITransport Transport { get; set; }

@@ -72,10 +72,10 @@ namespace SPAD.neXt.Interfaces.Events
         int NumberOfParameters { get; }
         IReadOnlyList<IEventActionParameter> Parameters { get; }
         IEventActionParameter Parameter { get; }
-        IEventActionParameter Parameter1 { get;}
-        IEventActionParameter Parameter2 { get;}
-        IEventActionParameter Parameter3 { get;}
-        IEventActionParameter Parameter4 { get;}
+        IEventActionParameter Parameter1 { get; }
+        IEventActionParameter Parameter2 { get; }
+        IEventActionParameter Parameter3 { get; }
+        IEventActionParameter Parameter4 { get; }
 
         IDataDefinition TargetDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }
@@ -140,16 +140,39 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventActionPlateImage : IEventAction,IEventActionWithImage
+    public interface IEventActionPlateImage : IEventAction, IEventActionWithImage
     {
         FLASHMODE FlashMode { get; set; }
     }
 
-    public interface IEventActionPlateLabel : IEventActionObserve
+    public interface ICustomLabel
     {
+        string Foreground { get; set; }
+        string Background { get; set; }
+        string Font { get; set; }
+        float FontSize { get; set; }
+        int FontStyle { get; set; }
+
+        int Layer { get; set; }
+        float PosX { get; set; }
+        float PosY { get; set; }
+        float SizeX { get; set; }
+        float SizeY { get; set; }
         string Text { get; set; }
-        string Color { get; set; }
-        ActionReferenceTypes TextType {get;set;}
+
+        int HorizontalAlignment { get; set; }
+
+        int VerticalAlignment { get; set; }
+
+        bool CanBeCustomized { get; set; }
+        string CurrentText { get; set; }
+        bool CanChangeLayer { get; set; }
+    }
+
+
+    public interface IEventActionPlateLabel : IEventActionObserve, ICustomLabel
+    {
+        ActionReferenceTypes TextType { get; set; }
     }
 
     public interface IEventImageData : IXmlAnyObject
@@ -189,7 +212,7 @@ namespace SPAD.neXt.Interfaces.Events
         int Joystick { get; set; }
     }
 
-    public interface IEventActionExternal  : IEventAction, IEventActionMonitor 
+    public interface IEventActionExternal : IEventAction, IEventActionMonitor
     {
         Guid ProviderID { get; set; }
         IActionProvider ActionProvider { get; }

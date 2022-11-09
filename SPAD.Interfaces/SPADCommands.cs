@@ -102,6 +102,14 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand PowerConfigurationCommand { get { return powerConfigurationCommand; } }
         public static RoutedCommand DeviceConfigurationCommand { get { return deviceConfigurationCommand; } }
 
+        public static RoutedCommand DeviceSwitchPanelCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceSwitchPanel", typeof(SPADCommands));
+
+        public static RoutedCommand DeviceReconnectCommand { get; } = new RoutedCommand("SPAD_neXt.ReconnectDevice", typeof(SPADCommands));
+        public static RoutedCommand DeviceDisconnectCommand { get; } = new RoutedCommand("SPAD_neXt.DisconnectDevice", typeof(SPADCommands));
+        public static RoutedCommand DeviceCopyCommand { get { return _CopyDeviceCommand; } }
+        public static RoutedCommand DeviceActivateCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceActivate", typeof(SPADCommands));
+        public static RoutedCommand DeviceDeactivateCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceDeactivate", typeof(SPADCommands));
+        public static RoutedCommand DeviceToggleActiveCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceToggleActive", typeof(SPADCommands));
         public static RoutedCommand AddEventCommand { get { return addEventCommand; } }
         public static RoutedCommand EditEventCommand { get { return editEventCommand; } }
         public static RoutedCommand DelEventCommand { get { return delEventCommand; } }
@@ -115,9 +123,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CopyPageCommand { get; } = new RoutedCommand("SPAD_neXt.CopyPage", typeof(SPADCommands));
         public static RoutedCommand RefreshPageCommand { get; } = new RoutedCommand("SPAD_neXt.RefreshPage", typeof(SPADCommands));
 
-        public static RoutedCommand ReconnectDeviceCommand { get; } = new RoutedCommand("SPAD_neXt.ReconnectDevice", typeof(SPADCommands));
-        public static RoutedCommand DisconnectDeviceCommand { get; } = new RoutedCommand("SPAD_neXt.DisconnectDevice", typeof(SPADCommands));
-        public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
+        
 
         public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));
         public static RoutedCommand InheritCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Inherit", typeof(SPADCommands));

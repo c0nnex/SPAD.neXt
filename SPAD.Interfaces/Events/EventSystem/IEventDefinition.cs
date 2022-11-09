@@ -11,7 +11,7 @@ using System.Linq;
 namespace SPAD.neXt.Interfaces.Events
 {
 
-    public interface IEventBaseObject
+    public interface IEventBaseObject : IIsDeletable
     {
         IEventDefinition GetParentEventDefinition();
         IDataDefinition GetDataDefinition(string definitionID);
@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
     }
     public interface IEncoderAcceleration
     {
+        
         Double Threshold { get; set; }
         Double Timeout { get; set; }
         Double Multiplier { get; set; }
@@ -42,9 +43,9 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventDefinition : IEventOptions, ICloneableWithID<IEventDefinition>, IConditionalSerialize
+    public interface IEventDefinition : IEventOptions, ICloneableWithID<IEventDefinition>, IConditionalSerialize, IIsDeletable, IProgrammableHeld
     {
-        Guid SingletonID { get; set; } 
+        Guid SingletonID { get; set; }
         bool IsSingleton { get; }
         IEventActions Actions { get; }
         string BoundTo { get; }
@@ -67,13 +68,13 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsDeprecated { get; set; }
         bool HasWarning { get; }
         bool EventIsRunning { get; }
-        string  WarningMessage { get;  }
+        string WarningMessage { get; }
         IEncoderAcceleration Acceleration { get; }
 
         InputModifier InputBehavior { get; set; }
         ISPADBaseEvent BaseEvent { get; }
-        IDeviceProfile DeviceProfile { get;  }
-        
+        IDeviceProfile DeviceProfile { get; }
+
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
         bool Activate(ISPADBaseEvent baseEvent);
         void Deactivate(ISPADBaseEvent baseEvent);
@@ -92,7 +93,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventCondition : IEventBaseObject,IHasID
+    public interface IEventCondition : IEventBaseObject, IHasID
     {
         string ConfigString { get; }
         bool IsConfigured { get; }
@@ -108,7 +109,7 @@ namespace SPAD.neXt.Interfaces.Events
         string BoundEvent { get; set; }
     }
 
-    public interface IEventConditionExpression : ICloneable<IEventConditionExpression>,IEventCondition,IIsMonitorable
+    public interface IEventConditionExpression : ICloneable<IEventConditionExpression>, IEventCondition, IIsMonitorable
     {
         string Expression { get; set; }
     }
@@ -135,11 +136,11 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventConditions : IObservableList<IEventCondition>
     {
         string ConfigString { get; }
-        bool Evaluate(ISPADEventArgs e,SPADConditionBinding binding, bool debugMode);
+        bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);
     }
 
     public interface IEventActions : IObservableList<IEventAction>
-    {        
+    {
         string ConfigString { get; }
 
         bool Execute(IEventDefinition definition, ISPADEventArgs e);
@@ -147,7 +148,19 @@ namespace SPAD.neXt.Interfaces.Events
         IEventAction GetBySingleton(Guid id);
     }
 
-    public interface IEventAction : INotifyPropertyChanged , IEventBaseObject,IEventOptions, ICloneableWithID<IEventAction>, IConditionalSerialize
+    public interface IEditableObjectEx
+    {
+        int RenderSize { get; set; }
+        void BeginEdit(IDeviceProfile deviceProfile);
+
+        void EndEdit(IDeviceProfile deviceProfile);
+
+        void CancelEdit(IDeviceProfile deviceProfile);
+        Action<IEventAction, Action<object>> EditModeRenderCallBack { get; set; }
+        void EditModeRender(object value, Action<object> renderMeCallback);
+    }
+
+    public interface IEventAction : INotifyPropertyChanged, IEventBaseObject, IEventOptions, ICloneableWithID<IEventAction>, IConditionalSerialize, IEditableObjectEx
     {
         SPADEventActions ActionID { get; }
         string ConfigID { get; }
@@ -163,15 +176,15 @@ namespace SPAD.neXt.Interfaces.Events
         string RawTargetDeviceID { get; }
         string TargetSwitchName { get; set; }
         string DataReferenceText { get; }
-        bool IsInEditMode { get; set; }
+        bool IsInEditMode { get; }
         void AddParserValue(string key, string value);
         int TransformValue(AxisEventValue e);
         bool Execute(IEventDefinition definition, ISPADEventArgs e);
         bool Equals(IEventAction other);
         bool CheckConfiguration(List<string> errorContainer);
-        
+
         IDeviceProfile GetTargetDevice(IEventDefinition def);
-        void SetEventValueCallback(string valueName,IEventValueCallback callback);
+        void SetEventValueCallback(string valueName, IEventValueCallback callback);
         void SetEventTargetCallback(string targetName, IEventTargetCallback callback);
     }
 

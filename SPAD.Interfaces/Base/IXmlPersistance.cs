@@ -12,6 +12,7 @@ namespace SPAD.neXt.Interfaces
     {
         bool ShouldSerializeThis(XmlSerilizationPurpose xmlSerilizationPurpose);
     }
+
     public interface IXmlAnyObject : IConditionalSerialize
     {
         

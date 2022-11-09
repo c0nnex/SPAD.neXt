@@ -125,6 +125,8 @@ namespace SPAD.neXt.Interfaces.Logging
         void Warn(Func<string> p);
 
         event EventHandler<SPADLogLevel, string> OnLog;
+
+        ILogger CreateChildLogger(string name);
     }
 
 

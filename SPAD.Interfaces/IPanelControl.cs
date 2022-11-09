@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +16,7 @@ using System.Windows.Media.Imaging;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface IPanelHost
+    public interface IPanelHost : IDisposable
     {
         IPanelDevice DeviceAttached { get; }
         IDeviceConfiguration DeviceConfiguration { get; set; }
@@ -25,7 +26,6 @@ namespace SPAD.neXt.Interfaces
         Guid PanelLinkID { get; }
         Guid DeviceGlobalIdentifier { get; }
         bool PanelHasFocus { get; }
-        bool IsVirtualDevice { get; }
         bool HasPageSupport { get;  }
 
         string PanelName { get; }
@@ -88,7 +88,7 @@ namespace SPAD.neXt.Interfaces
 
         void InitializePanel(IPanelHost hostControl, string panelLabel);
         bool NeedsAsyncInitialize { get; }
-        Task<bool> InitializePanelAsync();
+        Task<bool> InitializePanelAsync(CancellationToken cancelToken);
         void DeinitializePanel();
         void SetExtension(IExtensionPanel ctrl);
         void PanelGotFocus();
@@ -122,7 +122,7 @@ namespace SPAD.neXt.Interfaces
         void RaiseEvent(string switchName, ISPADEventArgs eArgs);
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
-        
+
     }
 
     public interface IPanelDocumentation

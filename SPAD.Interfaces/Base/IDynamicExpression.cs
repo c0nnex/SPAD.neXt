@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IIsDeletable
+    {
+        void OnDelete();
+    }
+
+
     public interface IHasErrorInfo
     {
         bool HasError { get; }

@@ -12,7 +12,7 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface ISPADEventArgs : IHandledEventArgs
     {
-        ConcurrentDictionary<string, string> EventData { get;}
+        ConcurrentDictionary<string, object> EventData { get; }
         string EventSwitch { get; set; }
         string EventName { get; set; }
         string EventTrigger { get; set; }
@@ -22,9 +22,9 @@ namespace SPAD.neXt.Interfaces.Events
         object OldValue { get; }
         string TargetDevice { get; }
         long EventMarker { get; }
-        EventPriority EventPriority { get; } 
-        EventSeverity EventSeverity { get; } 
-        string this[string key] { get; set; }
+        EventPriority EventPriority { get; }
+        EventSeverity EventSeverity { get; }
+
 
         IDeviceProfile DeviceProfile { get; set; }
         IMonitorableValue MonitorableValue { get; set; }
@@ -61,7 +61,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IAcceleratedEncoder
     {
-        
+
         void Reset();
         int GetAcceleration(double threshold, double timeout, double multiplier, double maxAcceleration);
         IAcceleratedEncoder WasPressed(long tick = 0);
@@ -71,12 +71,13 @@ namespace SPAD.neXt.Interfaces.Events
     {
         private ILogger logger = null;
 
-        public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, object> EventData { get; private set; } = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         public static new SPADEventArgs Empty = new SPADEventArgs();
         private static long EventMarkerCounter = 0;
         public string EventSwitch { get; set; }
-        public string EventName { get; set; }
+        public string EventName { get => eventName; set { eventName = value; _FullName = null; } }
+        public string EventTrigger { get => eventTrigger; set { eventTrigger = value; _FullName = null; } }
         public IInputElement CommandTarget { get; set; }
         public long EventMarker { get; private set; }
         public object OldValue
@@ -119,7 +120,7 @@ namespace SPAD.neXt.Interfaces.Events
         public IDeviceProfile DeviceProfile { get; set; }
         public bool Immediate { get; set; }
         public bool IsValueEvent { get; set; }
-        public string EventTrigger { get; set; }
+
         public bool IsCascadedEvent { get; set; }
         public bool IsAxisEvent { get; set; }
         public object CallbackValue { get; set; }
@@ -195,24 +196,29 @@ namespace SPAD.neXt.Interfaces.Events
 
         public override string ToString()
         {
-            return String.Format("{0} Old={1} New={2} Switch={3} ValueEvent={4} {5}", FullName, Convert.ToString(OldValue, CultureInfo.InvariantCulture), Convert.ToString(NewValue,CultureInfo.InvariantCulture),EventSwitch, IsValueEvent,  ExecutionContext == Guid.Empty ? "" : ExecutionContext.ToString());
+            return String.Format("{0} Old={1} New={2} Switch={3} ValueEvent={4} {5} {6}", FullName, Convert.ToString(OldValue, CultureInfo.InvariantCulture), Convert.ToString(NewValue, CultureInfo.InvariantCulture), EventSwitch, IsValueEvent, Immediate ? "Immediate" : "", ExecutionContext == Guid.Empty ? "" : ExecutionContext.ToString());
         }
-
+        private string _FullName = null;
         public string FullName
         {
             get
             {
-                if (!String.IsNullOrEmpty(EventTrigger))
-                    return String.Format("{0}.{1}", EventName, EventTrigger);
-                return EventName;
+                if (_FullName == null)
+                {
+                    if (!String.IsNullOrEmpty(EventTrigger))
+                        _FullName = String.Format("{0}.{1}", EventName, EventTrigger);
+                    else
+                        _FullName = EventName;
+                }
+                return _FullName;
             }
         }
 
-        public string this[string key]
+        public object this[string key]
         {
             get
             {
-                string val;
+                object val;
                 if (EventData.TryGetValue(key, out val))
                     return val;
                 return null;
@@ -225,10 +231,10 @@ namespace SPAD.neXt.Interfaces.Events
 
         public void AddData(string key, object value)
         {
-            this[key] = Convert.ToString(value, CultureInfo.InvariantCulture);
+            this[key] = value;
         }
 
-        public SPADEventArgs WithData(string key,object value)
+        public SPADEventArgs WithData(string key, object value)
         {
             AddData(key, value);
             return this;
@@ -250,25 +256,31 @@ namespace SPAD.neXt.Interfaces.Events
         {
             try
             {
-                string val = this[key];
+                object val = this[key];
                 if (val == null)
                     return default(T);
+                if (val is T)
+                    return (T)val;
                 if (typeof(T) == typeof(Guid))
-                    return (T)((object)new Guid(this[key]));
+                    return (T)((object)new Guid(Convert.ToString(val, CultureInfo.InvariantCulture)));
                 if (typeof(T) == typeof(Version))
-                    return (T)((object)new Version(this[key]));
+                    return (T)((object)new Version(Convert.ToString(val, CultureInfo.InvariantCulture)));
                 if (typeof(T).IsEnum)
-                    return (T)Enum.Parse(typeof(T), val);
-                return (T) Convert.ChangeType(val, typeof(T));
+                    return (T)Enum.Parse(typeof(T), Convert.ToString(val, CultureInfo.InvariantCulture));
+                return (T)Convert.ChangeType(val, typeof(T), CultureInfo.InvariantCulture);
             }
-            catch 
+            catch (Exception ex)
             {
+                logger?.Warn($"GetData " + typeof(T) + " => " + ex.Message);
                 return defaultValue;
             }
-            
+
         }
 
         private HashSet<string> handledEvents = new HashSet<string>();
+        private string eventName;
+        private string eventTrigger;
+
         public void SetHandled(string eventName)
         {
             handledEvents.Add(eventName);

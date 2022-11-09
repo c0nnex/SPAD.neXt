@@ -89,7 +89,6 @@ namespace System
         {
             return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
         }
-
         public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";
@@ -642,4 +641,17 @@ namespace SPAD.neXt.Interfaces
         }
    }
 }
+
+namespace System.Threading.Tasks
+{
+    public static class TaskDelay
+    {
+        public static Task<bool> Wait(TimeSpan timeout, CancellationToken token) =>
+            Task.Delay(timeout, token).ContinueWith(tsk => tsk.Exception == default);
+
+        public static Task<bool> Wait(int timeoutMs, CancellationToken token) =>
+            Task.Delay(timeoutMs, token).ContinueWith(tsk => tsk.Exception == default);
+    }
+}
+
 

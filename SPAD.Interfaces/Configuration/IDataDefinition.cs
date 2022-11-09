@@ -81,6 +81,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         object GetRawValue();
         double GetValue();
         void SetValue(double val);
+        void SetRawValue(object val);
         string GetValueString(string displayFormat);
 
         decimal CheckRange(decimal val);
@@ -140,7 +141,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         IEnumerable<T> Expand();
     }
 
-    public interface IControlDefinition
+    public interface IControlDefinition : IDataDefinitionProperties, IObjectWithOptions
     {
         int NumberOfParameters { get; set; }
     }

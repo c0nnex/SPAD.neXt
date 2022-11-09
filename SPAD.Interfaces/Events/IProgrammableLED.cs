@@ -58,6 +58,10 @@ namespace SPAD.neXt.Interfaces.Events
         }
     }
 
+    public interface IProgrammableHeld
+    {
+        void StartHeld(CancellationToken cancellationToken);
+    }
 
     public interface IProgrammableInput : INotifyPropertyChanged,IDisposable,IObjectWithOptions
     {
@@ -84,6 +88,10 @@ namespace SPAD.neXt.Interfaces.Events
         void Reset();
 
         INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent);
+
+        void EnableHeldMode(IProgrammableHeld callback);
+        void DisableHeldMode();
+
     }
 
     public enum INPUT_CHANGE_DIRECTION
@@ -96,6 +104,8 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IProgrammableLabel
     {
         string Label { get; set; }
+        string LabelDefault { get; set; }
+        Guid LabelSource { get; set; }
     }
 
     public interface IProgrammableRotary :  IProgrammableStatefulInput
@@ -198,10 +208,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsLongShortEnabled { get; set; }
         void SetLongPressThreshold(int newThreshold);
 
-        bool IsHeldModeEnabled { get; }
-        void EnableHeldMode(int frequency = -1, int threshold = -1, int heldValue = 1, string eventName = "HELD");
-        void DisableHeldMode();
-
+ 
         void UpdateUI();
     }
 }

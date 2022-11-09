@@ -136,6 +136,15 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             DeviceCommandMappingDict.Clear();
             DeviceDisplayDict.Clear();
+
+            // reorder if any element has an order and then only those
+            if (Inputs.Any(ii => ii.SortOrder != 0))
+            {
+                var tmpList = Inputs.Where(x => x.SortOrder != 0).OrderBy(x => x.SortOrder).ToList();
+                Inputs.RemoveAll(x => x.SortOrder != 0); 
+                Inputs.InsertRange(0, tmpList);
+            }
+
             foreach (var item in InputsOnly)
             {
                 item.FixUp();
@@ -628,6 +637,11 @@ namespace SPAD.neXt.Interfaces.Extension
         [Category("Data")]
         public int DeviceCommandIndex { get; set; } = -1;
         public bool ShouldSerializeDeviceCommandIndex() => DeviceCommandIndex != -1;
+
+        [XmlAttribute]
+        [Category("Data")]
+        public int SortOrder { get; set; } = 0;
+
 
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]

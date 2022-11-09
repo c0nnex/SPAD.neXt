@@ -38,8 +38,6 @@ namespace SPAD.neXt.Interfaces.Events
         string GetXML();
         void SetBinding(string bound);
 
-        void EnableHeldMode(Guid owner);
-        void StopHeldMode(Guid owner);
         void Upgrade();
     }
 

@@ -40,7 +40,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
         event PropertyChangedEventHandler OptionChanged;
 
-        void ActivateDevice(IPanelHost panelHost,bool runEvents = false);
+        bool ActivateDevice(IPanelHost panelHost,bool runEvents = false, bool force = false);
         void DeactivateDevice();
 
         ISPADBaseEvent CreateEvent(string tag);
@@ -57,7 +57,9 @@ namespace SPAD.neXt.Interfaces.Profile
         event EventHandler<IDeviceProfile, IDevicePage> PageDeactivated;
         event EventHandler<IDeviceProfile, IDevicePage> PageChanged;
         event EventHandler<IDeviceProfile, bool> DeviceProfileChange;
-
+        event EventHandler<IDeviceProfile, IEventAction> ActionBeginEdit;
+        event EventHandler<IDeviceProfile, IEventAction> ActionEndEdit;
+        void OnActionEdit(IEventAction eventAction, bool isBeginEdit);
         int CountPages { get; }
         Guid ActivePage { get; }
         IReadOnlyList<IDevicePage> PageList { get; }
@@ -94,6 +96,8 @@ namespace SPAD.neXt.Interfaces.Profile
         // Temp ugly Stuff
         void SetVariable(string varName, object value);
         T GetVariable<T>(string varName);
+
+        bool IsDeviceDeactivated { get; }
     }
 
     public interface IImageInfo

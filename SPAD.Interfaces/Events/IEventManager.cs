@@ -47,6 +47,8 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsStatic { get; set; }
         bool NeedNotify { get; }
 
+        bool Subscribe(string dataRef);
+        bool Unsubscribe(string dataRef);
         void Subscribe(IMonitorableValue monitorableValue);
         void Unsubscribe(IMonitorableValue monitorableValue);
 
@@ -249,7 +251,7 @@ namespace SPAD.neXt.Interfaces.Events
         void Unsubscribe(IObserverTicket observerTicket);
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
-        void Raise(string eventName, object sender, ISPADEventArgs eventArgs);
+        bool Raise(string eventName, object sender, ISPADEventArgs eventArgs);
 
         void SetPassive(); // This Monitorable will neever raise an event
         bool IsPassive { get; }
