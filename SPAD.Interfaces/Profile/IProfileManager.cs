@@ -11,6 +11,7 @@ namespace SPAD.neXt.Interfaces.Profile
         event PropertyChangedEventHandler ActiveProfileChanging;
         event PropertyChangedEventHandler ActiveProfilePropertyChanged;
         event PropertyChangedEventHandler ActiveProfileStatusChanged;
+
         IExtensionProfileOption ProfileAddOption(string key, ProfileOptionTypes type, string defaultValue, bool changeNeedsRestart, int order);
         IExtensionProfileOption ProfileAddHiddenOption(string key, ProfileOptionTypes type, string defaultValue);
         IExtensionProfileOption DeviceAddOption(string deviceKey,string key, ProfileOptionTypes type, string defaultValue, bool changeNeedsRestart, int order);
