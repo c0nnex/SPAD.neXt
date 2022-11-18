@@ -162,6 +162,7 @@ namespace SPAD.neXt.Interfaces
         bool AddUpgradedEvent(ISPADBaseEvent evtIn);
 
         bool AddImage(IDeviceImage image);
+        bool RemoveImage(Guid id);
         ISPADBaseEvent FindEvent(string bound);
         void RemoveAllEvents(IDeviceProfile profile);
         bool RemoveEvent(IDeviceProfile profile, string bound);

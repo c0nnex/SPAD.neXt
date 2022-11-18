@@ -84,7 +84,7 @@ namespace SPAD.neXt.Interfaces.Profile
         IDeviceImage ImportDeviceImage(Guid id, string name, byte[] imageData);
         IDeviceImage ImportLocalDeviceImage(string name, string source);
         void ReplaceDeviceImages(Dictionary<Guid, Guid> toReplace);
-        void AddDeviceImage(IDeviceImage image);
+        bool AddDeviceImage(IDeviceImage image);
 
         // Pages Stuff
         void AddPage(IDevicePage page);
