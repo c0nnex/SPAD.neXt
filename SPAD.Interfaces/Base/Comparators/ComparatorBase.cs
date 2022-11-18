@@ -121,5 +121,9 @@ namespace SPAD.neXt.Comparators
                 return false;
             }
         }
+        public override string ToString()
+        {
+            return $"[Comperator {GetType().Name}: {compareValueLeft} {compareValueRight}]";
+        }
     }
 }

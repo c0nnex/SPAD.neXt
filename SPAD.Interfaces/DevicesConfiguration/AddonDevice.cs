@@ -867,7 +867,7 @@ namespace SPAD.neXt.Interfaces.Extension
     }
 
     [Serializable]
-    public sealed class GenericOption
+    public class GenericOption : IGenericOption
     {
         [XmlAttribute]
         public string Key { get; set; }
@@ -920,13 +920,83 @@ namespace SPAD.neXt.Interfaces.Extension
             return Key + "=" + Value;
         }
     }
+    
+
+    public class GenericVariablesObject : IObjectWithVariables
+    {
+        [XmlElement(ElementName = "Variable")]
+        public List<GenericOption> Variables { get; set; } = new List<GenericOption>();
+        public virtual bool ShouldSerializeVariables() => Variables != null && Variables.Count > 0;
+        public int VariablesCount => (Variables == null ? 0 : Variables.Count);
+
+        IEnumerable<IGenericOption> IObjectWithVariables.Variables => Variables;
+
+        public T GetVariable<T>(string key, T defaultValue = default(T)) where T : IConvertible
+        {
+            var opt = Variables.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+
+            if (opt == null)
+                return defaultValue;
+
+            try
+            {
+                return (T)opt.GetValue<T>();
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        public bool HasVariable(string key)
+        {
+            return Variables.Any(o => String.Compare(o.Key, key, true) == 0);
+        }
+        public bool AddVariable(string key, object value, int pos = -1)
+        {
+            if (!HasVariable(key))
+            {
+                if (pos == -1)
+                    Variables.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                else
+                    Variables.Insert(pos, new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                return true;
+            }
+            return false;
+        }
+        public void SetVariable<T>(string key, T value) where T : IConvertible
+        {
+            Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
+            if (value != null)
+                Variables.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+        }
+
+        public int RemoveVariable(string key) => Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
+
+        public bool MergeVariables(IObjectWithVariables src)
+        {
+            bool res = false;
+            foreach (var item in src.Variables)
+            {
+                res |= AddVariable(item.Key, item.Value);
+            }
+            return res;
+        }
+
+        public override string ToString()
+        {
+            return string.Join(",", Variables.Select(o => o.ToString()));
+        }
+    }
 
     public class GenericOptionObject : IObjectWithOptions
     {
         [XmlElement(ElementName = "Option")]
         public List<GenericOption> Options { get; set; } = new List<GenericOption>();
-        public bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
-        public int Count => (Options == null ? 0 : Options.Count);
+        public virtual bool ShouldSerializeOptions() => Options != null && Options.Count > 0;
+        public int OptionsCount => (Options == null ? 0 : Options.Count);
+
+        IEnumerable<IGenericOption> IObjectWithOptions.Options => Options;
 
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
@@ -949,7 +1019,7 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);
         }
-        public void AddOption(string key, object value, int pos = -1)
+        public bool AddOption(string key, object value, int pos = -1)
         {
             if (!HasOption(key))
             {
@@ -957,7 +1027,9 @@ namespace SPAD.neXt.Interfaces.Extension
                     Options.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
                 else
                     Options.Insert(pos, new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                return true;
             }
+            return false;
         }
         public void SetOption<T>(string key, T value) where T : IConvertible
         {
@@ -968,18 +1040,20 @@ namespace SPAD.neXt.Interfaces.Extension
 
         public int RemoveOption(string key) => Options.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
 
-        public void MergeOptions(GenericOptionObject src)
+        public bool MergeOptions(IObjectWithOptions src)
         {
             foreach (var item in src.Options)
             {
                 SetOption(item.Key, item.Value);
             }
+            return true;
         }
 
         public override string ToString()
         {
             return string.Join(",", Options.Select(o => o.ToString()));
         }
+
     }
 
     [Serializable]

@@ -6,13 +6,32 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IGenericOption
+    {
+        string Key { get; }
+        string Value { get;  }
+    }
+
     public interface IObjectWithOptions
     {
-        void AddOption(string key, object value, int pos = -1);
+        IEnumerable<IGenericOption> Options { get; }
+        bool AddOption(string key, object value, int pos = -1);
         I GetOption<I>(string key, I defaultValue = default) where I : IConvertible;
         bool HasOption(string key);
         int RemoveOption(string key);
         void SetOption<I>(string key, I value) where I : IConvertible;
+        bool MergeOptions(IObjectWithOptions src);
+    }
+
+    public interface IObjectWithVariables
+    {
+        IEnumerable<IGenericOption> Variables { get; }
+        bool AddVariable(string key, object value, int pos = -1);
+        I GetVariable<I>(string key, I defaultValue = default) where I : IConvertible;
+        bool HasVariable(string key);
+        int RemoveVariable(string key);
+        void SetVariable<I>(string key, I value) where I : IConvertible;
+        bool MergeVariables(IObjectWithVariables src);
     }
 
     public interface IExtensible

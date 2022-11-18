@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.Profile
     
 
 
-    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible, IObservableProvider<ISPADEventArgs>
+    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible,IObjectWithVariables, IObservableProvider<ISPADEventArgs>
     {
         string VendorID { get; }
         string ProductID { get; }
@@ -94,8 +94,8 @@ namespace SPAD.neXt.Interfaces.Profile
         void RemoveAllPages();
 
         // Temp ugly Stuff
-        void SetVariable(string varName, object value);
-        T GetVariable<T>(string varName);
+        void SetPrivateVariable(string varName, object value);
+        T GetPrivateVariable<T>(string varName);
 
         bool IsDeviceDeactivated { get; }
     }

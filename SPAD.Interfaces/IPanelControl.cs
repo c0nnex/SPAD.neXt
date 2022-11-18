@@ -42,7 +42,7 @@ namespace SPAD.neXt.Interfaces
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars,string mainCategory = null);
         void UpdatePanelVariable(string name, object value);
         object GetPanelVariable(string name);
-
+        string RegisterDeviceVariable(string varName, object defaultValue, bool overwriteValue = true, bool asReadOnly = true);
         void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
         void AddPagingSupport();

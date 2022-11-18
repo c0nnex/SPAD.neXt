@@ -15,4 +15,12 @@ namespace SPAD.neXt.Interfaces.Configuration
         bool IsMonitored { get; }
         bool IsReadOnly { get; }
     }
+
+    public interface IVariablesProvider
+    {
+        void RemoveVariable(string name);
+        bool HasVariable(string name);
+        T GetVariable<T>(string name, T defaultValue = default);
+        void SetVariable(string name, object value);
+    }
 }

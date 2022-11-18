@@ -15,39 +15,32 @@ namespace SPAD.neXt.Interfaces
         public static ILogger logger { get; set; }
         public static bool DoLogPerformance { get; set; } = false;
         bool doLog = false;
-        ulong stTicks;
-        ulong stLastMark;
+        Stopwatch Stopwatch;
+        TimeSpan stLastMark = TimeSpan.Zero;
         string Name;
         int marker = 0;
         static PerformanceChecker()
-        {
-            // DoLogPerformance = System.Environment.MachineName == "DESKTOP-40RM7LC";
+        {           
         }
-        public PerformanceChecker(string name,bool doLog = false)
+        public PerformanceChecker(string name, bool doLog = false)
         {
             Name = name;
-            stTicks = EnvironmentEx.TickCount64;
-            stLastMark = stTicks;
             this.doLog = doLog;
+            Stopwatch = Stopwatch.StartNew();
         }
 
-        public void Mark(string info=null, string userMsg = null,bool isInternal = false)
+        public void Mark(string info = null, string userMsg = null, bool isInternal = false)
         {
             if (DoLogPerformance || doLog)
             {
-                var x = EnvironmentEx.TickCount64;
-                logger?.Info($"{Name} MARK {marker++} {info} {x - stLastMark}/{x - stTicks} ms");
-                stLastMark = x;
+                var stNow = Stopwatch.Elapsed;
+                logger?.Info($"{Name} MARK {marker++} {info} {stNow - stLastMark} / {stNow}");
+                stLastMark = stNow;
             }
             if (!isInternal)
                 OnMark?.Invoke(this, String.IsNullOrEmpty(userMsg) ? info : userMsg);
         }
 
-        public void Reset()
-        {
-            stTicks = EnvironmentEx.TickCount64;
-            stLastMark = stTicks;
-        }
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -57,7 +50,12 @@ namespace SPAD.neXt.Interfaces
             {
                 if (disposing)
                 {
-                    if (DoLogPerformance || doLog) logger?.Info($"{Name} DONE {EnvironmentEx.TickCount64 - stLastMark}/{EnvironmentEx.TickCount64 - stTicks} ms");
+                    Stopwatch.Stop();
+                    if (DoLogPerformance || doLog)
+                    {
+                        var stNow = Stopwatch.Elapsed;
+                        logger?.Info($"{Name} DONE {stNow - stLastMark} / {stNow}");
+                    }
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

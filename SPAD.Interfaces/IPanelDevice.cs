@@ -259,7 +259,7 @@ namespace SPAD.neXt.Interfaces
     public interface IControllableDevice
     {
         void SetBrightness(int index, int howBright);
-        void SetLEDColor(int index, SPADColors color);
+        void SetLEDColor(int index, int color);
         void SetString(int index, string value);
         void ClearString(int index);
     }
