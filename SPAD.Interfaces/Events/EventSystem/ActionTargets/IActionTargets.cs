@@ -147,32 +147,40 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ICustomLabel
     {
+        int Layer { get; set; }
+
         string Foreground { get; set; }
         string Background { get; set; }
         string Font { get; set; }
         float FontSize { get; set; }
         int FontStyle { get; set; }
 
-        int Layer { get; set; }
         float PosX { get; set; }
         float PosY { get; set; }
         float SizeX { get; set; }
         float SizeY { get; set; }
-        string Text { get; set; }
-
         int HorizontalAlignment { get; set; }
-
         int VerticalAlignment { get; set; }
 
-        bool CanBeCustomized { get; set; }
-        string CurrentText { get; set; }
-        bool CanChangeLayer { get; set; }
+        string Text { get; set; }
+
+        bool IsLayerChangeAllowed { get; set; }
+        bool IsStyleChangeAllowed { get; set; }
     }
 
 
-    public interface IEventActionPlateLabel : IEventActionObserve, ICustomLabel
+    public interface IEventActionPlateLabel : IEventActionObserve
     {
         ActionReferenceTypes TextType { get; set; }
+
+        string Text { get; set; }
+
+        int Layer { get; set; }
+
+        string Foreground { get; set; }
+        string Background { get; set; }
+        bool IsLayerChangeAllowed { get; set; }
+        bool IsStyleChangeAllowed { get; set; }
     }
 
     public interface IEventImageData : IXmlAnyObject

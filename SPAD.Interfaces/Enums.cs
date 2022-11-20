@@ -484,11 +484,11 @@ namespace SPAD.neXt.Interfaces
 
     }
 
-    
+
 
     public enum REMOTE_SOCKET_COMMAND
     {
-        
+
         PushImage = 1,
         PushImageNonFlipped,
         PushImageRaw,
@@ -1377,21 +1377,20 @@ namespace SPAD.neXt.Interfaces
 
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
         public static readonly Guid GENERIC_EXTENSION = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
-        
+
         public static readonly Guid DEVICE_EXT_MIDI = new Guid("{8DF6E62A-BDFC-432E-A5FA-8BB94BBEFC4D}");
         public static readonly Guid DEVICE_EXT_GENERIC = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
-        
+
         public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
 
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
         public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
 
-        public static readonly Guid IMAGE_SYSTEM_OFF    = new Guid("{0F53D212-5A29-428F-BE62-47DF8CA68F81}");
+        public static readonly Guid IMAGE_SYSTEM_OFF = new Guid("{0F53D212-5A29-428F-BE62-47DF8CA68F81}");
         public static readonly Guid IMAGE_SYSTEM_IGNORE = new Guid("{A944027C-50E3-4F09-B0E3-B44CC8A34D39}");
-        
         public static readonly Guid IMAGE_SYSTEM_EMPTY = new Guid("{E412AB45-9B97-4E80-A0DB-E7D617A73B84}");
 
-    public static readonly Guid FIP_EVENT_ENABLE = new Guid("{6309B2D8-C169-4545-89A2-A7259126BB76}");
+        public static readonly Guid FIP_EVENT_ENABLE = new Guid("{6309B2D8-C169-4545-89A2-A7259126BB76}");
         public const int FIP_MAX_VARIABLES = 1024;
         public static readonly List<SPADValueOperation> EventValueOperations = new List<SPADValueOperation>()
         {

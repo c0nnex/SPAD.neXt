@@ -19,5 +19,11 @@ namespace SPAD.neXt.Interfaces
         }
     }
 
+    public interface IVersionableObject
+    {
+        int Version { get; set; }
+
+        bool UpgradeVersionableObject(int fromVersion,int toVersion);
+    }
 
 }
