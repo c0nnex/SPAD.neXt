@@ -70,6 +70,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventActionSendEvent : IEventAction, IEventActionDoesMonitor
     {
         int NumberOfParameters { get; }
+        bool NoExtendedEvent { get; set; }
         IReadOnlyList<IEventActionParameter> Parameters { get; }
         IEventActionParameter Parameter { get; }
         IEventActionParameter Parameter1 { get; }
