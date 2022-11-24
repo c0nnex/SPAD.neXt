@@ -123,6 +123,7 @@
     <Compile Include="Events\ISPADEventValue.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Aircraft\ICDUScreen.cs" />
+    <Compile Include="Gauges\IDeviceImageResolver.cs" />
     <Compile Include="Gauges\IGaugeVersionInformation.cs" />
     <Compile Include="ICommandDevice.cs" />
     <Compile Include="ISpecificOptions.cs" />
