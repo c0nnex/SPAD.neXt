@@ -275,8 +275,6 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// Get content of a CDU row
         /// </summary>
         /// <param name="rowNumber">Row number ( 0 - 13 )</param>
-        /// <param name="startOffset">Starting offset ( 0 - 23 )</param>
-        /// <param name="endOffset">End offset ( 0 - 23 )</param>
         /// <returns>Content of CDU row</returns>
         string GetColorRow(int rowNumber);
         string GetColorRow(int rowNumber, int startOffset);

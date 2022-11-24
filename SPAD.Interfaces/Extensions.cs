@@ -406,8 +406,6 @@ namespace SPAD.neXt.Interfaces
 
         public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
         {
-            int tries = 0;
-            TValue value;
             if ((key == null))
                 return false;
             return dict.TryRemove(key, out var _);
@@ -419,7 +417,6 @@ namespace SPAD.neXt.Interfaces
                 return false;
             if (dict.ContainsKey(key))
                 dict.Remove(key);
-            int tries = 0;
             return dict.TryAdd(key, value);
         }
     }

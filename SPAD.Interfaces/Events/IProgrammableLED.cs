@@ -182,7 +182,6 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsHeldModeEnabled { get; }
         bool IsSwitch { get; }
         void EnableHeldMode();
-        void DisableHeldMode();
 
         bool HasMode(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeOff(PROGRAMMABLEBUTTONSTATUS whichMode);
