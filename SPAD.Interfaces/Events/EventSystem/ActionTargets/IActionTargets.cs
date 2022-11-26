@@ -2,6 +2,7 @@
 using SPAD.neXt.Interfaces.Configuration;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -148,24 +149,40 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ICustomLabel
     {
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         int Layer { get; set; }
 
+        [Category("Configuration")]
         string Foreground { get; set; }
+        [Category("Configuration")]
         string Background { get; set; }
+        [Category("Configuration")]
         string Font { get; set; }
+        [Category("Configuration")]
         float FontSize { get; set; }
+        [Category("Configuration")]
         int FontStyle { get; set; }
-
-        float PosX { get; set; }
-        float PosY { get; set; }
-        float SizeX { get; set; }
-        float SizeY { get; set; }
+        [Category("Configuration")]
+        int PosX { get; set; }
+        [Category("Configuration")]
+        int PosY { get; set; }
+        [Category("Configuration")]
+        int SizeX { get; set; }
+        [Category("Configuration")]
+        int SizeY { get; set; }
+        [Category("Configuration")]
         int HorizontalAlignment { get; set; }
+        [Category("Configuration")]
         int VerticalAlignment { get; set; }
-
+        [Category("Value")]
         string Text { get; set; }
 
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         bool IsLayerChangeAllowed { get; set; }
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         bool IsStyleChangeAllowed { get; set; }
     }
 

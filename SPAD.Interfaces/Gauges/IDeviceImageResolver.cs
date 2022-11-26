@@ -1,7 +1,9 @@
 ﻿using SPAD.neXt.Interfaces.Events;
+using SPAD.neXt.Interfaces.Extension;
 using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Xml.Serialization;
 
@@ -20,6 +22,21 @@ namespace SPAD.neXt.Interfaces
         TEXT
     }
 
+    public enum GaugeImageDistortionType
+    {
+        NONE,
+        ROTATE,
+        SHIFT,
+        ROTATESHIFT,
+        SHIFTROTATE,
+    }
+
+    public sealed class GaugeImageDistortion : GenericOptionObject
+    {
+        [XmlAttribute("DistortionType")]
+        public GaugeImageDistortionType GaugeImageDistortionType { get; set; } = GaugeImageDistortionType.NONE;
+    }
+
     public sealed class GaugeSize
     {        
         [XmlAttribute]
@@ -34,10 +51,11 @@ namespace SPAD.neXt.Interfaces
         }
     }
 
-    public interface ISimpleGauge : IVersionableObject, IXmlAnyObject
+    public interface ISimpleGauge : IVersionableObject, IXmlAnyObject, ICloneable<ISimpleGauge>
     {
         bool Disabled { get; set; }
         bool IsConfigured { get; }
+        IGaugeRenderer Renderer { get; }
         T GetLayer<T>(int layerNumber) where T : ISimpleGaugeLayerConfig;
         IReadOnlyList<ISimpleGaugeLayerConfig> GetLayers();
         void SetParentID(Guid newParentID);
@@ -50,20 +68,28 @@ namespace SPAD.neXt.Interfaces
     public interface ISimpleGaugeLayerConfig
     {
         bool IsDisabled { get; }
-        string LayerName { get; }
-        int LayerNumber { get; }
+        [Category("Configuration")]
+        string LayerName { get; set; }
+        [Browsable(false)]
+        int LayerNumber { get; set; }
         GaugeLayerType LayerType { get; }
 
         void SetName(string name);
         T As<T>() where T : ISimpleGaugeLayerConfig;
+        [Browsable(false)]
+        object RenderObject { get; }
+        [Browsable(false)] 
+        object RenderParameter { get; }
     }
 
     public interface IGaugeColorLayerConfig : ISimpleGaugeLayerConfig
     {
+        [Category("Value")]
         string Color { get; set; }
     }
     public interface IGaugeImageLayerConfig : ISimpleGaugeLayerConfig
     {
+        [Category("Value")]
         Guid ImageId { get; set; }
     }
 
@@ -78,6 +104,7 @@ namespace SPAD.neXt.Interfaces
         bool IsInDesignMode { get; set; }
         GaugeSize Size { get; }
 
+        void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         void AddLayer(GaugeLayerType layerType, int layerNumber, object renderObject, object renderParam = null);
         IGaugeRenderLayer GetLayer(int layerNumber);
         bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
@@ -100,22 +127,21 @@ namespace SPAD.neXt.Interfaces
         void Disable();
         void Enable();
         bool Render(object renderTarget);
+        bool RenderDesign(object renderTarget, object renderObject, object renderParameter);
         void Initialize(GaugeSize size);
     }
 
     public interface IGaugeImageLayer : IGaugeRenderLayer
     {
-        void Render(object renderTarget, IDeviceImage image, int rotation = 0);
+        bool Render(object renderTarget, IDeviceImage image, int rotation = 0);
     }
 
     public interface IGaugeColorLayer : IGaugeRenderLayer
     {
-        void Render(object g, string color);
     }
 
     public interface IGaugeTextLayer : IGaugeRenderLayer
     {
-        bool Render(object g, string text, ICustomLabel targetLabelConfig = null);
         void UpdateRenderColors(string foreground, string background);
     }
 }
