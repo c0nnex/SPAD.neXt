@@ -5,6 +5,7 @@ using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,7 +68,9 @@ namespace SPAD.neXt.Interfaces
 
     public interface IPublishCustomize
     {
+        bool CanPublish();
         string CustomizePublishname(string defaultName);
+        string CustomizePublishContext(string currentContext,string devicename, string eventName);
     }
 
     public interface IPanelService
