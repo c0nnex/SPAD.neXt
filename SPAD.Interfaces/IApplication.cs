@@ -121,6 +121,7 @@ namespace SPAD.neXt.Interfaces
         Task<bool> PutImageAsync(Guid id, string name, byte[] data, string category = null, string subCategory = null);
         Task<bool> PutImagesAsync(IEnumerable<ImageServicePayload> payLoad);
         Task<byte[]> GetImageAsync(Guid id,long lastChange = 0);
+        Task<string> GetImageLocalUrlAsync(Guid id, long lastChange = 0);
         bool HasImage(Guid id, string hash = null);
         
         IImageInfo GetImageInformation(Guid id);

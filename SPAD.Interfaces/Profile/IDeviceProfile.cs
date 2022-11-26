@@ -127,6 +127,7 @@ namespace SPAD.neXt.Interfaces.Profile
         void AddReference();
         byte[] GetImage();
         Task<byte[]> GetImageAsync();
+        Task<string> GetImageUrlAsync();
         void Refresh();
     }
 
