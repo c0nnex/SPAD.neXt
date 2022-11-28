@@ -149,40 +149,22 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ICustomLabel
     {
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
         int Layer { get; set; }
 
-        [Category("Configuration")]
         string Foreground { get; set; }
-        [Category("Configuration")]
         string Background { get; set; }
-        [Category("Configuration")]
         string Font { get; set; }
-        [Category("Configuration")]
         float FontSize { get; set; }
-        [Category("Configuration")]
         int FontStyle { get; set; }
-        [Category("Configuration")]
-        int PosX { get; set; }
-        [Category("Configuration")]
-        int PosY { get; set; }
-        [Category("Configuration")]
-        int SizeX { get; set; }
-        [Category("Configuration")]
-        int SizeY { get; set; }
-        [Category("Configuration")]
+        int X { get; set; }
+        int Y { get; set; }
+        int Width { get; set; }
+        int Height { get; set; }
         int HorizontalAlignment { get; set; }
-        [Category("Configuration")]
-        int VerticalAlignment { get; set; }
-        [Category("Value")]
+        int VerticalAlignment { get; set; }            
         string Text { get; set; }
 
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
         bool IsLayerChangeAllowed { get; set; }
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
         bool IsStyleChangeAllowed { get; set; }
     }
 

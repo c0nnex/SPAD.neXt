@@ -68,10 +68,14 @@ namespace SPAD.neXt.Interfaces
     public interface ISimpleGaugeLayerConfig
     {
         bool IsDisabled { get; }
-        [Category("Configuration")]
         string LayerName { get; set; }
-        [Browsable(false)]
         int LayerNumber { get; set; }
+
+        int X { get; set; }
+        int Y { get; set; }
+        int Width { get; set; }
+        int Height { get; set; }
+
         GaugeLayerType LayerType { get; }
 
         void SetName(string name);
@@ -103,7 +107,7 @@ namespace SPAD.neXt.Interfaces
         bool IsDirty { get; }
         bool IsInDesignMode { get; set; }
         GaugeSize Size { get; }
-
+        IDeviceImageResolver DeviceImageResolver { get; }
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         void AddLayer(GaugeLayerType layerType, int layerNumber, object renderObject, object renderParam = null);
         IGaugeRenderLayer GetLayer(int layerNumber);
@@ -128,7 +132,8 @@ namespace SPAD.neXt.Interfaces
         void Enable();
         bool Render(object renderTarget);
         bool RenderDesign(object renderTarget, object renderObject, object renderParameter);
-        void Initialize(GaugeSize size);
+        void RenderBorder(object renderTarget);
+        void Initialize(ISimpleGaugeLayerConfig config, int defaultWidth, int defaultHeight);
     }
 
     public interface IGaugeImageLayer : IGaugeRenderLayer
