@@ -22,6 +22,7 @@ namespace SPAD.neXt.Interfaces.Events
         object OldValue { get; }
         string TargetDevice { get; }
         long EventMarker { get; }
+        long Timestamp { get; }
         EventPriority EventPriority { get; }
         EventSeverity EventSeverity { get; }
 
@@ -80,6 +81,7 @@ namespace SPAD.neXt.Interfaces.Events
         public string EventTrigger { get => eventTrigger; set { eventTrigger = value; _FullName = null; } }
         public IInputElement CommandTarget { get; set; }
         public long EventMarker { get; private set; }
+        public long Timestamp { get; set; }
         public object OldValue
         {
             get
@@ -141,6 +143,7 @@ namespace SPAD.neXt.Interfaces.Events
         public SPADEventArgs(string eventName)
         {
             EventMarker = Interlocked.Increment(ref EventMarkerCounter);
+            Timestamp = EnvironmentEx.TickCountLong;
             EventName = eventName;
             EventTrigger = String.Empty;
             string[] args = eventName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
