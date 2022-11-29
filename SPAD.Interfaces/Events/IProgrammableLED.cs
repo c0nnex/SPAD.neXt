@@ -87,7 +87,7 @@ namespace SPAD.neXt.Interfaces.Events
         I GetUIRoutedToData<I>() where I : class;
         void Reset();
 
-        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent);
+        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent,long timeStamp);
 
         void EnableHeldMode(IProgrammableHeld callback);
         void DisableHeldMode();
@@ -198,8 +198,6 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IProgrammableButton : IProgrammableInput
     {
-
-        long LastPressDuration { get; }
         string EventPressName { get; set; }
         string EventShortPressName { get; set; }
         string EventLongPressName { get; set; }
