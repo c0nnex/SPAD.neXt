@@ -109,7 +109,7 @@ namespace SPAD.neXt.Interfaces
         GaugeSize Size { get; }
         IDeviceImageResolver DeviceImageResolver { get; }
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
-        void AddLayer(GaugeLayerType layerType, int layerNumber, object renderObject, object renderParam = null);
+        IGaugeRenderLayer AddLayer(ISimpleGaugeLayerConfig config);
         IGaugeRenderLayer GetLayer(int layerNumber);
         bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
         bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
