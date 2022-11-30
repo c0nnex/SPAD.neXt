@@ -318,7 +318,7 @@ namespace SPAD.neXt.Interfaces
         StreamReader GetStreamReader(string filename = null);
         string GetContent(string filename = null);
 
-
+        void Warning(string message);
     }
 
     public interface IResolvesAtRuntime
