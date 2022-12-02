@@ -675,7 +675,7 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlIgnore]
         public bool IsDisplay => Type == "DISPLAY";
         [XmlIgnore]
-        public bool IsInput { get; set; } = true;
+        public bool IsInput => !IsOutput;
 
         [XmlIgnore]
         public AddonDeviceDisplay Display { get; private set; } = null;
