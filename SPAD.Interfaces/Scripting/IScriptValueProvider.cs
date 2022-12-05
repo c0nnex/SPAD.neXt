@@ -18,6 +18,11 @@ namespace SPAD.neXt.Interfaces.Scripting
 
     }
 
+    public interface IScriptDebug
+    {
+
+    }
+
     public interface IScriptValueProvider : IScript
     {
         double ProvideValue(IApplication app);
