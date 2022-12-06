@@ -331,6 +331,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
     public abstract class GenericCDUScreen : ICDUScreen
     {
         protected List<List<byte>> EmptyScreen;
+        private string EmptyRow = "";
         protected Dictionary<CDU_LED, int> LedStatus = new Dictionary<CDU_LED, int>();
         protected ILogger logger;
         public int RowCount { get; private set; }
@@ -368,6 +369,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             {
                 EmptyScreen.Add(null);
             }
+            EmptyRow = "".PadRight(cols);
             foreach (CDU_LED item in Enum.GetValues(typeof(CDU_LED)))
             {
                 LedStatus[item] = 0;
@@ -492,7 +494,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         public string GetRow(int rowNumber, int startOffset, int endOffset)
         {
             if (!IsValid || (rowNumber < 0) || (startOffset < 0) || (startOffset >= ColumnCount) || (rowNumber >= RowCount) || (endOffset < 0) || (endOffset >= ColumnCount))
-                return String.Empty;
+                return EmptyRow;
             String retStr = "";
             for (int i = startOffset; i <= endOffset; i++)
             {
