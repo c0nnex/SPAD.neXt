@@ -51,7 +51,7 @@ namespace SPAD.neXt.Interfaces.Events
         ISPADEventArgs Clone();
         T GetData<T>(string key, T defaultValue = default(T));
         ISPADEventArgs WithData(string key, object data);
-
+        ISPADEventArgs WithDataIfNot<T>(string key, T data, T compareValue) where T: IEquatable<T>;
         bool Is(ISPADEventArgs e);
     }
 
@@ -248,7 +248,12 @@ namespace SPAD.neXt.Interfaces.Events
             AddData(key, value);
             return this;
         }
-
+        ISPADEventArgs ISPADEventArgs.WithDataIfNot<T>(string key, T value, T compareValue) 
+        {
+            if (!compareValue.Equals(value))
+                AddData(key, value);
+            return this;
+        }
         public SPADEventArgs WithLogger(ILogger logger)
         {
             this.logger = logger;
@@ -261,7 +266,7 @@ namespace SPAD.neXt.Interfaces.Events
             {
                 object val = this[key];
                 if (val == null)
-                    return default(T);
+                    return defaultValue;
                 if (val is T)
                     return (T)val;
                 if (typeof(T) == typeof(Guid))

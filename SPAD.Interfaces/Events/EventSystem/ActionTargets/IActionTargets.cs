@@ -9,6 +9,17 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Events
 {
+    public enum GaugeLayerActionType
+    {
+        GaugeToggle,
+        LayerToggle,
+        LayerModeChange,
+        LayerImageChange,
+        LayerImageRotate,
+        LayerChangeText,
+        LayerChangeColor
+    }
+
     public interface IEventActionRangedAxis : IEventAction
     {
         bool InvertAxis { get; set; }
@@ -135,14 +146,28 @@ namespace SPAD.neXt.Interfaces.Events
     {
     }
 
+    public interface IHasImageReferences
+    {
+        IEnumerable<Guid> GetImageReferences();
+        int ReplaceImageReferences(IDictionary<Guid, Guid> replaceDict);
+    }
     public interface IEventActionWithImage
     {
         string Image { get; set; }
         Guid ImageId { get; set; }
 
     }
+    public interface IEventActionWithTargetLayer
+    {
+        int TargetLayer { get; set; }
+    }
 
-    public interface IEventActionPlateImage : IEventAction, IEventActionWithImage
+    public interface IEventActionPlateColor : IEventAction, IEventActionWithTargetLayer
+    {
+        string Color { get; set; }
+        int TargetScope { get; set; }
+    }
+    public interface IEventActionPlateImage : IEventAction, IEventActionWithImage, IEventActionWithTargetLayer
     {
         FLASHMODE FlashMode { get; set; }
     }
@@ -175,12 +200,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         string Text { get; set; }
 
-        int Layer { get; set; }
+        int TargetLayer { get; set; }
 
-        string Foreground { get; set; }
-        string Background { get; set; }
-        bool IsLayerChangeAllowed { get; set; }
-        bool IsStyleChangeAllowed { get; set; }
     }
 
     public interface IEventImageData : IXmlAnyObject

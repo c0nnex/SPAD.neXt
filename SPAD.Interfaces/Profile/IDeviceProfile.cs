@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.Profile
     
 
 
-    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible,IObjectWithVariables, IObservableProvider<ISPADEventArgs>
+    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible,IObjectWithVariables,IDeviceImageResolver, IObservableProvider<ISPADEventArgs>
     {
         string VendorID { get; }
         string ProductID { get; }

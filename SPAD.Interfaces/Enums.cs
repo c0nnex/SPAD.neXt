@@ -131,7 +131,8 @@ namespace SPAD.neXt.Interfaces
         Data,
         Control,
         Toggle,
-        Exec
+        Exec,
+        RPC
     }
     public enum EventPriority
     {
@@ -1302,6 +1303,7 @@ namespace SPAD.neXt.Interfaces
         public const string ModeReport = "__MODEREPORT__";
         public const string EventUpdate = "__EVENTUPDATE__";
         public const string SystemEvent = "__SYSTEM__";
+        public const string GaugeEvent = "__GAUGE__";
     }
 
     public static class SPADSystemEvents
@@ -1424,6 +1426,7 @@ namespace SPAD.neXt.Interfaces
         public const string Data = "data";
         public const string SPAD = "spad";
         public const string Devices = "devices";
+        public const string Graphics = "gfx";
         public const string Gauges = "gauges";
         public const string Localization = "lang";
         public const string Special = "special";

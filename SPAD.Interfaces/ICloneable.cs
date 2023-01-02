@@ -66,6 +66,7 @@ namespace SPAD.neXt.Interfaces
         T Clone();
     }
 
+
     public interface IObservableList<T> : IList<T>
     {
         void Replace(T oldItem, T newItem);

@@ -18,4 +18,7 @@ namespace SPAD.neXt.Interfaces.UI
         string Name { get; }
         Guid ID { get; }
     }
+
+    public interface IUIProxy
+    { }
 }

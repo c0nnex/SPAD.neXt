@@ -283,7 +283,7 @@ namespace SPAD.neXt.Interfaces
         IRuntimeResolver CreateRuntimeResolver(string id);
         IJoystickEmulator CreateVirtualJoystick(int identifier, string name, string vendorId, string productId);
 
-        ISimpleGauge CreateGauge();
+        ISimpleGauge CreateGauge(bool noLayers);
     }
 
     public interface IActionManager

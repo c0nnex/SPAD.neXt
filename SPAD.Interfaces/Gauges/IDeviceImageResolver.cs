@@ -22,19 +22,21 @@ namespace SPAD.neXt.Interfaces
         TEXT
     }
 
-    public enum GaugeImageDistortionType
+    /* Important: Don't forget to adjust GaugeImageLayer-Rendering if modes are added */
+    public enum GaugeImageDistortionMode
     {
         NONE,
         ROTATE,
-        SHIFT,
-        ROTATESHIFT,
-        SHIFTROTATE,
+        SHIFT_X,
+        SHIFT_Y,
+        //        ROTATESHIFT,
+        //        SHIFTROTATE,
     }
 
     public sealed class GaugeImageDistortion : GenericOptionObject
     {
         [XmlAttribute("DistortionType")]
-        public GaugeImageDistortionType GaugeImageDistortionType { get; set; } = GaugeImageDistortionType.NONE;
+        public GaugeImageDistortionMode GaugeImageDistortionType { get; set; } = GaugeImageDistortionMode.NONE;
     }
 
     public sealed class GaugeSize
@@ -49,52 +51,65 @@ namespace SPAD.neXt.Interfaces
             Width = sizeX;
             Height = sizeY;
         }
+
     }
 
-    public interface ISimpleGauge : IVersionableObject, IXmlAnyObject, ICloneable<ISimpleGauge>
+    public interface ISimpleGauge : IHasImageReferences,IVersionableObject, IXmlAnyObject, ICloneable<ISimpleGauge>
     {
         bool Disabled { get; set; }
         bool IsConfigured { get; }
+        bool IsTurnedOn { get; set; }
+        bool DefaultsToOff { get; set; }
         IGaugeRenderer Renderer { get; }
         T GetLayer<T>(int layerNumber) where T : ISimpleGaugeLayerConfig;
         IReadOnlyList<ISimpleGaugeLayerConfig> GetLayers();
         void SetParentID(Guid newParentID);
 
-        ISimpleGaugeLayerConfig AddImageLayer(int layerNumber, Guid imageId);
-        ISimpleGaugeLayerConfig AddTextLayer(int layerNumber, string text, ICustomLabel textConfig);
+        IGaugeImageLayerConfig AddImageLayer(int layerNumber, Guid imageId);
+        IGaugeTextLayerConfig AddTextLayer(int layerNumber, string text, ICustomLabel textConfig);
         IGaugeRenderer CreateRenderer(string belongsTo, int sizeX, int sizeY, IDeviceImageResolver deviceImageResolver);
     }
 
-    public interface ISimpleGaugeLayerConfig
+    public interface ISimpleGaugeLayerConfig : ICloneable
     {
         bool IsDisabled { get; }
         string LayerName { get; set; }
+        string LayerSelectionName { get; }
         int LayerNumber { get; set; }
 
         int X { get; set; }
         int Y { get; set; }
         int Width { get; set; }
         int Height { get; set; }
-
+       
         GaugeLayerType LayerType { get; }
 
         void SetName(string name);
         T As<T>() where T : ISimpleGaugeLayerConfig;
         [Browsable(false)]
         object RenderObject { get; }
-        [Browsable(false)] 
-        object RenderParameter { get; }
-    }
+        void SetRenderParameter(object value);
+        object GetRenderParameter();
 
-    public interface IGaugeColorLayerConfig : ISimpleGaugeLayerConfig
+    }
+    public interface IGaugeNoPositionEdit { }
+    public interface IGaugeColorLayerConfig : ISimpleGaugeLayerConfig, IGaugeNoPositionEdit
     {
-        [Category("Value")]
         string Color { get; set; }
     }
     public interface IGaugeImageLayerConfig : ISimpleGaugeLayerConfig
     {
-        [Category("Value")]
         Guid ImageId { get; set; }
+        bool SizeToFit { get; set; }
+        GaugeImageDistortionMode DistortionMode { get; set; }
+        int AxisX { get; set; }
+        int AxisY { get; set; }
+        int MaxRotationValue { get; set; }
+        int MaxValue { get; set; }
+        int MinRotationValue { get; set; }
+        int MinValue { get; set; }
+        int PointsTo { get; set; }
+        string RotationExpressionText { get; set; }
     }
 
     public interface IGaugeTextLayerConfig : ISimpleGaugeLayerConfig,ICustomLabel
@@ -107,6 +122,8 @@ namespace SPAD.neXt.Interfaces
         bool IsDirty { get; }
         bool IsInDesignMode { get; set; }
         GaugeSize Size { get; }
+
+        event EventHandler<IGaugeRenderer> RenderingRequested;
         IDeviceImageResolver DeviceImageResolver { get; }
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeRenderLayer AddLayer(ISimpleGaugeLayerConfig config);
@@ -114,13 +131,14 @@ namespace SPAD.neXt.Interfaces
         bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
         bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
 
-        void UpdateColorLayer(int layerNumber, string newColor);
+        void UpdateColorLayer(int layerNumber, int layerScope, string newColor);
         void UpdateImageLayer(int layerNumber, Guid newImage);
-        void UpdateTextLayer(int layerNumber, ICustomLabel newTextConfig);
-        void UpdateTextLayer(int layerNumber, string newText, string foreground = null, string background = null);
+        void UpdateTextLayer(int layerNumber, string newText);
         void DisableLayer(int layerNumber);
         void EnableLayer(int layerNumber);
         bool HasLayer(int layerNumber);
+
+        void SetDirty();
     }
 
     public interface IGaugeRenderLayer : IDisposable
@@ -133,12 +151,11 @@ namespace SPAD.neXt.Interfaces
         bool Render(object renderTarget);
         bool RenderDesign(object renderTarget, object renderObject, object renderParameter);
         void RenderBorder(object renderTarget);
-        void Initialize(ISimpleGaugeLayerConfig config, int defaultWidth, int defaultHeight);
+        void Initialize(IObserverTicket observerTicket, ISimpleGaugeLayerConfig config, int defaultWidth, int defaultHeight);
     }
 
     public interface IGaugeImageLayer : IGaugeRenderLayer
     {
-        bool Render(object renderTarget, IDeviceImage image, int rotation = 0);
     }
 
     public interface IGaugeColorLayer : IGaugeRenderLayer

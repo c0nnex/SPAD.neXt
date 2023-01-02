@@ -363,6 +363,13 @@ namespace SPAD.neXt.Interfaces
 
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Rescale(this int value, float sourceMin, float sourceMax, float targetMin, float targetMax)
+        {
+            float val = Math.Max(sourceMin, Math.Min(value, sourceMax));
+            
+            return (int)( ((val - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin );
+        }
     }
 
     public static class DictionaryExtensions

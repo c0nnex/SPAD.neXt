@@ -118,13 +118,16 @@ namespace SPAD.neXt.Interfaces
         void ApplicationReady(BooleanEventArgs e);
 
         bool CreateDocumentation(IPanelDocumentation docProxy);
-        bool InterceptCommand(ICommand command);
+        bool InterceptCommand(ICommand command,object parameter);
         bool SavePanelImage(string filename);
 
         T GetService<T>(string id = null) where T : class, IPanelService;
         void RaiseEvent(string switchName, ISPADEventArgs eArgs);
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
+
+        void OnDeviceEnabled();
+        void OnDeviceDisabled();
 
     }
 
@@ -145,7 +148,7 @@ namespace SPAD.neXt.Interfaces
         bool IsValidEvent(string eventName);
         void RemoveAllEvents();
         bool RemoveEvent(string bound);
-        IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
+        IEnumerable<KeyValuePair<object, string>> GetValidEventChoices(string targetSwitch,string commandName);
         bool IsCommandSupported(string commandName);
 
         void PreparePageForExport(IDeviceProfile deviceProfile, IDevicePage devicePage);

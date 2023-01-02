@@ -138,6 +138,11 @@ namespace SPAD.Extensions.Generic
         void OnPageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
 
         IInput GetAttachedInput(string name);
+
+        void OnDeviceEnabled();
+        void OnDeviceDisabled();
+        void OnDeviceActivated(IDeviceProfile device);
+        void OnDeviceDeactivated();
     }
 
 }

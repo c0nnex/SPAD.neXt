@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Profile
 {
-    public interface IProfile
+    public interface IProfile : IDeviceImageResolver
     {
         bool IsDummyProfile { get; }
         bool IsDirty { get; }

@@ -42,6 +42,8 @@ namespace SPAD.neXt.Interfaces.Configuration
         string WriteParameters { get; set; }
         int DefinitionKey { get; }
         bool ExcludeKeyFromSearch { get; set; }
+
+        int NumberOfParameters { get; set; }
     }
 
     public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions
@@ -143,6 +145,5 @@ namespace SPAD.neXt.Interfaces.Configuration
 
     public interface IControlDefinition : IDataDefinitionProperties, IObjectWithOptions
     {
-        int NumberOfParameters { get; set; }
     }
 }
