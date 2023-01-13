@@ -411,11 +411,18 @@ namespace SPAD.neXt.Interfaces
             return value;
         }
 
-        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, bool disposeVal = false)
         {
             if ((key == null))
                 return false;
-            return dict.TryRemove(key, out var _);
+
+            if (dict.TryRemove(key, out var val) && disposeVal)
+            {
+                if (val is IDisposable disposable)
+                    disposable.Dispose();
+                return true;
+            }
+            return false;
         }
 
         public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, TValue value)

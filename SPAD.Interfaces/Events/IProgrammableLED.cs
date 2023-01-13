@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
         public int StateValue { get; set; }
         public string StateName { get; set; }
         public string EventName { get; set; }
+        public Guid EventContext { get; set; } = Guid.Empty;
 
         public int StateIndexToggle { get; set; } = 0;
         public ProgrammableInputStateChangedArgs AsIntermediate()
@@ -87,7 +88,7 @@ namespace SPAD.neXt.Interfaces.Events
         I GetUIRoutedToData<I>() where I : class;
         void Reset();
 
-        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent,long timeStamp);
+        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent,long timeStamp,Guid? context = null);
 
         void EnableHeldMode(IProgrammableHeld callback);
         void DisableHeldMode();

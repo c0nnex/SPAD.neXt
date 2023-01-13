@@ -47,6 +47,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsStatic { get; set; }
         bool NeedNotify { get; }
 
+        void Clear();
         bool Subscribe(string dataRef);
         bool Unsubscribe(string dataRef);
         void Subscribe(IMonitorableValue monitorableValue);

@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Comparators
 {
-    public delegate double ComparatorGetValueDelegate();
+    public delegate IComparable ComparatorGetValueDelegate();
 
     public abstract class ComparatorBase : ISPADComparator
     {
         public static ComparatorBase IgnoreComparator = new ComparatorIgnore();
-        public Double compareValueLeft { get; private set; } = 0;
-        public Double compareValueRight { get; private set; } = 0;
+        public IComparable compareValueLeft { get; private set; } = 0;
+        public IComparable compareValueRight { get; private set; } = 0;
         private ComparatorGetValueDelegate compareValueLeftDelegate = null;
         private ComparatorGetValueDelegate compareValueRightDelegate = null;
 
@@ -34,9 +34,11 @@ namespace SPAD.neXt.Comparators
             switch (whichComparator)
             {
                 case SPADEventValueComparator.Equals:
+                case SPADEventValueComparator.StrEquals:
                     b = new ComparatorEqual(); break;
 
                 case SPADEventValueComparator.Unequal:
+                case SPADEventValueComparator.StrNotEquals:
                     b = new ComparatorUnequal(); break;
 
                 case SPADEventValueComparator.Less:
@@ -68,10 +70,48 @@ namespace SPAD.neXt.Comparators
                     b = new ComparatorIsBitSet(); break;
                 case SPADEventValueComparator.IsBitNotSet:
                     b = new ComparatorIsBitNotSet(); break;
+                case SPADEventValueComparator.Always:
+                    break;
+                case SPADEventValueComparator.StrContains:
+                    b = new ComparatorStrContains(); break;                    
+                case SPADEventValueComparator.StrNotContains:
+                    b = new ComparatorStrNotContains(); break;
+                case SPADEventValueComparator.None:
+                    break;
                 default:
                     b = new ComparatorAlways(); break;
             }
             return b;
+        }
+
+        public static bool IsStringComparator(SPADEventValueComparator whichComparator)
+        {
+            switch (whichComparator)
+            {
+                case SPADEventValueComparator.Equals:
+                case SPADEventValueComparator.Unequal:
+                case SPADEventValueComparator.Less:
+                case SPADEventValueComparator.LessOrEqual:
+                case SPADEventValueComparator.Greater:
+                case SPADEventValueComparator.GreaterOrEqual:
+                case SPADEventValueComparator.Mask:
+                case SPADEventValueComparator.Not:
+                case SPADEventValueComparator.AnyBitSet:
+                case SPADEventValueComparator.IsBitSet:
+                case SPADEventValueComparator.IsBitNotSet:
+                case SPADEventValueComparator.Ignore:
+                case SPADEventValueComparator.Always:
+                case SPADEventValueComparator.Range:
+                case SPADEventValueComparator.None:
+                    return false;
+                case SPADEventValueComparator.StrEquals:
+                case SPADEventValueComparator.StrNotEquals:
+                case SPADEventValueComparator.StrContains:
+                case SPADEventValueComparator.StrNotContains:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public static ComparatorBase CreateComparator(SPADEventValueComparator whichComparator, object leftValue, object rightValue = null)
@@ -102,9 +142,9 @@ namespace SPAD.neXt.Comparators
             catch { return IgnoreComparator; }
         }
 
-        protected abstract bool DoesMatch(IComparable testValue);
+        protected abstract bool DoesMatchImpl(IComparable testValue);
 
-        public bool DoesMatch(object testValue)
+        public bool DoesMatch(IComparable testValue)
         {
             try
             {
@@ -114,7 +154,7 @@ namespace SPAD.neXt.Comparators
                     compareValueLeft = compareValueLeftDelegate();
                 if (compareValueRightDelegate != null)
                     compareValueRight = compareValueRightDelegate();
-                return DoesMatch(Convert.ToDouble(testValue) as IComparable);
+                return DoesMatchImpl(testValue);
             }
             catch
             {

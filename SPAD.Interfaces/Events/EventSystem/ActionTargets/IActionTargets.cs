@@ -162,11 +162,21 @@ namespace SPAD.neXt.Interfaces.Events
         int TargetLayer { get; set; }
     }
 
+    public interface IEventActionWithTargetMode
+    {
+        int TargetMode { get; set; }
+    }
+
     public interface IEventActionPlateColor : IEventAction, IEventActionWithTargetLayer
     {
         string Color { get; set; }
         int TargetScope { get; set; }
     }
+   
+    public interface IEventActionLayerMode : IEventAction, IEventActionWithTargetLayer, IEventActionWithTargetMode
+    {
+    }
+
     public interface IEventActionPlateImage : IEventAction, IEventActionWithImage, IEventActionWithTargetLayer
     {
         FLASHMODE FlashMode { get; set; }

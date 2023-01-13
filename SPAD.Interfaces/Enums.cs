@@ -124,7 +124,8 @@ namespace SPAD.neXt.Interfaces
         PLATELABEL,
         SWITCHWINDOW,
         EXTERNAL,
-        RESTCALL
+        RESTCALL,
+        LAYERMODE
     }
     public enum DataProviderMapType
     {
@@ -187,6 +188,10 @@ namespace SPAD.neXt.Interfaces
         Ignore,
         Always,
         Range,
+        StrEquals,
+        StrNotEquals,
+        StrContains,
+        StrNotContains,
         None
     }
 
@@ -1285,6 +1290,7 @@ namespace SPAD.neXt.Interfaces
         public const string UpdateLeftDisplay = "__UPDATELEFTDISPLAY__";
         public const string UpdateRightDisplay = "__UPDATELEFTDISPLAY__";
         public const string ButtonLight = "__BUTTONLIGHT__";
+        public const string LayerMode = "__LAYERMODE__";
         public const string ButtonMode = "__BUTTONMODE__";
         public const string LEDColor = "__LEDCOLOR__";
         public const string PlateColor = "__PLATECOLOR__";

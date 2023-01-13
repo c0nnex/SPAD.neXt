@@ -9,7 +9,7 @@ namespace SPAD.neXt.Comparators
 {
     public class ComparatorLess : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             return compareValueLeft.CompareTo(testValue) > 0; // compareValueLeft > testValue -> TestValue < cLeft
         }
@@ -17,7 +17,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorLessOrEqual : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testVal)
+        protected override bool DoesMatchImpl(IComparable testVal)
         {
             return compareValueLeft.CompareTo(testVal) >= 0;
         }
@@ -25,7 +25,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorGreater : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testVal)
+        protected override bool DoesMatchImpl(IComparable testVal)
         {
             return compareValueLeft.CompareTo(testVal) < 0;
         }
@@ -33,7 +33,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorGreaterOrEqual : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testVal)
+        protected override bool DoesMatchImpl(IComparable testVal)
         {
             return compareValueLeft.CompareTo(testVal) <= 0;
         }
@@ -41,7 +41,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorRange : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testVal)
+        protected override bool DoesMatchImpl(IComparable testVal)
         {
             
             var Left = compareValueLeft.CompareTo(testVal);
@@ -58,7 +58,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorAnyBitSet: ComparatorBase
     {               
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {           
             UInt64 a3 = Convert.ToUInt64(compareValueLeft);
             UInt64 a4 = Convert.ToUInt64(testValue);
@@ -68,7 +68,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorMask : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             UInt64 a3 = Convert.ToUInt64(compareValueLeft);
             UInt64 a4 = Convert.ToUInt64(testValue);
@@ -78,7 +78,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorIsBitSet : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
 
             UInt64 a3 = 1UL << Convert.ToInt32(compareValueLeft);
@@ -88,7 +88,7 @@ namespace SPAD.neXt.Comparators
     }
     public class ComparatorIsBitNotSet : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             UInt64 a3 = 1UL << Convert.ToInt32(compareValueLeft);
             UInt64 a4 = Convert.ToUInt64(testValue);
@@ -98,7 +98,7 @@ namespace SPAD.neXt.Comparators
 
     public class ComparatorNot : ComparatorBase
     {
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             UInt64 a3 = Convert.ToUInt64(compareValueLeft);
             UInt64 a4 = Convert.ToUInt64(testValue);
@@ -111,7 +111,7 @@ namespace SPAD.neXt.Comparators
         public ComparatorIgnore()            
         { }
 
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             return false;
         }
@@ -122,7 +122,7 @@ namespace SPAD.neXt.Comparators
         public ComparatorAlways()            
         { }
 
-        protected override bool DoesMatch(IComparable testValue)
+        protected override bool DoesMatchImpl(IComparable testValue)
         {
             return true;
         }

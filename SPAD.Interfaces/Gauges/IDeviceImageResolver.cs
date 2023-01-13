@@ -64,7 +64,7 @@ namespace SPAD.neXt.Interfaces
         T GetLayer<T>(int layerNumber) where T : ISimpleGaugeLayerConfig;
         IReadOnlyList<ISimpleGaugeLayerConfig> GetLayers();
         void SetParentID(Guid newParentID);
-
+        void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeImageLayerConfig AddImageLayer(int layerNumber, Guid imageId);
         IGaugeTextLayerConfig AddTextLayer(int layerNumber, string text, ICustomLabel textConfig);
         IGaugeRenderer CreateRenderer(string belongsTo, int sizeX, int sizeY, IDeviceImageResolver deviceImageResolver);
@@ -101,6 +101,7 @@ namespace SPAD.neXt.Interfaces
     {
         Guid ImageId { get; set; }
         bool SizeToFit { get; set; }
+        bool StretchToFit { get; set; }
         GaugeImageDistortionMode DistortionMode { get; set; }
         int AxisX { get; set; }
         int AxisY { get; set; }
@@ -123,7 +124,7 @@ namespace SPAD.neXt.Interfaces
         bool IsInDesignMode { get; set; }
         GaugeSize Size { get; }
 
-        event EventHandler<IGaugeRenderer> RenderingRequested;
+        void SetRenderRequestCallback(Action<IGaugeRenderer> renderingRequested);
         IDeviceImageResolver DeviceImageResolver { get; }
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeRenderLayer AddLayer(ISimpleGaugeLayerConfig config);
