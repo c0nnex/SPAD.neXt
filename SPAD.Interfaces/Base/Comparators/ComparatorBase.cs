@@ -1,5 +1,6 @@
 ﻿using SPAD.neXt.Interfaces;
 using SPAD.neXt.Interfaces.Events;
+using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,14 @@ namespace SPAD.neXt.Comparators
 
     public abstract class ComparatorBase : ISPADComparator
     {
+        protected static ILogger logger;
         public static ComparatorBase IgnoreComparator = new ComparatorIgnore();
         public IComparable compareValueLeft { get; private set; } = 0;
         public IComparable compareValueRight { get; private set; } = 0;
         private ComparatorGetValueDelegate compareValueLeftDelegate = null;
         private ComparatorGetValueDelegate compareValueRightDelegate = null;
+
+        public static void Initialize(ILogger newlogger) { logger = newlogger; }
 
         public ComparatorBase()
         {
@@ -71,12 +75,13 @@ namespace SPAD.neXt.Comparators
                 case SPADEventValueComparator.IsBitNotSet:
                     b = new ComparatorIsBitNotSet(); break;
                 case SPADEventValueComparator.Always:
-                    break;
+                    b = new ComparatorAlways(); break;
                 case SPADEventValueComparator.StrContains:
                     b = new ComparatorStrContains(); break;                    
                 case SPADEventValueComparator.StrNotContains:
                     b = new ComparatorStrNotContains(); break;
                 case SPADEventValueComparator.None:
+                    return IgnoreComparator;
                     break;
                 default:
                     b = new ComparatorAlways(); break;
@@ -127,7 +132,11 @@ namespace SPAD.neXt.Comparators
                 }
                 return b;
             }
-            catch { return IgnoreComparator; }
+            catch (Exception ex)
+            {
+                logger.Warn($"CreateComparator : {ex}");
+                return IgnoreComparator;
+            }
         }
 
         public static ComparatorBase CreateComparator(SPADEventValueComparator whichComparator, ComparatorGetValueDelegate leftDelegate, ComparatorGetValueDelegate rightDelegate = null)
@@ -139,7 +148,11 @@ namespace SPAD.neXt.Comparators
                 b.compareValueRightDelegate = rightDelegate;
                 return b;
             }
-            catch { return IgnoreComparator; }
+            catch (Exception ex)
+            {
+                logger.Warn($"CreateComparator : {ex}");
+                return IgnoreComparator;
+            }
         }
 
         protected abstract bool DoesMatchImpl(IComparable testValue);
@@ -156,8 +169,9 @@ namespace SPAD.neXt.Comparators
                     compareValueRight = compareValueRightDelegate();
                 return DoesMatchImpl(testValue);
             }
-            catch
+            catch (Exception ex) 
             {
+                logger.Warn($"{this} {testValue} : {ex}");
                 return false;
             }
         }
