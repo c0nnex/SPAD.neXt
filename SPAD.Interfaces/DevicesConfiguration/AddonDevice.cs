@@ -1,6 +1,7 @@
 ﻿
 using SPAD.neXt.Interfaces.Aircraft.CDU;
 using SPAD.neXt.Interfaces.Base;
+using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -89,7 +92,10 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlIgnore]
         public List<AddonDeviceElement> Outputs => Inputs.Where(ii => ii.IsOutput).ToList();
         [XmlIgnore]
-        public List<AddonDeviceElement> InputsOnly => Inputs.Where(ii => !ii.IsOutput).ToList();
+        public List<AddonDeviceElement> InputsOnly => Inputs.Where(ii => !ii.IsOutput && ii.InputType != DeviceInputTypes.UIElement).ToList();
+
+        [XmlIgnore]
+        public List<AddonDeviceElement> UIElements => Inputs.Where(ii => ii.InputType == DeviceInputTypes.UIElement).ToList();
 
         [XmlElement("EventMapping", IsNullable = false)]
         public List<EventMapping> EventMappings { get; set; } = new List<EventMapping>();
@@ -97,6 +103,12 @@ namespace SPAD.neXt.Interfaces.Extension
         public List<AddonDeviceColorSet> Colorsets { get; set; } = new List<AddonDeviceColorSet>();
         [XmlElement(ElementName = "Mapping")]
         public List<AddonDeviceCommandMapping> CommandMappings { get; set; } = new List<AddonDeviceCommandMapping>();
+
+        [XmlElement(ElementName = "Variable")]
+        public List<GenericVariable> Variables { get; set; } = new List<GenericVariable>();
+        public bool ShouldSerializeVariables() => Variables.Count > 0;
+        
+        
         [XmlElement(ElementName = "Import")]
         public List<string> Imports { get; set; } = new List<string>();
 
@@ -141,7 +153,7 @@ namespace SPAD.neXt.Interfaces.Extension
             if (Inputs.Any(ii => ii.SortOrder != 0))
             {
                 var tmpList = Inputs.Where(x => x.SortOrder != 0).OrderBy(x => x.SortOrder).ToList();
-                Inputs.RemoveAll(x => x.SortOrder != 0); 
+                Inputs.RemoveAll(x => x.SortOrder != 0);
                 Inputs.InsertRange(0, tmpList);
             }
 
@@ -154,7 +166,7 @@ namespace SPAD.neXt.Interfaces.Extension
                     m.FixUp();
                     DeviceCommandMappingDict[m.In] = m;
                 }
-               
+
             }
             foreach (var item in Outputs)
             {
@@ -222,6 +234,8 @@ namespace SPAD.neXt.Interfaces.Extension
             variableBaseKey = baseVarkey;
         }
 
+        public void SetVariableBaseKey(string newKey) => variableBaseKey = newKey;
+
         public AddonDevice WithVendor(string vendorId, string productId)
         {
             SetOption("VID", vendorId);
@@ -260,9 +274,10 @@ namespace SPAD.neXt.Interfaces.Extension
         }
 
         public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag);
-        public AddonDeviceElement GetInput(string tag) => Inputs.FirstOrDefault(x =>x.Tag == tag);
+        public AddonDeviceElement GetInput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag);
         public AddonDeviceElement GetOutput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput);
-
+        public T GetOutput<T>(string tag) where T:class => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput) as T;
+        public T GetInput<T>(string tag) where T:class => Inputs.FirstOrDefault(x => x.Tag == tag) as T;
         public AddonDeviceElement GetOrCreateInput(string tag, Func<AddonDeviceElement> pCreate)
         {
             if (HasInput(tag))
@@ -343,7 +358,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool NoPadding = false;
         public bool NoSegmentRowEvents = false;
         public Func<string, int, string> PadMe = (input, len) => input == null ? "".PadRight(len).Left(len) : input.PadRight(len).Left(len);
-        public Func<string, int, string> FillMe = (input, len) => input == null ? "".PadRight(len): input.PadRight(len);
+        public Func<string, int, string> FillMe = (input, len) => input == null ? "".PadRight(len) : input.PadRight(len);
         protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment)
         {
             Tag = tag;
@@ -471,53 +486,93 @@ namespace SPAD.neXt.Interfaces.Extension
 
     }
 
-    public class AddonDeviceSwitchEncoder : AddonDeviceElement
+    // Encoder that works like bundled switches
+    public class AddonDeviceSwitchEncoder : AddonDeviceInputBase
     {
-        [XmlIgnore]
-        public int NumPositions { get => GetOption("NumPositions", 0); set => SetOption("NumPositions", value); }
-
+        private int _NumPositions;
         private int[] _PositionMasks;
         private string[] _PositionNames;
+        private int _PositionCurrent = 0;
+
+        [XmlIgnore]
+        public int NumPositions { get => _NumPositions; set { SetOption("NumPositions", value); _NumPositions = value; } }
         [XmlIgnore]
         public int[] PositionMasks { get => _PositionMasks; set => SetOption("PositionMasks", String.Join(",", value)); }
         [XmlIgnore]
         public string[] PositionNames { get => _PositionNames; set => SetOption("PositionNames", String.Join(",", value)); }
-        [XmlIgnore]
-        public int ReportIndex { get => GetOption("ReportIndex", 0); set => SetOption("ReportIndex", value); }
 
-        private int PositionCurrent = 0;
+
+        public AddonDeviceSwitchEncoder()
+        {
+            Type = "ROTARY";
+        }
+
+        public AddonDeviceSwitchEncoder AsEncoder()
+        {
+            Inherit = "SPAD_ENCODER_NOACC";
+            Type = "ROTARY";
+            return this;
+        }
+        public AddonDeviceSwitchEncoder AsRotarySwitch(string inherit = null)
+        {
+            if (!String.IsNullOrEmpty(inherit))
+                Inherit = inherit;
+            Type = "ROTARYSWITCH";
+            return this;
+        }
+
+        public AddonDeviceSwitchEncoder WithRotaryEncoderPosition(string name, int mask, int uiValue)
+        {
+            RegisterRotaryPosition(name, mask, uiValue);
+            return this;
+        }
 
         public override void FixUp()
         {
             base.FixUp();
-            _PositionMasks = new int[NumPositions];
-            var dta = GetOption("PositionMasks", "").Split(',');
-            for (int i = 0; i < NumPositions; i++)
+            if (NumPositions == 0)
             {
-                int.TryParse(dta[i], out _PositionMasks[i]);
+                if (RotaryPositions.Count > 0)
+                {
+                    NumPositions = RotaryPositions.Count;
+                    PositionMasks = RotaryPositions.Select(p => p.Value).ToArray();
+                    PositionNames = RotaryPositions.Select(p => p.Name).ToArray();
+                }
             }
-            _PositionNames = GetOption("PositionNames", "").Split(',');
+            if (NumPositions > 0)
+            {
+                _PositionMasks = new int[NumPositions];
+                var dta = GetOption("PositionMasks", "").Split(',');
+                for (int i = 0; i < NumPositions; i++)
+                {
+                    int.TryParse(dta[i], out _PositionMasks[i]);
+                }
+                _PositionNames = GetOption("PositionNames", "").Split(',');
+            }
         }
 
-        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
         {
+            var iVal = getInputValRaw(inputReport, startIndex);
+            if (ReportMask != 0)
+                iVal &= ReportMask;
             for (int i = 0; i < NumPositions; i++)
             {
-                var nVal = (inputReport[ReportIndex] & _PositionMasks[i]) != 0;
+                var nVal = (iVal == _PositionMasks[i]);
                 if (nVal)
                 {
-                    if (PositionCurrent != i || isStateScan)
+                    if (_PositionCurrent != i || isStateScan)
                     {
                         raiseEventCallback?.Invoke(Tag, _PositionNames[i], _PositionMasks[i], _PositionMasks[i], isStateScan);
-                        PositionCurrent = i;
-                        break;
+                        _PositionCurrent = i;
                     }
+                    break;
                 }
             }
         }
     }
 
-    public class AddonDeviceRotaryPosition
+    public class AddonDeviceRotaryPosition : GenericOptionObject
     {
         private int? uIValue = null;
 
@@ -531,95 +586,264 @@ namespace SPAD.neXt.Interfaces.Extension
 
     }
 
-
-    public class AddonDeviceButton : AddonDeviceElement
+    public class AddonDeviceInputBase : AddonDeviceElement
     {
-        [XmlIgnore]
-        public int ReportIndex { get => GetOption("ReportIndex", 0); set => SetOption("ReportIndex", value); }
-        [XmlIgnore]
-        public int ReportMask { get => GetOption("ReportMask", 0); set => SetOption("ReportMask", value); }
-        [XmlIgnore]
-        public int ReportLen { get => GetOption("ReportLen", 1); set => SetOption("ReportLen", value); }
-        [XmlIgnore]
-        public bool Inverse { get => GetOption("Inverse", false); set => SetOption("Inverse", value); }
 
-        private bool lastValue = false;
+        [XmlIgnore]
+        public int ReportIndex
+        {
+            get { if (!_ReportIndex.HasValue) _ReportIndex = GetOption("ReportIndex", 0); return _ReportIndex.Value; }
+            set { SetOption("ReportIndex", value); _ReportIndex = value; }
+        }
+        private int? _ReportIndex;
 
-        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
+       
+
+        [XmlIgnore]
+        public int ReportMask
+        {
+            get { if (!_ReportMask.HasValue) _ReportMask = GetOption("ReportMask", 0); return _ReportMask.Value; }
+            set { SetOption("ReportMask", value); _ReportMask = value; }
+        }
+        private int? _ReportMask;
+        [XmlIgnore]
+        public int ReportLen
+        {
+            get { if (!_ReportLen.HasValue) _ReportLen = GetOption("ReportLen", 1); return _ReportLen.Value; }
+            set { SetOption("ReportLen", value); _ReportLen = value; }
+        }
+        private int? _ReportLen;
+        [XmlIgnore]
+        public bool Inverse
+        {
+            get { if (!_Inverse.HasValue) _Inverse = GetOption("Inverse", false); return _Inverse.Value; }
+            set { SetOption("Inverse", value); _Inverse = value; }
+        }
+        private bool? _Inverse;
+
+        [XmlIgnore]
+        public int ReportBit
+        {
+            get { if (!_ReportBit.HasValue) _ReportBit = GetOption("ReportBit", 0); return _ReportBit.Value; }
+            set { SetOption("ReportBit", value); _ReportBit = value; }
+        }
+        private int? _ReportBit;
+
+        [XmlIgnore]
+        public int UIRow
+        {
+            get { if (!_UIRow.HasValue) _UIRow = GetOption("UI.Row", 0); return _UIRow.Value; }
+            set { SetOption("UI.Row", value); _UIRow = value; }
+        }
+        private int? _UIRow;
+
+        protected bool lastBoolValue = false;
+
+        public override void FixUp()
+        {
+            if (!HasOption("ReportMask") && HasOption("ReportBit"))
+            {
+                ReportMask = 1 << ReportBit;
+            }
+            base.FixUp();
+        }
+
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
         {
 
-            var nVal = getInputVal(inputReport);
+            var nVal = getInputVal(inputReport, startIndex);
             if (Inverse)
                 nVal = !nVal;
 
-            if (lastValue != nVal)
+            if (lastBoolValue != nVal)
             {
                 raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1 : 0, nVal ? 1 : 0, isStateScan);
             }
-            lastValue = nVal;
+            lastBoolValue = nVal;
         }
 
-        private bool getInputVal(byte[] inputReport)
+        protected int getInputValRaw(byte[] inputReport, int startIndex = 0)
         {
             if (ReportLen == 1)
-                return (inputReport[ReportIndex] & ReportMask) != 0;
+                return inputReport[ReportIndex + startIndex];
             int val = 0;
-            for (int i = ReportIndex; i < ReportLen; i++)
+            for (int i = ReportIndex; i < ReportIndex + ReportLen; i++)
             {
                 val = val << 8;
-                val |= (inputReport[i]);
+                val |= (inputReport[i + startIndex]);
+            }
+            return val;
+        }
+
+        protected bool getInputVal(byte[] inputReport, int startIndex = 0)
+        {
+            if (ReportLen == 1)
+                return (inputReport[ReportIndex + startIndex] & ReportMask) != 0;
+            int val = 0;
+            for (int i = ReportIndex; i < ReportIndex + ReportLen; i++)
+            {
+                val = val << 8;
+                val |= (inputReport[i + startIndex]);
             }
             return (val & ReportMask) != 0;
         }
     }
 
-    public class AddonDeviceSwitch : AddonDeviceElement
+    public class AddonDeviceEncoder : AddonDeviceInputBase
     {
-        [XmlIgnore]
-        public int ReportIndex { get => GetOption("ReportIndex", 0); set => SetOption("ReportIndex", value); }
-        [XmlIgnore]
-        public int ReportMask { get => GetOption("ReportMask", 0); set => SetOption("ReportMask", value); }
-        [XmlIgnore]
-        public int ReportLen { get => GetOption("ReportLen", 1); set => SetOption("ReportLen", value); }
-        [XmlIgnore]
-        public bool Inverse { get => GetOption("Inverse", false); set => SetOption("Inverse", value); }
+        public AddonDeviceEncoder()
+        {
+            Type = "ENCODER";
+            Inherit = "SPAD_ENCODER";
+        }
 
-        private bool lastValue = false;
-
-        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
+        private int _LastEncoderVal = 0;
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
         {
 
-            var nVal = getInputVal(inputReport);
+            var nVal = getInputValRaw(inputReport, startIndex);
+
+            if (_LastEncoderVal != nVal || isStateScan)
+            {
+                if (!isStateScan) // encoder will not raise StateScan-Events just register state
+                {
+                    var dir = (nVal > _LastEncoderVal) ? 1 : -1;
+                    if (Inverse)
+                        dir = -1 * dir;
+                    raiseEventCallback?.Invoke(Tag, dir > 0 ? GetOption("CW", "TUNER_CLOCKWISE") : GetOption("CCW", "TUNER_COUNTERCLOCKWISE"), dir, nVal, isStateScan);
+                }
+                _LastEncoderVal = nVal;
+            }
+        }
+    }
+
+    public abstract class AddonDeviceOutputBase : AddonDeviceInputBase 
+    {
+        [XmlIgnore]
+        public bool isON { get; protected set; } = false;
+
+        [XmlIgnore]
+        public byte ReportValue
+        {
+            get { if (!_ReportValue.HasValue) _ReportValue = GetOption("ReportValue", (byte)0); return _ReportValue.Value; }
+            set { SetOption("ReportValue", value); _ReportValue = value; }
+        }
+       
+        private byte? _ReportValue;
+
+        Action<AddonDeviceOutputBase,byte[]> generatePayLoadAction;
+
+
+
+        public void SetState(bool ison)
+        {
+            isON = ison;
+        }
+        public void SetPayLoadAction(Action<AddonDeviceOutputBase,byte[]> payLoadAction) => generatePayLoadAction = payLoadAction;
+        public void GeneratePayLoad(ref byte[] payload) => generatePayLoadAction?.Invoke(this,payload);
+    }
+
+    public class AddonDeviceOutputDisplay : AddonDeviceOutputBase
+    {
+        [XmlIgnore]
+        public string currentValue { get; protected set; } = "";
+        public AddonDeviceOutputDisplay()
+        {
+            Type = "DISPLAY";
+            Inherit = "SPAD_DISPLAY";
+            SetPayLoadAction((a,b) => GeneratePayLoadDisplay(a, b));
+            SetState(true);
+        }
+
+        public void SetCurrentValue(string val) => currentValue = val;
+
+        void GeneratePayLoadDisplay(AddonDeviceOutputBase target,byte[] payload)
+        {
+            if (isON)
+                for (int i = 0; i < ReportLen; i++)
+                    payload[ReportIndex + i] = (byte)(i < currentValue.Length ? GetOption<byte>("CHARTABLE." + currentValue[i], (byte)currentValue[i]) : 0);
+            else
+            {
+                for (int i = 0;i < ReportLen; i++)
+                    payload[ReportIndex + i] = 0;
+            }
+        }
+    }
+
+    public class AddonDeviceOutputLED : AddonDeviceOutputBase
+    {
+        public override void FixUp()
+        {
+            SetState(GetOption("DEFAULT", false));
+            base.FixUp();
+        }
+        public AddonDeviceOutputLED()
+        {
+            Type = "LED";
+            Inherit = "SPAD_LED";
+            SetPayLoadAction((a,b) => GeneratePayLoadLED(a,b));
+            SetState(false);
+        }
+
+        void GeneratePayLoadLED(AddonDeviceOutputBase target,byte[] payload)
+        {
+            var val = isON;
+            if (Inverse)
+                val = !val;            
+            if (val)
+                payload[ReportIndex] |= (byte)(1 << ReportBit);
+            else
+                payload[ReportIndex] &= (byte)(~(1 << ReportBit));
+        }
+    }
+
+
+    public class AddonDeviceButton : AddonDeviceInputBase
+    {
+        public AddonDeviceButton()
+        {
+            Type = "PUSHBUTTON";
+            Inherit = "SPAD_PUSHBUTTON";
+        }
+    }
+
+    public class AddonDeviceSwitch : AddonDeviceInputBase
+    {
+        public AddonDeviceSwitch()
+        {
+            Type = "SWITCH";Inherit= "SPAD_SWITCH";
+        }
+
+        public AddonDeviceSwitch WithRotaryEncoderPosition(string name, int mask, int uiValue)
+        {
+            RegisterRotaryPosition(name, mask, uiValue);
+            return this;
+        }
+
+        // Switches will raise stateScan Events
+        public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
+        {
+
+            var nVal = getInputVal(inputReport, startIndex);
             if (Inverse)
                 nVal = !nVal;
 
-            if (lastValue != nVal || isStateScan)
+            if (lastBoolValue != nVal || isStateScan)
             {
-                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1 : 0, nVal ? 1 : 0, isStateScan);
+                raiseEventCallback?.Invoke(Tag, nVal ? GetOption("PRESS", "PRESS") : GetOption("RELEASE", "RELEASE"), nVal ? 1 : 0, nVal ? 0 : 1, isStateScan);
             }
-            lastValue = nVal;
+            lastBoolValue = nVal;
         }
 
-        private bool getInputVal(byte[] inputReport)
-        {
-            if (ReportLen == 1)
-                return (inputReport[ReportIndex] & ReportMask) != 0;
-            int val = 0;
-            for (int i = ReportIndex; i < ReportLen; i++)
-            {
-                val = val << 8;
-                val |= (inputReport[i]);
-            }
-            return (val & ReportMask) != 0;
-        }
     }
 
     [Serializable]
     [XmlInclude(typeof(AddonDeviceSwitch))]
     [XmlInclude(typeof(AddonDeviceSwitchEncoder))]
     [XmlInclude(typeof(AddonDeviceButton))]
-
-
+    [XmlInclude(typeof(AddonDeviceEncoder))]
+    [XmlInclude(typeof(AddonDeviceOutputDisplay))]
+    [XmlInclude(typeof(AddonDeviceOutputLED))]
     public class AddonDeviceElement : GenericOptionObject
     {
         [XmlAttribute]
@@ -702,8 +926,10 @@ namespace SPAD.neXt.Interfaces.Extension
                     case "LED": return DeviceInputTypes.Led;
                     case "AXIS": return DeviceInputTypes.Axis;
                     case "ROTARY": return DeviceInputTypes.Rotary;
+                    case "ROTARYSWITCH": return DeviceInputTypes.RotarySwitch;
                     case "SWITCH3": return DeviceInputTypes.StatefulSwitch;
                     case "LABEL": return DeviceInputTypes.Label;
+                    case "UI": return DeviceInputTypes.UIElement;
                     default:
                         return DeviceInputTypes.Unkown;
                 }
@@ -725,11 +951,22 @@ namespace SPAD.neXt.Interfaces.Extension
             return val;
         }
 
-        public void RegisterRotaryPosition(string posName, int posValue, int posUIValue)
+        public AddonDeviceElement WithRotaryPosition(string name, int mask, int uiValue, string uiLabel = null)
+        {
+            var tmp = RegisterRotaryPosition(name, mask, uiValue);
+            if (!string.IsNullOrEmpty(uiLabel))
+                tmp.AddOption("LABEL", uiLabel);
+            return this;
+        }
+
+
+        public AddonDeviceRotaryPosition RegisterRotaryPosition(string posName, int posValue, int posUIValue)
         {
             if (RotaryPositions.Any(x => x.Name == posName))
-                return;
-            RotaryPositions.Add(new AddonDeviceRotaryPosition() { Name = posName, Value = posValue, UIValue = posUIValue });
+                return null;
+            var newPos = new AddonDeviceRotaryPosition() { Name = posName, Value = posValue, UIValue = posUIValue };
+            RotaryPositions.Add(newPos);
+            return newPos;
         }
         public virtual void FixUp()
         {
@@ -857,12 +1094,79 @@ namespace SPAD.neXt.Interfaces.Extension
             Width = width;
         }
 
-        public virtual void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false)
+        public virtual void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
         { }
 
         public override string ToString()
         {
             return $"{this.GetType()} {Type} {Tag} Options {Options.Count}";
+        }
+    }
+
+    public class GenericVariable : GenericOptionObject
+    {
+        [XmlAttribute]
+        public string Key { get; set; }
+        [XmlAttribute]
+        public string Value { get; set; }
+        [XmlAttribute]
+        public VARIABLE_SCOPE Scope { get; set; } = VARIABLE_SCOPE.SESSION;
+        public bool ShouldSerializeScope() => Scope != VARIABLE_SCOPE.SESSION;
+        [XmlAttribute]
+        public string DefaultValue { get; set; }
+        public bool ShouldSerializeDefaultValue() => !String.IsNullOrEmpty(DefaultValue);
+
+        public GenericVariable()
+        {
+        }
+        public GenericVariable(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
+
+
+        public T GetValue<T>() where T : IConvertible
+        {
+            try
+            {
+                object res;
+                if (typeof(T) == typeof(Guid))
+                {
+                    res = Guid.Parse(Value);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(char))
+                {
+                    res = Value.FirstOrDefault();
+                    return (T)res;
+                }
+                if (typeof(T).IsEnum)
+                    return (T)Enum.Parse(typeof(T), Value, true);
+
+                res = Convert.ChangeType(Value, typeof(T), CultureInfo.InvariantCulture);
+                return (T)res;
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        public override string ToString()
+        {
+            return Key + "=" + Value;
+        }
+
+        public GenericVariable WithOption(string name, object value)
+        {
+            AddOption(name, value);
+            return this;
         }
     }
 
@@ -920,7 +1224,7 @@ namespace SPAD.neXt.Interfaces.Extension
             return Key + "=" + Value;
         }
     }
-    
+
 
     public class GenericVariablesObject : IObjectWithVariables
     {
@@ -1014,7 +1318,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultValue;
             }
         }
-        
+
         public bool HasOption(string key)
         {
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);
@@ -1079,7 +1383,7 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         public int StateValue { get; set; } = int.MaxValue;
         public bool ShouldSerializeStateValue() => StateValue != int.MaxValue;
-      
+
         public AddonDeviceCommandMapping() { }
         public AddonDeviceCommandMapping(string tag, string @in, string @out, int activateDirection = 1)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.neXt.Interfaces.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,6 +71,7 @@ namespace SPAD.neXt.Interfaces
     public interface IObservableList<T> : IList<T>
     {
         void Replace(T oldItem, T newItem);
+        void Merge(IEnumerable<T> itemList);
     }
 
     public interface IObservableReadOnlyList<T> : IReadOnlyList<T>

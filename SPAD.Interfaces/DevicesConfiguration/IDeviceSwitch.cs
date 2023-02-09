@@ -51,6 +51,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool IsConfigEnabled(string id);
         string SubMenuName { get; set; }
 
+        void AddOption(string key, object value);
         T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible;
         string GetTargetControllerName(string boundTo);
     }

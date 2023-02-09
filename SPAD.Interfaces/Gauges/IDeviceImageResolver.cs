@@ -29,6 +29,9 @@ namespace SPAD.neXt.Interfaces
         ROTATE,
         SHIFT_X,
         SHIFT_Y,
+        FLIP_X,
+        FLIP_Y,
+        FLIP_XY
         //        ROTATESHIFT,
         //        SHIFTROTATE,
     }

@@ -93,7 +93,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IEventCondition : IEventBaseObject, IHasID
+    public interface IEventCondition : IEventBaseObject, IHasID, ICloneable<IEventCondition>
     {
         string ConfigString { get; }
         bool IsConfigured { get; }
@@ -146,6 +146,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Execute(IEventDefinition definition, ISPADEventArgs e);
 
         IEventAction GetBySingleton(Guid id);
+       
     }
 
     public interface IEditableObjectEx

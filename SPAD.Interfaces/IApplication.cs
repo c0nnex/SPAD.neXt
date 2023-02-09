@@ -346,6 +346,7 @@ namespace SPAD.neXt.Interfaces
     public interface IDeviceEmulation
     {
         void EmulateClientConnect(object data);
+        void EmulateEvent(string device, string eventName, string source, string group, int val);
     }
 
     public interface IJoystickEmulator : ICalibrateableDevice, IInputDevice

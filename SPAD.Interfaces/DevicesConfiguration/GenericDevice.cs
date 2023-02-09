@@ -96,7 +96,22 @@ namespace SPAD.Extensions.Generic
         void RaiseEvent(IGenericCommandDevice device,ISPADEventArgs eventArgs);
         void RaiseEncoderEvent(IGenericCommandDevice device, ISPADEventArgs eventArgs);
         void RaiseAxisEvent(IGenericCommandDevice device, AxisInputEventArgs eventArgs);
+
+        void UpdateLogger(string newname);
+        void OnLog(SPADLogLevel level, string message);
+        
+        void OnCommandReceived(string message);
+        void OnConfigurationCompleted();
+        void OnConfigurationFailed(string message);
+        void OnConnectionStateChanged(bool isConnected);
+
+        /*
+        void ConfigurationCompleted();
+        void ConfigurationFailed(string message);
+        void ConnectionStateChanged(bool isConnected);
+        */
     }
+
 
 
     public interface IGenericCommandDevice : IDisposable

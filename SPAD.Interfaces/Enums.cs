@@ -337,8 +337,10 @@ namespace SPAD.neXt.Interfaces
         Display,
         Encoder,
         Rotary,
+        RotarySwitch,
         StatefulSwitch,
         Label,
+        UIElement,
         Unkown
     }
 

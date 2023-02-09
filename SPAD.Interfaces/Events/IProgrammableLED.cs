@@ -17,8 +17,10 @@ namespace SPAD.neXt.Interfaces.Events
         int StateValue { get; set; }
         int StateUIValue { get; set; }
         string StateName { get; set; }
+        string StateLabel { get; set; }
         string EventName { get; set; }
         void SetVisible(bool isVisible);
+        void UpdateLabel(string stateLabel);
     }
 
     public sealed class ProgrammableInputStateChangedArgs : EventArgs
@@ -93,6 +95,7 @@ namespace SPAD.neXt.Interfaces.Events
         void EnableHeldMode(IProgrammableHeld callback);
         void DisableHeldMode();
 
+        void SwitchToDynamicLabel(string lblFormat);
     }
 
     public enum INPUT_CHANGE_DIRECTION
@@ -109,6 +112,11 @@ namespace SPAD.neXt.Interfaces.Events
         Guid LabelSource { get; set; }
     }
 
+    public interface IProgrammableEncoder : IProgrammableStatefulInput
+    {
+
+    }
+
     public interface IProgrammableRotary :  IProgrammableStatefulInput
     {
        
@@ -116,7 +124,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IProgrammableStatefulInput : IProgrammableInput
     {
-        IProgrammableInputUIState RegisterPostion(string positionName,string eventName, int value, int uiValue);
+        IProgrammableInputUIState RegisterPostion(string positionName,string eventName,string positionLabel, int value, int uiValue);
         IProgrammableInputUIState GetUIStateByName(string positionName);
         IProgrammableInputUIState GetUIStateByValue(int positionValue);
         IProgrammableInputUIState GetUIStateByNameOrValue(string positionName,int positionValue);
