@@ -23,6 +23,21 @@ namespace SPAD.neXt.Comparators
         }
     }
 
+    public class ComparatorStrEqual : ComparatorBase
+    {
+        protected override bool DoesMatchImpl(IComparable testVal)
+        {
+            return Convert.ToString(testVal, CultureInfo.InvariantCulture) == (Convert.ToString(compareValueLeft, CultureInfo.InvariantCulture));
+        }
+    }
+    public class ComparatorStrUnequal : ComparatorBase
+    {
+        protected override bool DoesMatchImpl(IComparable testVal)
+        {
+            return Convert.ToString(testVal, CultureInfo.InvariantCulture) != (Convert.ToString(compareValueLeft, CultureInfo.InvariantCulture));
+        }
+    }
+
     public class ComparatorStrContains : ComparatorBase
     {
         protected override bool DoesMatchImpl(IComparable testVal)

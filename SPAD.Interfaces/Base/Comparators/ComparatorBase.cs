@@ -38,12 +38,14 @@ namespace SPAD.neXt.Comparators
             switch (whichComparator)
             {
                 case SPADEventValueComparator.Equals:
-                case SPADEventValueComparator.StrEquals:
                     b = new ComparatorEqual(); break;
+                case SPADEventValueComparator.StrEquals:
+                    b = new ComparatorStrEqual(); break;
 
                 case SPADEventValueComparator.Unequal:
-                case SPADEventValueComparator.StrNotEquals:
                     b = new ComparatorUnequal(); break;
+                case SPADEventValueComparator.StrNotEquals:
+                    b = new ComparatorStrUnequal(); break;
 
                 case SPADEventValueComparator.Less:
                     b = new ComparatorLess(); break;
@@ -177,7 +179,7 @@ namespace SPAD.neXt.Comparators
         }
         public override string ToString()
         {
-            return $"[Comperator {GetType().Name}: {compareValueLeft} {compareValueRight}]";
+            return $"[Comparator : {compareValueRight} ({compareValueRight.GetType()}) {GetType().Name} {compareValueLeft} ({compareValueLeft.GetType()})]";
         }
     }
 }

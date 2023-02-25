@@ -36,6 +36,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsCascadedEvent { get; set; }
         bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
+        bool IsThrottled { get; set; }
         bool IsStateEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
@@ -128,7 +129,7 @@ namespace SPAD.neXt.Interfaces.Events
         public object CallbackValue { get; set; }
         public bool IsDisplayEvent { get; set; }
         public bool IsStateEvent { get; set; }
-
+        public bool IsThrottled { get; set; }
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
@@ -199,7 +200,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         public override string ToString()
         {
-            return String.Format("{0} Old={1} New={2} Switch={3} ValueEvent={4} {5} {6}", FullName, Convert.ToString(OldValue, CultureInfo.InvariantCulture), Convert.ToString(NewValue, CultureInfo.InvariantCulture), EventSwitch, IsValueEvent, Immediate ? "Immediate" : "", ExecutionContext == Guid.Empty ? "" : ExecutionContext.ToString());
+            return $"{FullName} {EventMarker} Old={OldValue} New={NewValue} Sw={EventSwitch} VE={IsValueEvent} {Immediate} {ExecutionContext}";
         }
         private string _FullName = null;
         public string FullName
