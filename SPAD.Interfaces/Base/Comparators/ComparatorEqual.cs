@@ -27,7 +27,7 @@ namespace SPAD.neXt.Comparators
     {
         protected override bool DoesMatchImpl(IComparable testVal)
         {
-            return Convert.ToString(compareValueLeft,CultureInfo.InvariantCulture).Contains(Convert.ToString(testVal,CultureInfo.InvariantCulture));
+            return Convert.ToString(testVal, CultureInfo.InvariantCulture).Contains(Convert.ToString(compareValueLeft, CultureInfo.InvariantCulture));
         }
     }
 
@@ -35,7 +35,7 @@ namespace SPAD.neXt.Comparators
     {
         protected override bool DoesMatchImpl(IComparable testVal)
         {
-            return !Convert.ToString(compareValueLeft, CultureInfo.InvariantCulture).Contains(Convert.ToString(testVal, CultureInfo.InvariantCulture));
+            return !Convert.ToString(testVal, CultureInfo.InvariantCulture).Contains(Convert.ToString(compareValueLeft, CultureInfo.InvariantCulture));
         }
     }
 
