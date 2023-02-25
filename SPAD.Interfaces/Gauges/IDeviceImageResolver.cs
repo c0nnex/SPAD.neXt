@@ -36,6 +36,13 @@ namespace SPAD.neXt.Interfaces
         //        SHIFTROTATE,
     }
 
+    public enum GaugeImageSizeMode
+    {
+        NONE,
+        STRETCH,
+        SIZE
+    }
+
     public sealed class GaugeImageDistortion : GenericOptionObject
     {
         [XmlAttribute("DistortionType")]
@@ -103,8 +110,7 @@ namespace SPAD.neXt.Interfaces
     public interface IGaugeImageLayerConfig : ISimpleGaugeLayerConfig
     {
         Guid ImageId { get; set; }
-        bool SizeToFit { get; set; }
-        bool StretchToFit { get; set; }
+        GaugeImageSizeMode SizeMode { get; set; }
         GaugeImageDistortionMode DistortionMode { get; set; }
         int AxisX { get; set; }
         int AxisY { get; set; }

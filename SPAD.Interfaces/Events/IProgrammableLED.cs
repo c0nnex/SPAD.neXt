@@ -66,6 +66,14 @@ namespace SPAD.neXt.Interfaces.Events
         void StartHeld(CancellationToken cancellationToken);
     }
 
+    public interface IProgrammableValue : INotifyPropertyChanged,IDisposable,IObjectWithOptions
+    {
+        double Value { get; set; }
+        double Offset { get; set; }
+
+        void SetValue(double value);
+    }
+
     public interface IProgrammableInput : INotifyPropertyChanged,IDisposable,IObjectWithOptions
     {
         event EventHandler<IProgrammableInput,ProgrammableInputStateChangedArgs> InputStateChanged;

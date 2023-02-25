@@ -153,7 +153,9 @@ namespace SPAD.neXt.Interfaces
 
         void PreparePageForExport(IDeviceProfile deviceProfile, IDevicePage devicePage);
         bool PageImported(IDeviceProfile deviceProfile, IDevicePage devicePage);
-        Dictionary<string, string> GetPublishInformation();        
+        Dictionary<string, string> GetPublishInformation();
+
+        bool CanDeleteEvent(IDeviceProfile deviceProfile, string boundTo, IEventDefinition eventDefinition);
     }
 
     public interface IDevicePage : IExtensible

@@ -11,10 +11,12 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Media3D;
 using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.Extension
@@ -106,9 +108,21 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlElement(ElementName = "Variable")]
         public List<GenericVariable> Variables { get; set; } = new List<GenericVariable>();
-        public bool ShouldSerializeVariables() => Variables.Count > 0;
-        
-        
+        [XmlElement(ElementName = "DeviceEvent")]
+        public List<string> DeviceEvents { get; set; } = new List<string>();
+
+        // [XmlArray(ElementName = "Routing", Namespace = "http://www.fsgs.com/SPAD", IsNullable = true)] XmlArrayItem ... No we make root elements
+        [XmlElement(ElementName = "Route", Type = typeof(AddonInputRouting))]
+        public List<AddonInputRouting> Routing { get; set; } = new List<AddonInputRouting>();
+
+        public List<AddonInputRouting> GetAllRoutings()
+        {
+            IEnumerable<AddonInputRouting> ret = new List<AddonInputRouting>();
+            ret = ret.Concat(Routing);
+            InputsOnly.ForEach(ii => ret = ret.Concat(ii.Routing));
+            return ret.ToList();
+        }
+
         [XmlElement(ElementName = "Import")]
         public List<string> Imports { get; set; } = new List<string>();
 
@@ -129,6 +143,27 @@ namespace SPAD.neXt.Interfaces.Extension
         public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>(StringComparer.InvariantCultureIgnoreCase);
 
 
+        public AddonDevice GetSubPanelDevice(string subPanel, bool remove = false)
+        {
+            var retVal = new AddonDevice();
+            retVal.Inputs = Inputs.Where(ii => ii.GetOption("PANEL", "UGHUIGH") == subPanel).ToList();
+            retVal.Options = Options.Where(oo => oo.Key.StartsWith("PANEL." + subPanel + ".UI")).ToList();
+            if (remove)
+            {
+                retVal.Inputs.ForEach(x => Inputs.Remove(x));
+                Options.RemoveAll(oo => oo.Key.StartsWith("PANEL." + subPanel + ".UI"));
+            }
+            return retVal;
+        }
+
+        public bool AddRouting(AddonInputRouting routingBase)
+        {
+            if (Routing.Any(rt => rt.From == routingBase.From && rt.To == routingBase.To))
+                return false;
+            Routing.Add(routingBase);
+            return true;
+        }
+
         public void ProcessImports(Func<string, AddonDevice> loadCallback)
         {
             foreach (var item in Imports)
@@ -139,7 +174,9 @@ namespace SPAD.neXt.Interfaces.Extension
                 if (importDevice != null)
                 {
                     importDevice.Options.ForEach(option => AddOption(option.Key, option.Value));
+                    importDevice.Variables.ForEach(v => Variables.Add(v));
                     importDevice.Inputs.ForEach(input => AddInput(input));
+                    importDevice.Routing.ForEach(rt => AddRouting(rt));
                 }
             }
         }
@@ -242,9 +279,12 @@ namespace SPAD.neXt.Interfaces.Extension
             SetOption("PID", productId);
             return this;
         }
-        public AddonDevice WithOption(string key, string value)
+        public AddonDevice WithOption(string key, string value,bool overwrite = false)
         {
-            SetOption(key, value);
+            if (overwrite)
+                SetOption(key, value);
+            else
+                AddOption(key, value);
             return this;
         }
 
@@ -276,8 +316,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag);
         public AddonDeviceElement GetInput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag);
         public AddonDeviceElement GetOutput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput);
-        public T GetOutput<T>(string tag) where T:class => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput) as T;
-        public T GetInput<T>(string tag) where T:class => Inputs.FirstOrDefault(x => x.Tag == tag) as T;
+        public T GetOutput<T>(string tag) where T : class => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput) as T;
+        public T GetInput<T>(string tag) where T : class => Inputs.FirstOrDefault(x => x.Tag == tag) as T;
         public AddonDeviceElement GetOrCreateInput(string tag, Func<AddonDeviceElement> pCreate)
         {
             if (HasInput(tag))
@@ -597,7 +637,7 @@ namespace SPAD.neXt.Interfaces.Extension
         }
         private int? _ReportIndex;
 
-       
+
 
         [XmlIgnore]
         public int ReportMask
@@ -697,27 +737,55 @@ namespace SPAD.neXt.Interfaces.Extension
             Inherit = "SPAD_ENCODER";
         }
 
-        private int _LastEncoderVal = 0;
+        private volatile int _LastEncoderVal = 0;
+        private int _EncoderDelta = 1;
+        private volatile int _expectedClicks = 1;
+        public override void FixUp()
+        {
+            _EncoderDelta = GetOption("EncoderDelta", 1);
+            base.FixUp();
+        }
+
+
         public override void ProcessInput(byte[] inputReport, Action<string, string, int, int, bool> raiseEventCallback, bool isStateScan = false, int startIndex = 0)
         {
+            if (isStateScan)
+            {
+                _LastEncoderVal = getInputValRaw(inputReport, startIndex);
+                _expectedClicks = _EncoderDelta;
+                return;
 
+            }
             var nVal = getInputValRaw(inputReport, startIndex);
 
-            if (_LastEncoderVal != nVal || isStateScan)
+            var dir = (nVal > _LastEncoderVal) ? 1 : -1;
+            var dif = Math.Abs(nVal - _LastEncoderVal);
+            if (dif > 127) // EdgeCase
             {
-                if (!isStateScan) // encoder will not raise StateScan-Events just register state
+                if (nVal > _LastEncoderVal)
                 {
-                    var dir = (nVal > _LastEncoderVal) ? 1 : -1;
-                    if (Inverse)
-                        dir = -1 * dir;
-                    raiseEventCallback?.Invoke(Tag, dir > 0 ? GetOption("CW", "TUNER_CLOCKWISE") : GetOption("CCW", "TUNER_COUNTERCLOCKWISE"), dir, nVal, isStateScan);
+                    dif = 256 - nVal + _LastEncoderVal;
+                    dir = -1;
                 }
+                else
+                {
+                    dif = 256 - _LastEncoderVal + nVal;
+                    dir = 1;
+                }
+            }
+
+            if (dif >= _expectedClicks)
+            {
+                if (Inverse)
+                    dir = -1 * dir;
+                raiseEventCallback?.Invoke(Tag, dir > 0 ? GetOption("CW", "TUNER_CLOCKWISE") : GetOption("CCW", "TUNER_COUNTERCLOCKWISE"), dir, nVal, isStateScan);
                 _LastEncoderVal = nVal;
             }
+            _expectedClicks = _EncoderDelta;
         }
     }
 
-    public abstract class AddonDeviceOutputBase : AddonDeviceInputBase 
+    public abstract class AddonDeviceOutputBase : AddonDeviceInputBase
     {
         [XmlIgnore]
         public bool isON { get; protected set; } = false;
@@ -728,19 +796,17 @@ namespace SPAD.neXt.Interfaces.Extension
             get { if (!_ReportValue.HasValue) _ReportValue = GetOption("ReportValue", (byte)0); return _ReportValue.Value; }
             set { SetOption("ReportValue", value); _ReportValue = value; }
         }
-       
+
         private byte? _ReportValue;
 
-        Action<AddonDeviceOutputBase,byte[]> generatePayLoadAction;
-
-
+        Action<AddonDeviceOutputBase, byte[]> generatePayLoadAction;
 
         public void SetState(bool ison)
         {
             isON = ison;
         }
-        public void SetPayLoadAction(Action<AddonDeviceOutputBase,byte[]> payLoadAction) => generatePayLoadAction = payLoadAction;
-        public void GeneratePayLoad(ref byte[] payload) => generatePayLoadAction?.Invoke(this,payload);
+        public void SetPayLoadAction(Action<AddonDeviceOutputBase, byte[]> payLoadAction) => generatePayLoadAction = payLoadAction;
+        public void GeneratePayLoad(ref byte[] payload) => generatePayLoadAction?.Invoke(this, payload);
     }
 
     public class AddonDeviceOutputDisplay : AddonDeviceOutputBase
@@ -751,20 +817,20 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             Type = "DISPLAY";
             Inherit = "SPAD_DISPLAY";
-            SetPayLoadAction((a,b) => GeneratePayLoadDisplay(a, b));
+            SetPayLoadAction((a, b) => GeneratePayLoadDisplay(a, b));
             SetState(true);
         }
 
         public void SetCurrentValue(string val) => currentValue = val;
 
-        void GeneratePayLoadDisplay(AddonDeviceOutputBase target,byte[] payload)
+        void GeneratePayLoadDisplay(AddonDeviceOutputBase target, byte[] payload)
         {
             if (isON)
                 for (int i = 0; i < ReportLen; i++)
                     payload[ReportIndex + i] = (byte)(i < currentValue.Length ? GetOption<byte>("CHARTABLE." + currentValue[i], (byte)currentValue[i]) : 0);
             else
             {
-                for (int i = 0;i < ReportLen; i++)
+                for (int i = 0; i < ReportLen; i++)
                     payload[ReportIndex + i] = 0;
             }
         }
@@ -781,15 +847,15 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             Type = "LED";
             Inherit = "SPAD_LED";
-            SetPayLoadAction((a,b) => GeneratePayLoadLED(a,b));
+            SetPayLoadAction((a, b) => GeneratePayLoadLED(a, b));
             SetState(false);
         }
 
-        void GeneratePayLoadLED(AddonDeviceOutputBase target,byte[] payload)
+        void GeneratePayLoadLED(AddonDeviceOutputBase target, byte[] payload)
         {
             var val = isON;
             if (Inverse)
-                val = !val;            
+                val = !val;
             if (val)
                 payload[ReportIndex] |= (byte)(1 << ReportBit);
             else
@@ -811,7 +877,7 @@ namespace SPAD.neXt.Interfaces.Extension
     {
         public AddonDeviceSwitch()
         {
-            Type = "SWITCH";Inherit= "SPAD_SWITCH";
+            Type = "SWITCH"; Inherit = "SPAD_SWITCH";
         }
 
         public AddonDeviceSwitch WithRotaryEncoderPosition(string name, int mask, int uiValue)
@@ -836,6 +902,61 @@ namespace SPAD.neXt.Interfaces.Extension
         }
 
     }
+
+    public class AddonInputRouting : GenericOptionObject
+    {
+        [XmlAttribute]
+        public string From { get; set; }
+        [XmlAttribute]
+        public string To { get; set; }
+
+        [XmlAttribute]
+        public string Press { get; set; }
+        [XmlIgnore] public string CW => Press;
+        [XmlAttribute]
+        public string Release { get; set; }
+        [XmlIgnore] public string CCW => Release;
+        [XmlAttribute]
+        public bool IsSwitch { get; set; } = false;
+        public bool ShouldSerializeIsSwitch() => IsSwitch;
+
+
+        public AddonInputRouting(string from, string to, string event1 = "PRESS", string event2 = "RELEASE",bool isSwitch = false)
+        {
+            From = from;
+            To = to;
+            Press = event1;
+            Release = event2;
+            IsSwitch = isSwitch;
+        }
+
+        public AddonInputRouting()
+        {
+        }
+    }
+    /*
+    public class RouteAxis : RouteBase
+    {
+        public RouteAxis()
+        {
+        }
+
+        public RouteAxis(string from, string to) : base(from, to)
+        {
+        }
+
+        public RouteAxis(string from, string to,int min=0, int max=1024) : this(from,to)
+        {
+            Min = min;
+            Max = max;
+        }
+
+        [XmlAttribute]
+        public int Min { get; set; } = 0;
+        [XmlAttribute]
+        public int Max { get; set; } = 1024;
+    }
+*/
 
     [Serializable]
     [XmlInclude(typeof(AddonDeviceSwitch))]
@@ -870,8 +991,12 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
+        
         [XmlElement(ElementName = "RotaryPosition")]
         public List<AddonDeviceRotaryPosition> RotaryPositions { get; set; } = new List<AddonDeviceRotaryPosition>();
+        
+        [XmlElement(ElementName = "Route", Type = typeof(AddonInputRouting))]
+        public List<AddonInputRouting> Routing { get; set; } = new List<AddonInputRouting>();
 
         [XmlAttribute]
         [Category("Position")]
@@ -968,6 +1093,15 @@ namespace SPAD.neXt.Interfaces.Extension
             RotaryPositions.Add(newPos);
             return newPos;
         }
+
+        public bool AddRouting(AddonInputRouting routingBase)
+        {
+            if (Routing.Any(rt => rt.From == routingBase.From && rt.To == routingBase.To))
+                return false;
+            Routing.Add(routingBase);
+            return true;
+        }
+
         public virtual void FixUp()
         {
             if (String.IsNullOrEmpty(Inherit))
@@ -1002,7 +1136,10 @@ namespace SPAD.neXt.Interfaces.Extension
                 RemoveOption("POS_VALUES");
                 RemoveOption("POS_UIVALUES");
             }
-
+            Width = GetOption("WIDTH", Width);
+            Height = GetOption("HEIGHT", Height);
+            Top = GetOption("Top", Top);
+            Left = GetOption("Left", Left);
             var tList = RotaryPositions.OrderBy(r => r.Value).ToList();
             RotaryPositions = tList;
         }
@@ -1047,11 +1184,32 @@ namespace SPAD.neXt.Interfaces.Extension
             return null;
         }
 
-
-        public AddonDeviceElement WithOption(string key, object value)
+        public AddonDeviceElement AddGridOptions(int row = 0, int col = 0, int rowSpan = 0, int colSpan = 0)
         {
-            if (!HasOption(key))
-                Options.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+            this.WithOption("UI.ROW", row);
+            this.WithOption("UI.COL", col);
+            this.WithOption("UI.ROWSPAN", rowSpan);
+            this.WithOption("UI.COLSPAN", colSpan);
+            return this;
+        }
+
+
+        public AddonDeviceElement WithGridPosition(int row, int col, int rowSpan = 0, int colSpan = 0)
+        {
+            if (row != 0)
+                this.WithOption("UI.ROW", row);
+            if (col != 0)
+                this.WithOption("UI.COL", col);
+            if (rowSpan != 0)
+                this.WithOption("UI.ROWSPAN", rowSpan);
+            if (colSpan != 0)
+                this.WithOption("UI.COLSPAN", colSpan);
+            return this;
+        }
+        public AddonDeviceElement WithOption(string key, object value, bool overwrite = false)
+        {
+            if (overwrite || !HasOption(key))
+                SetOption(key, Convert.ToString(value, CultureInfo.InvariantCulture));
             return this;
         }
         public void AddInherit(string baseClass)
@@ -1301,6 +1459,26 @@ namespace SPAD.neXt.Interfaces.Extension
         public int OptionsCount => (Options == null ? 0 : Options.Count);
 
         IEnumerable<IGenericOption> IObjectWithOptions.Options => Options;
+
+        public bool TryGetOptionIf<T>(string key, out T outVar, T defaultValue = default(T)) where T : IConvertible, IComparable<T>
+        {
+            outVar = defaultValue;
+            if (!HasOption(key))
+                return false;
+            outVar = GetOption<T>(key, defaultValue);
+            if (outVar.CompareTo(defaultValue) == 0) return false;
+
+            return true;
+        }
+
+        public bool TryGetOption<T>(string key, out T outVar, T defaultValue = default(T)) where T : IConvertible
+        {
+            outVar = defaultValue;
+            if (!HasOption(key))
+                return false;
+            outVar = GetOption<T>(key, defaultValue);
+            return true;
+        }
 
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {

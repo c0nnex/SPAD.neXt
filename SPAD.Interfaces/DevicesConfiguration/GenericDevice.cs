@@ -98,6 +98,7 @@ namespace SPAD.Extensions.Generic
         void RaiseAxisEvent(IGenericCommandDevice device, AxisInputEventArgs eventArgs);
 
         void UpdateLogger(string newname);
+        void UpdateLogger(ILogger newLogger);
         void OnLog(SPADLogLevel level, string message);
         
         void OnCommandReceived(string message);

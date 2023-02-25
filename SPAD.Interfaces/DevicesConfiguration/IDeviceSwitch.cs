@@ -82,6 +82,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool HasPrivateOption(string optionName);
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
         ISerializableOption SetPrivateOption(string optionName, string defaultValue = null);
+        void AddPrivateListOption(string optionName, string valueToAdd);
+        List<string> GetPrivateListOption(string optionName);
         IDeviceConfigValue FindConfigValue(string trigger);
         IDeviceConfigValue EnsureConfigValueExists(string valuename);
         bool HasConfigValue(string trigger);
