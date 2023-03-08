@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -42,8 +43,10 @@ namespace SPAD.neXt.Interfaces.Extension
     }
 
     [Serializable]
-    public class AddonDevice : GenericOptionObject
+    public class AddonDevice : GenericOptionObject, IObjectWithVariables
     {
+        public event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
+
 
         [XmlAttribute(AttributeName = "Version")]
         public string _Version { get; set; } = "0.0";
@@ -108,6 +111,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlElement(ElementName = "Variable")]
         public List<GenericVariable> Variables { get; set; } = new List<GenericVariable>();
+
         [XmlElement(ElementName = "DeviceEvent")]
         public List<string> DeviceEvents { get; set; } = new List<string>();
 
@@ -279,7 +283,7 @@ namespace SPAD.neXt.Interfaces.Extension
             SetOption("PID", productId);
             return this;
         }
-        public AddonDevice WithOption(string key, string value,bool overwrite = false)
+        public AddonDevice WithOption(string key, string value, bool overwrite = false)
         {
             if (overwrite)
                 SetOption(key, value);
@@ -364,6 +368,63 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             return Colorsets.FirstOrDefault(c => c.Key == key);
         }
+
+        #region Variables
+        IEnumerable<IGenericOption> IObjectWithVariables.Variables => Variables;
+
+        public T GetVariable<T>(string key, T defaultValue = default(T)) where T : IConvertible
+        {
+            var opt = Variables.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+
+            if (opt == null)
+                return defaultValue;
+
+            try
+            {
+                return (T)opt.GetValue<T>();
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        public bool HasVariable(string key)
+        {
+            return Variables.Any(o => String.Compare(o.Key, key, true) == 0);
+        }
+        public bool AddVariable(string key, object value, int pos = -1)
+        {
+            if (!HasVariable(key))
+            {
+                if (pos == -1)
+                    Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                else
+                    Variables.Insert(pos, new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                return true;
+            }
+            return false;
+        }
+        public void SetVariable<T>(string key, T value) 
+        {
+            Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
+            if (value != null)
+                Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+            VariableChanged?.FireAndForget(this, new VariableChangedEventArgs(key, value));
+        }
+
+        public int RemoveVariable(string key) => Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
+
+        public bool MergeVariables(IObjectWithVariables src)
+        {
+            bool res = false;
+            foreach (var item in src.Variables)
+            {
+                res |= AddVariable(item.Key, item.Value);
+            }
+            return res;
+        }
+        #endregion
     }
 
     public class AddonDeviceDisplay
@@ -911,17 +972,17 @@ namespace SPAD.neXt.Interfaces.Extension
         public string To { get; set; }
 
         [XmlAttribute]
-        public string Press { get; set; }
+        public string Press { get; set; } = "PRESS";
         [XmlIgnore] public string CW => Press;
         [XmlAttribute]
-        public string Release { get; set; }
+        public string Release { get; set; } = "RELEASE";
         [XmlIgnore] public string CCW => Release;
         [XmlAttribute]
         public bool IsSwitch { get; set; } = false;
         public bool ShouldSerializeIsSwitch() => IsSwitch;
 
 
-        public AddonInputRouting(string from, string to, string event1 = "PRESS", string event2 = "RELEASE",bool isSwitch = false)
+        public AddonInputRouting(string from, string to, string event1 = "PRESS", string event2 = "RELEASE", bool isSwitch = false)
         {
             From = from;
             To = to;
@@ -991,10 +1052,10 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
         public List<AddonDeviceCommandMapping> Mappings { get; set; } = new List<AddonDeviceCommandMapping>();
-        
+
         [XmlElement(ElementName = "RotaryPosition")]
         public List<AddonDeviceRotaryPosition> RotaryPositions { get; set; } = new List<AddonDeviceRotaryPosition>();
-        
+
         [XmlElement(ElementName = "Route", Type = typeof(AddonInputRouting))]
         public List<AddonInputRouting> Routing { get; set; } = new List<AddonInputRouting>();
 
@@ -1261,12 +1322,21 @@ namespace SPAD.neXt.Interfaces.Extension
         }
     }
 
-    public class GenericVariable : GenericOptionObject
+    public enum VariableValueTypes
+    {
+        Number,
+        String
+    }
+
+    public class GenericVariable : GenericOptionObject, IGenericOption
     {
         [XmlAttribute]
         public string Key { get; set; }
         [XmlAttribute]
         public string Value { get; set; }
+        [XmlAttribute]
+        public VariableValueTypes ValueType { get; set; }
+        public bool ShouldSerializeValueType() => ValueType != 0;
         [XmlAttribute]
         public VARIABLE_SCOPE Scope { get; set; } = VARIABLE_SCOPE.SESSION;
         public bool ShouldSerializeScope() => Scope != VARIABLE_SCOPE.SESSION;
@@ -1283,6 +1353,18 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = value;
         }
 
+        public object GetTypedValue()
+        {
+            switch (ValueType)
+            {
+                case VariableValueTypes.Number:
+                    return GetValue<double>();
+                case VariableValueTypes.String:
+                    return Value;
+                default:
+                    return Value;
+            }
+        }
 
         public T GetValue<T>() where T : IConvertible
         {
@@ -1388,8 +1470,11 @@ namespace SPAD.neXt.Interfaces.Extension
     {
         [XmlElement(ElementName = "Variable")]
         public List<GenericOption> Variables { get; set; } = new List<GenericOption>();
+
+        public event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
+
         public virtual bool ShouldSerializeVariables() => Variables != null && Variables.Count > 0;
-        public int VariablesCount => (Variables == null ? 0 : Variables.Count);
+        public int CountVariables => (Variables == null ? 0 : Variables.Count);
 
         IEnumerable<IGenericOption> IObjectWithVariables.Variables => Variables;
 
@@ -1426,11 +1511,12 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return false;
         }
-        public void SetVariable<T>(string key, T value) where T : IConvertible
+        public void SetVariable<T>(string key, T value) 
         {
             Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
                 Variables.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+            VariableChanged?.FireAndForget(this, new VariableChangedEventArgs(key, value));
         }
 
         public int RemoveVariable(string key) => Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
@@ -1526,7 +1612,7 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             foreach (var item in src.Options)
             {
-                SetOption(item.Key, item.Value);
+                AddOption(item.Key, item.Value);
             }
             return true;
         }

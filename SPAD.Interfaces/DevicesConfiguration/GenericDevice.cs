@@ -106,6 +106,7 @@ namespace SPAD.Extensions.Generic
         void OnConfigurationFailed(string message);
         void OnConnectionStateChanged(bool isConnected);
 
+        void UpdateVariable(string varName, object varValue);
         /*
         void ConfigurationCompleted();
         void ConfigurationFailed(string message);
@@ -134,7 +135,7 @@ namespace SPAD.Extensions.Generic
         string DeviceSerial { get; }
         string DevicePublishName { get; }
         Version DeviceVersion { get; } // VersionNumber of Device
-
+        Guid DeviceGuid { get; }
         DateTime DeviceLastPing { get; } // Last Packet/Pong from Device
 
         AddonDevice AddonDevice { get; }

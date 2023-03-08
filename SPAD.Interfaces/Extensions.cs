@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Diagnostics;
+using static System.Windows.Forms.AxHost;
 
 namespace System
 {
@@ -178,6 +179,8 @@ namespace System.Collections.ObjectModel
 
 namespace SPAD.neXt.Interfaces
 {
+    public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e);
+    public delegate Task AsyncEventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2>(TEventType sender, TEventArg1 arg1, TEventArg2 e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2, TEventArg3>(TEventType sender, TEventArg1 arg1, TEventArg2 arg2, TEventArg3 e);
@@ -292,6 +295,33 @@ namespace SPAD.neXt.Interfaces
             {
                 // do nothing
             }
+        }
+
+        public static void FireAndForget<TEventArgs>(this AsyncEventHandler<TEventArgs> handler,object sender, TEventArgs args)
+        {
+            _ = Task.Factory.StartNew(async state => {
+                try
+                {
+                    await handler(sender, (TEventArgs)(state ?? default));
+                }
+                catch (Exception ex)
+                {
+                    // handle the exception, notify the app
+                }
+            }, args);
+        }
+        public static void FireAndForget<TEventType, TEventArgs>(this AsyncEventHandler<TEventType, TEventArgs> handler, TEventType sender, TEventArgs args)
+        {
+            _ = Task.Factory.StartNew(async state => {
+                try
+                {
+                    await handler(sender, (TEventArgs)(state ?? default));
+                }
+                catch (Exception ex)
+                {
+                    // handle the exception, notify the app
+                }
+            }, args);
         }
     }
 

@@ -24,14 +24,33 @@ namespace SPAD.neXt.Interfaces
         bool MergeOptions(IObjectWithOptions src);
     }
 
+    public sealed class VariableChangedEventArgs : EventArgs
+    {
+        public VariableChangedEventArgs()
+        {
+        }
+
+        public VariableChangedEventArgs(string key, object value)
+        {
+            Key = key;
+            Value = value;
+        }
+
+        public string Key { get; }
+        public object Value { get; }
+
+
+    }
+
     public interface IObjectWithVariables
     {
+        event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
         IEnumerable<IGenericOption> Variables { get; }
         bool AddVariable(string key, object value, int pos = -1);
-        I GetVariable<I>(string key, I defaultValue = default) where I : IConvertible;
+        I GetVariable<I>(string key, I defaultValue = default) where I:IConvertible;
         bool HasVariable(string key);
         int RemoveVariable(string key);
-        void SetVariable<I>(string key, I value) where I : IConvertible;
+        void SetVariable<I>(string key, I value);
         bool MergeVariables(IObjectWithVariables src);
     }
 

@@ -63,7 +63,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IProgrammableHeld
     {
-        void StartHeld(CancellationToken cancellationToken);
+        void StartHeld(string clalledFrom,CancellationToken cancellationToken);
     }
 
     public interface IProgrammableValue : INotifyPropertyChanged,IDisposable,IObjectWithOptions
@@ -98,7 +98,7 @@ namespace SPAD.neXt.Interfaces.Events
         I GetUIRoutedToData<I>() where I : class;
         void Reset();
 
-        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent,long timeStamp,Guid? context = null);
+        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent, bool force = false, long timeStamp = long.MinValue,Guid? context = null);
 
         void EnableHeldMode(IProgrammableHeld callback);
         void DisableHeldMode();
@@ -136,7 +136,7 @@ namespace SPAD.neXt.Interfaces.Events
         IProgrammableInputUIState GetUIStateByName(string positionName);
         IProgrammableInputUIState GetUIStateByValue(int positionValue);
         IProgrammableInputUIState GetUIStateByNameOrValue(string positionName,int positionValue);
-        INPUT_CHANGE_DIRECTION SetState(IProgrammableInputUIState newState, bool raiseEvent);
+        INPUT_CHANGE_DIRECTION SetState(IProgrammableInputUIState newState, bool raiseEvent,bool force);
         IEnumerable<string> GetStateNames();
         IEnumerable<int> GetStateValues();
         IEnumerable<IProgrammableInputUIState> GetStates();

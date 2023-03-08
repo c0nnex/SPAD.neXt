@@ -16,7 +16,7 @@ namespace SPAD.neXt.Interfaces.Events
         IEventDefinition GetParentEventDefinition();
         IDataDefinition GetDataDefinition(string definitionID);
 
-
+        void InitalizeNewAction(IDeviceProfile deviceProfile, IEventDefinition eventDefinition);
     }
 
     public interface IEventDefinitions : IObservableList<IEventDefinition>, ICloneableWithID<IEventDefinitions>, IConditionalSerialize
@@ -97,6 +97,7 @@ namespace SPAD.neXt.Interfaces.Events
     {
         string ConfigString { get; }
         bool IsConfigured { get; }
+        bool LastEvalResult { get; }
         void SetDirty();
         void Activate();
         void Deactivate();
