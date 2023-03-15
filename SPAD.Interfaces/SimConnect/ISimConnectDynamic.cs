@@ -20,7 +20,7 @@ namespace SPAD.neXt.Interfaces.SimConnect
         bool IsKnown(string offset);
         IDynamicSimConnectDataItem IsKnown(string name, string units);
         object GetValue(string index);
-        void SetValue(string index, object value);
+        bool SetValue(string index, object value);
         bool IsDirty(short idx);
 
         event SPADEventHandler PropertyChanged;

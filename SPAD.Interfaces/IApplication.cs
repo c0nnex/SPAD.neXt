@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Aircraft;
+﻿using SPAD.Extensions.Generic;
+using SPAD.neXt.Interfaces.Aircraft;
 using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Callout;
 using SPAD.neXt.Interfaces.Configuration;
@@ -284,6 +285,7 @@ namespace SPAD.neXt.Interfaces
         IJoystickEmulator CreateVirtualJoystick(int identifier, string name, string vendorId, string productId);
 
         ISimpleGauge CreateGauge(bool noLayers);
+        bool CheckDeviceLicense(IGenericCommandDevice e);
     }
 
     public interface IActionManager

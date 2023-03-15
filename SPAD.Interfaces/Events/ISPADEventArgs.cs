@@ -36,7 +36,8 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsCascadedEvent { get; set; }
         bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
-        bool IsThrottled { get; set; }
+        bool IsThrottled { get; }
+        string ThrottleID { get; }
         bool IsStateEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
@@ -48,7 +49,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool GetHandled(string eventName);
         void SetCallbackValue(object value);
         void Callback(IValueProvider provider);
-
+        ISPADEventArgs AsThrottled();
         ISPADEventArgs Clone();
         T GetData<T>(string key, T defaultValue = default(T));
         ISPADEventArgs WithData(string key, object data);
@@ -129,7 +130,8 @@ namespace SPAD.neXt.Interfaces.Events
         public object CallbackValue { get; set; }
         public bool IsDisplayEvent { get; set; }
         public bool IsStateEvent { get; set; }
-        public bool IsThrottled { get; set; }
+        public bool IsThrottled { get; private set; }
+        public string ThrottleID { get; private set; }
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
@@ -196,6 +198,13 @@ namespace SPAD.neXt.Interfaces.Events
                 EventName = args[0];
                 EventTrigger = args[1];
             }
+        }
+
+        public ISPADEventArgs AsThrottled()
+        {
+            ThrottleID = FullName + GetData("LAYER", "");
+            IsThrottled = true;
+            return this;
         }
 
         public override string ToString()

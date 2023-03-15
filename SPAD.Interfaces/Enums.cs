@@ -1401,6 +1401,7 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid IMAGE_SYSTEM_EMPTY = new Guid("{E412AB45-9B97-4E80-A0DB-E7D617A73B84}");
 
         public static readonly Guid FIP_EVENT_ENABLE = new Guid("{6309B2D8-C169-4545-89A2-A7259126BB76}");
+        public static readonly Guid FIP_DATA_CACHE = new Guid("{CB0C7CB8-D3CB-4B2D-901F-9B3260634C76}");
         public const int FIP_MAX_VARIABLES = 1024;
         public static readonly List<SPADValueOperation> EventValueOperations = new List<SPADValueOperation>()
         {

@@ -56,7 +56,7 @@ namespace SPAD.neXt.Interfaces
     {
         event EventHandler<string, IEnumerable<int>> OnCacheInvalidated;
         string CacheID { get; }
-
+        int[] AllDataIndexes { get; }
         double GetNumericValue(int dataIndex);
         object GetValue(int dataIndex);
         bool UpdateCache();
