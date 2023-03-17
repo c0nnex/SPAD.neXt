@@ -46,7 +46,13 @@ namespace SPAD.neXt.Interfaces.Configuration
         int NumberOfParameters { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions
+    public interface IObejectWithScopeRestriction
+    {
+        string ScopeRestriction { get; set; }
+        bool ScopeRestrictionMatch(string currentScope, bool defaultVal);
+    }
+
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions, IObejectWithScopeRestriction
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
