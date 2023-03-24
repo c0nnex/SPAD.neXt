@@ -200,6 +200,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// </summary>
         public byte Symbol { get; set; }
 
+        public byte SymbolClean => Symbol == 0x0 ? (byte)0x20 : Symbol;
         /// <summary>
         /// Cell color <see cref="CDU_COLOR"/>
         /// </summary>
@@ -224,7 +225,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
 
         public CDU_Cell(int row, int column, byte symbol, CDU_COLOR color, CDU_FLAG flags)
         {
-            Symbol = symbol;
+            Symbol = symbol == 0x0 ? (byte)0x20 : symbol;
             Color = color;
             Flags = flags;
             Row = row;
