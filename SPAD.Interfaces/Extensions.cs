@@ -446,10 +446,13 @@ namespace SPAD.neXt.Interfaces
             if ((key == null))
                 return false;
 
-            if (dict.TryRemove(key, out var val) && disposeVal)
+            if (dict.TryRemove(key, out var val))
             {
-                if (val is IDisposable disposable)
-                    disposable.Dispose();
+                if (disposeVal)
+                {
+                    if (val is IDisposable disposable)
+                        disposable.Dispose();
+                }
                 return true;
             }
             return false;

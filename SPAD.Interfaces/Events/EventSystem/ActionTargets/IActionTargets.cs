@@ -100,6 +100,9 @@ namespace SPAD.neXt.Interfaces.Events
         IDataDefinition TargetDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }
         IReadOnlyList<IDataDefinition> ObservedDataDefinitions { get; }
+
+        int UpdateIntervall { get; set; }
+        double UpdateEpsilon { get; set; }
     }
 
     public interface IEventActionSingleton : IEventAction
