@@ -85,7 +85,7 @@ namespace SPAD.Extensions.Generic
         Task<bool> LearnInput(AddonDeviceElement addonDeviceElement);
     }
 
-    public interface  IGenricCreateInteraction
+    public interface  IGenericCreateInteraction
     {
         FrameworkElement CreateInteraction(AddonDeviceElement addonDeviceElement,bool asInactive = false);
     }
@@ -107,6 +107,9 @@ namespace SPAD.Extensions.Generic
         void OnConnectionStateChanged(bool isConnected);
 
         void UpdateVariable(string varName, object varValue);
+
+        void DeviceWarning(string message);
+        void DeviceWarningClear();
         /*
         void ConfigurationCompleted();
         void ConfigurationFailed(string message);
@@ -114,11 +117,23 @@ namespace SPAD.Extensions.Generic
         */
     }
 
+    public enum SPAD_DEVICE_EVENT
+    {
+        NONE,
+        INITIALIZE,
+        CONNECT,
+        DISCONNECT,
+        SYNC,
+        INITIALIZE_UI,
 
+        CUSTOM=1000
+    }
+    
 
     public interface IGenericCommandDevice : IDisposable
     {
         event EventHandler<object, string> OnLog;
+        event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnDeviceEvent;
         event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseEvent;
         event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseTunerEvent;
         event EventHandler<IGenericCommandDevice, string> OnCommandReceived;
@@ -147,19 +162,21 @@ namespace SPAD.Extensions.Generic
         void CreateDevice(IApplication applicationProxy, GenericSettings settings);
 
         // event functions
-        void OnProfileChanged(bool isCompleted);
-        void OnAircraftChanged(string newAircraft);
-        void OnVirtualPowerChanged(bool newPowerState);
+        void ProfileChanged(bool isCompleted);
+        void AircraftChanged(string newAircraft);
+        void VirtualPowerChanged(bool newPowerState);
 
-        void OnLedStatusChanged(string tag, LedStatusEventArgs newState);
-        void OnPageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
+        void LedStatusChanged(string tag, LedStatusEventArgs newState);
+        void PageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
 
         IInput GetAttachedInput(string name);
 
-        void OnDeviceEnabled();
-        void OnDeviceDisabled();
-        void OnDeviceActivated(IDeviceProfile device);
-        void OnDeviceDeactivated();
+        void DeviceEnabled();
+        void DeviceDisabled();
+        void DeviceActivated(IDeviceProfile device);
+        void DeviceDeactivated();
+
+        void DeviceExecuteEvent(ISPADEventArgs eventArgs);
     }
 
 }

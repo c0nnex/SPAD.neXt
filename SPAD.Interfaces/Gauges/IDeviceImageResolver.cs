@@ -126,7 +126,13 @@ namespace SPAD.neXt.Interfaces
     {
     }
 
-
+    public enum GaugeRenderFlipType
+    {
+        None,
+        Rotate90,
+        Rotate180,
+        Rotate270,
+    }
     public interface IGaugeRenderer : IDisposable
     {
         bool IsDirty { get; }
@@ -138,8 +144,8 @@ namespace SPAD.neXt.Interfaces
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeRenderLayer AddLayer(ISimpleGaugeLayerConfig config);
         IGaugeRenderLayer GetLayer(int layerNumber);
-        bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
-        bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null);
+        bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None);
+        bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None);
 
         void UpdateColorLayer(int layerNumber, int layerScope, string newColor);
         void UpdateImageLayer(int layerNumber, Guid newImage);

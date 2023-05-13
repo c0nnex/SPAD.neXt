@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Logging;
+﻿using SPAD.neXt.Interfaces.Extension;
+using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Concurrent;
@@ -55,6 +56,9 @@ namespace SPAD.neXt.Interfaces.Events
         ISPADEventArgs WithData(string key, object data);
         ISPADEventArgs WithDataIfNot<T>(string key, T data, T compareValue) where T: IEquatable<T>;
         bool Is(ISPADEventArgs e);
+
+        ISPADEventArgs WithEventParameter(string name, object value);
+        object GetEventParameter(string name);
     }
 
     public interface IHandledEventArgs
@@ -365,5 +369,21 @@ namespace SPAD.neXt.Interfaces.Events
         }
 
         public bool Is(ISPADEventArgs e) => FullName == e.EventName;
+
+        private ConcurrentDictionary<string,object> EventParameters;
+        public ISPADEventArgs WithEventParameter(string name, object value)
+        {
+            if (EventParameters == null) { EventParameters = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase); }
+            if (value == null) { EventParameters.TryRemove(name, out var _); return this; }
+            EventParameters[name] = value;
+            return this;
+        }
+        public object GetEventParameter(string name)
+        {
+            if (EventParameters == null) { return null; }
+            if (EventParameters.TryGetValue(name, out var val))
+                return val;
+            return null;
+        }
     }
 }

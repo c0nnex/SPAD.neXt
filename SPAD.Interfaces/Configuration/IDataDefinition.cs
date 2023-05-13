@@ -86,7 +86,8 @@ namespace SPAD.neXt.Interfaces.Configuration
         List<string> AlternateUnits { get; }
         string PrimaryID { get; }
 
-        object GetRawValue();
+        void SetRawValueCallback(Func<ISPADEventArgs, object> callback);
+        object GetRawValue(ISPADEventArgs args = null);
         double GetValue();
         void SetValue(double val);
         void SetRawValue(object val);

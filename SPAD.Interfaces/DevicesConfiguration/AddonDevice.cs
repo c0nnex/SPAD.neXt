@@ -1582,7 +1582,6 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultValue;
             }
         }
-
         public bool HasOption(string key)
         {
             return Options.Any(o => String.Compare(o.Key, key, true) == 0);

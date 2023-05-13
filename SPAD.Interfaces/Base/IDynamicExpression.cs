@@ -23,7 +23,7 @@ namespace SPAD.neXt.Interfaces
     {
         string Name { get; }
         string Expression { get; }
-        object Evaluate();
+        object Evaluate(ISPADEventArgs e = null);
         bool EvaluateBool();
         bool Compile();
 

@@ -37,7 +37,12 @@ namespace SPAD.neXt.Interfaces.Events
         void HandleEvent(ISPADEventArgs e);
     }
 
-    public interface IObserverTicket : IDisposable
+    public interface ITrackableDisposable : IDisposable
+    { 
+        bool IsDisposed { get; }
+    }
+
+    public interface IObserverTicket : ITrackableDisposable
     {
         Guid ID { get; }
         string EventName { get; }

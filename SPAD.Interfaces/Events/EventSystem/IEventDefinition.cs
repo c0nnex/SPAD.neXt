@@ -188,6 +188,8 @@ namespace SPAD.neXt.Interfaces.Events
         IDeviceProfile GetTargetDevice(IEventDefinition def);
         void SetEventValueCallback(string valueName, IEventValueCallback callback);
         void SetEventTargetCallback(string targetName, IEventTargetCallback callback);
+
+        void SetConfiguration(string configID);
     }
 
     public interface IEventValueCallback
