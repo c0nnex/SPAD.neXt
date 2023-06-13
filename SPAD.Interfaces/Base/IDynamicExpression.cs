@@ -28,6 +28,9 @@ namespace SPAD.neXt.Interfaces
         bool Compile();
 
         event EventHandler<IMonitorableValue> VariableAdded;
+        void EnableDebug(bool val);
+        void RegisterFunction(string name, Func<object[], object> fun);
+        void RegisterPrivateVariableFunction(Func<string, object> fun);
     }
 
     public interface IExternalExpression : IDisposable, IHasErrorInfo

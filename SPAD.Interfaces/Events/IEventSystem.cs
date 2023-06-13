@@ -32,7 +32,7 @@ namespace SPAD.neXt.Interfaces.Events
         IEventConditionSimple CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue);
         IEventCondition CreateEventCondition();
         IEventDefinitions CreateEventDefinitions(string boundTo);
-
+        IDynamicExpression CreateExpression(string expression);
         Type[] GetExtraSerializationTypes();
         IValueProvider GetValueProvider(string provider);
         IEnumerable<string> GetValueProviders(bool onlyActive = true);
@@ -99,6 +99,8 @@ namespace SPAD.neXt.Interfaces.Events
         {
             return EventSystemHandler.CreateEventCondition();
         }
+
+        public static IDynamicExpression CreateExpression(string expression) => EventSystemHandler.CreateExpression(expression);
         public static IDataDefinition CreateNewLocal(string name, string displaynormalizer,VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null)
         {
             return EventSystemHandler.CreateNewLocal(name, displaynormalizer,scope,defaultValue);

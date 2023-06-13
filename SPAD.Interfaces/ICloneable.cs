@@ -18,7 +18,7 @@ namespace SPAD.neXt.Interfaces
         IEnumerable<IGenericOption> Options { get; }
         bool AddOption(string key, object value, int pos = -1);
         I GetOption<I>(string key, I defaultValue = default) where I : IConvertible;
-        bool HasOption(string key);
+        bool HasOption(params string[] key);
         int RemoveOption(string key);
         void SetOption<I>(string key, I value) where I : IConvertible;
         bool MergeOptions(IObjectWithOptions src);

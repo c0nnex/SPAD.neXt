@@ -2,6 +2,7 @@
 using SPAD.neXt.Interfaces.Aircraft.CDU;
 using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
+using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Concurrent;
@@ -17,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Media3D;
 using System.Xml.Serialization;
 
@@ -46,7 +48,7 @@ namespace SPAD.neXt.Interfaces.Extension
     public class AddonDevice : GenericOptionObject, IObjectWithVariables
     {
         public event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
-
+        protected ILogger logger { get; private set; }
 
         [XmlAttribute(AttributeName = "Version")]
         public string _Version { get; set; } = "0.0";
@@ -88,7 +90,10 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlIgnore]
         public string ProductID => GetOption<string>("PID", null);
-
+        [XmlIgnore]
+        public bool HasSyncSupport => GetOption("DEVICE.SYNC_SUPPORT", false);
+        [XmlIgnore]
+        public bool NeedsInitialSync => GetOption("DEVICE.SYNC_NEEDED", false);
         public string ImageData { get; set; }
 
         [XmlElement(ElementName = "Input")]
@@ -145,6 +150,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public ConcurrentDictionary<string, AddonDeviceCommandMapping> DeviceCommandMappingDict = new ConcurrentDictionary<string, AddonDeviceCommandMapping>(StringComparer.InvariantCultureIgnoreCase);
         [XmlIgnore]
         public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>(StringComparer.InvariantCultureIgnoreCase);
+        [XmlIgnore]
+        public ConcurrentDictionary<string, IDynamicExpression> DeviceInputMappingDict = new ConcurrentDictionary<string, IDynamicExpression>(StringComparer.InvariantCultureIgnoreCase);
 
 
         public AddonDevice GetSubPanelDevice(string subPanel, bool remove = false)
@@ -185,11 +192,22 @@ namespace SPAD.neXt.Interfaces.Extension
             }
         }
 
+        public string MapInput(string input)
+        {
+            if (DeviceInputMappingDict.TryGetValue(input, out var mapping))
+            {
+                var val = Convert.ToString(mapping.Evaluate());
+                logger.Debug(() => $"Map {input} => {val}");
+                return val;
+            }
+            return input;
+        }
+
         public void FixUp(IApplication applicationProxy) // Create LookupTable for faster processing
         {
             DeviceCommandMappingDict.Clear();
             DeviceDisplayDict.Clear();
-
+            logger = applicationProxy.GetLogger($"AddonDevice.{VendorID}.{ProductID}");
             // reorder if any element has an order and then only those
             if (Inputs.Any(ii => ii.SortOrder != 0))
             {
@@ -197,18 +215,30 @@ namespace SPAD.neXt.Interfaces.Extension
                 Inputs.RemoveAll(x => x.SortOrder != 0);
                 Inputs.InsertRange(0, tmpList);
             }
-
+            var doStateStore = GetOption("DEVICE.STORESTATE", false);
             foreach (var item in InputsOnly)
             {
                 item.FixUp();
+                if (item.TargetMapping != null)
+                {
+                    foreach (var mapItem in item.TargetMapping.InputValues)
+                    {
+                        DeviceInputMappingDict[mapItem] = item.TargetMapping.Mapping;
+                    }
+                }
                 foreach (var m in item.Mappings)
                 {
                     m.Tag = item.Tag;
                     m.FixUp();
                     DeviceCommandMappingDict[m.In] = m;
+                    if (doStateStore && String.IsNullOrEmpty(m.StateStore))
+                    {
+                        if (item.InputType != DeviceInputTypes.Encoder)
+                        m.StateStore = item.Tag;
+                    }
                 }
-
             }
+
             foreach (var item in Outputs)
             {
                 item.FixUp();
@@ -405,7 +435,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return false;
         }
-        public void SetVariable<T>(string key, T value) 
+        public void SetVariable<T>(string key, T value)
         {
             Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
@@ -1059,6 +1089,9 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlElement(ElementName = "Route", Type = typeof(AddonInputRouting))]
         public List<AddonInputRouting> Routing { get; set; } = new List<AddonInputRouting>();
 
+        [XmlElement(ElementName = "TargetMapping")]
+        public AddonDeviceTargetMapping TargetMapping { get; set; }
+
         [XmlAttribute]
         [Category("Position")]
         public double Width { get; set; }
@@ -1071,6 +1104,19 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute(AttributeName = "Top")]
         [Category("Position")]
         public double Top { get; set; }
+
+        [XmlAttribute(AttributeName = "Col")]
+        [Category("Position")]
+        public int Col { get; set; }
+        [XmlAttribute(AttributeName = "Row")]
+        [Category("Position")]
+        public int Row { get; set; }
+        [XmlAttribute(AttributeName = "ColSpan")]
+        [Category("Position")]
+        public int ColSpan { get; set; }
+        [XmlAttribute(AttributeName = "RowSpan")]
+        [Category("Position")]
+        public int RowSpan { get; set; }
 
         [XmlAttribute(AttributeName = "Canvas.Left")]
         [Category("Obsolete")]
@@ -1201,8 +1247,19 @@ namespace SPAD.neXt.Interfaces.Extension
             Height = GetOption("HEIGHT", Height);
             Top = GetOption("Top", Top);
             Left = GetOption("Left", Left);
+            Col = GetOption("UI.COL", Col);
+            Row = GetOption("UI.ROW", Row);
+            ColSpan = GetOption("UI.COLSPAN", ColSpan);
+            RowSpan = GetOption("UI.ROWSPAN", RowSpan);
+
             var tList = RotaryPositions.OrderBy(r => r.Value).ToList();
+
             RotaryPositions = tList;
+            if (TargetMapping != null)
+            {
+                TargetMapping.Tag = Tag;
+                TargetMapping.FixUp();
+            }
         }
 
         public AddonDeviceCommandMapping GetOrCreateMapping(string inStr, string outStr)
@@ -1511,7 +1568,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return false;
         }
-        public void SetVariable<T>(string key, T value) 
+        public void SetVariable<T>(string key, T value)
         {
             Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
@@ -1566,6 +1623,26 @@ namespace SPAD.neXt.Interfaces.Extension
             return true;
         }
 
+        public T GetFirstMatchingOption<T>(T defaultValue, params string[] keys) where T : IConvertible
+        {
+            foreach (var key in keys)
+            {
+                var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+
+                if (opt != null)
+                {
+                    try
+                    {
+                        return (T)opt.GetValue<T>();
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            return defaultValue;
+        }
+
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
             var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
@@ -1582,9 +1659,17 @@ namespace SPAD.neXt.Interfaces.Extension
                 return defaultValue;
             }
         }
-        public bool HasOption(string key)
+        public bool HasOption(params string[] keys)
         {
-            return Options.Any(o => String.Compare(o.Key, key, true) == 0);
+            foreach (var key in keys)
+            {
+                if (!String.IsNullOrEmpty(key))
+                {
+                    if (Options.Any(o => String.Compare(o.Key, key, true) == 0))
+                        return true;
+                }
+            }
+            return false;
         }
         public bool AddOption(string key, object value, int pos = -1)
         {
@@ -1624,6 +1709,64 @@ namespace SPAD.neXt.Interfaces.Extension
     }
 
     [Serializable]
+    public class AddonDeviceTargetMapping : GenericOptionObject
+    {
+        [XmlAttribute]
+        public string In { get; set; }
+        [XmlIgnore]
+        public List<string> InputValues { get; private set; }
+
+        [XmlAttribute]
+        public string Vals { get; set; }
+        public List<string> InputValueDatas => !String.IsNullOrEmpty(Vals) ? new List<string>(Vals.Split(',')) : new List<string>();
+        [XmlText]
+        public string MappingExpression { get; set; }
+        [XmlIgnore]
+        public IDynamicExpression Mapping { get; set; }
+        [XmlAttribute]
+        public string Tag { get; set; }
+        public AddonDeviceTargetMapping() { }
+
+        public void FixUp()
+        {
+            var SwitchNames = new List<string>();
+            if (String.IsNullOrEmpty(In))
+            {
+                InputValues = new List<string>();
+            }
+            else
+            {
+                var strs = In.Split(',');
+                var vls = InputValueDatas;
+                var res = new List<string>();
+
+                foreach (var item in strs)
+                {
+                    if (vls.Count > 0)
+                    {
+                        foreach (var val in vls)
+                            res.Add(item.Replace("$", val));
+                    }
+                    else
+                        res.Add(item);
+                    SwitchNames.Add(item.Replace("$",""));
+                }
+                InputValues = res;
+            }
+
+            if (!String.IsNullOrEmpty(MappingExpression))
+            {
+                for (var i = 0;i < SwitchNames.Count;i++)
+                {
+                    MappingExpression = MappingExpression.Replace("$" + i, SwitchNames[i]);
+                } 
+                Mapping = EventSystem.CreateExpression(MappingExpression.Replace("{TAG}", Tag));
+            }
+        }
+
+    }
+
+    [Serializable]
     public class AddonDeviceCommandMapping : GenericOptionObject
     {
         [XmlIgnore]
@@ -1646,6 +1789,10 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         public int StateValue { get; set; } = int.MaxValue;
         public bool ShouldSerializeStateValue() => StateValue != int.MaxValue;
+        [XmlElement(ElementName = "Condition")]
+        public string ConditionExpression { get; set; }
+        [XmlIgnore]
+        public IDynamicExpression Condition { get; set; }
 
         public AddonDeviceCommandMapping() { }
         public AddonDeviceCommandMapping(string tag, string @in, string @out, int activateDirection = 1)
@@ -1684,7 +1831,24 @@ namespace SPAD.neXt.Interfaces.Extension
                         StateValue = 0;
                 }
             }
+            if (!String.IsNullOrEmpty(ConditionExpression))
+            {
+                Condition = EventSystem.CreateExpression(ConditionExpression);
+            }
+            if (!String.IsNullOrEmpty(Tag))
+            {
+                In = In.Replace("{TAG}", Tag);
+                Out = Out.Replace("{TAG}", Tag);
+            }
         }
+
+        public bool CanExecute()
+        {
+            if (Condition != null)
+                return Condition.EvaluateBool();
+            return true;
+        }
+
 
         public AddonDeviceCommandMapping WithDisplayAs(string str)
         {

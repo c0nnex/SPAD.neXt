@@ -274,6 +274,7 @@ namespace SPAD.neXt.Interfaces
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
         IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
+        void RegisterStartupDialog(string title, string message, System.Windows.MessageBoxButton buttonsAvail, string button_OK_Text = "OK", string button_CANCEL_Text = "Cancel", Action<string> onOpen = null, Action<System.Windows.MessageBoxResult> onClose = null);
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
 
         object GetNamedObject(Guid id);
@@ -328,7 +329,7 @@ namespace SPAD.neXt.Interfaces
 
     public interface IResolvesAtRuntime
     {
-        void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver);
+        void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver, Action<double,double> dimensionsCallback = null);
     }
 
     public interface ISupportsActivation
