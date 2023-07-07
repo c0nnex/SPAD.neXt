@@ -216,6 +216,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 Inputs.InsertRange(0, tmpList);
             }
             var doStateStore = GetOption("DEVICE.STORESTATE", false);
+            UIElements.ForEach(ui => ui.FixUp());
             foreach (var item in InputsOnly)
             {
                 item.FixUp();
@@ -234,7 +235,7 @@ namespace SPAD.neXt.Interfaces.Extension
                     if (doStateStore && String.IsNullOrEmpty(m.StateStore))
                     {
                         if (item.InputType != DeviceInputTypes.Encoder)
-                        m.StateStore = item.Tag;
+                            m.StateStore = item.Tag;
                     }
                 }
             }
@@ -411,7 +412,7 @@ namespace SPAD.neXt.Interfaces.Extension
 
             try
             {
-                return (T)opt.GetValue<T>();
+                return (T)opt.GetValue<T>(defaultValue);
             }
             catch
             {
@@ -437,10 +438,24 @@ namespace SPAD.neXt.Interfaces.Extension
         }
         public void SetVariable<T>(string key, T value)
         {
-            Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
-            if (value != null)
-                Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
-            VariableChanged?.FireAndForget(this, new VariableChangedEventArgs(key, value));
+            if (value == null)
+            {
+                RemoveVariable(key);
+            }
+            else
+            {
+                var v = Variables.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+                if (v == null)
+                {
+                    Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                }
+                else
+                {
+                    v.SetValue(value);
+                    if (v.GetOption("ONCHANGE",false))
+                        VariableChanged?.FireAndForget(this, new VariableChangedEventArgs(key, value));
+                }
+            }
         }
 
         public int RemoveVariable(string key) => Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
@@ -1142,6 +1157,9 @@ namespace SPAD.neXt.Interfaces.Extension
 
         [XmlIgnore]
         public bool IsOutput => InputType == DeviceInputTypes.Display || InputType == DeviceInputTypes.Led;
+        private static readonly DeviceInputTypes[] _SwitchTypes = new DeviceInputTypes[] { DeviceInputTypes.Switch,DeviceInputTypes.StatefulSwitch,DeviceInputTypes.RotarySwitch };
+        [XmlIgnore]
+        public bool IsSwitch => _SwitchTypes.Contains(InputType);
 
         [XmlIgnore]
         public DeviceInputTypes InputType
@@ -1392,14 +1410,17 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         public string Value { get; set; }
         [XmlAttribute]
-        public VariableValueTypes ValueType { get; set; }
-        public bool ShouldSerializeValueType() => ValueType != 0;
+        public VariableValueTypes ValueType { get; set; } = VariableValueTypes.Number;
+        public bool ShouldSerializeValueType() => ValueType != VariableValueTypes.Number;
         [XmlAttribute]
         public VARIABLE_SCOPE Scope { get; set; } = VARIABLE_SCOPE.SESSION;
         public bool ShouldSerializeScope() => Scope != VARIABLE_SCOPE.SESSION;
         [XmlAttribute]
         public string DefaultValue { get; set; }
         public bool ShouldSerializeDefaultValue() => !String.IsNullOrEmpty(DefaultValue);
+        [XmlAttribute]
+        public string SettingName { get; set; }
+        public bool ShouldSerializeSettingName() => !String.IsNullOrEmpty(SettingName);
 
         public GenericVariable()
         {
@@ -1410,6 +1431,7 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = value;
         }
 
+        public void SetValue(object newValue) { Value = Convert.ToString(newValue, CultureInfo.InvariantCulture); }
         public object GetTypedValue()
         {
             switch (ValueType)
@@ -1423,7 +1445,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
         }
 
-        public T GetValue<T>() where T : IConvertible
+        public T GetValue<T>(T defValue = default) where T : IConvertible
         {
             try
             {
@@ -1451,7 +1473,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             catch
             {
-                return default;
+                return defValue;
             }
         }
 
@@ -1749,17 +1771,17 @@ namespace SPAD.neXt.Interfaces.Extension
                     }
                     else
                         res.Add(item);
-                    SwitchNames.Add(item.Replace("$",""));
+                    SwitchNames.Add(item.Replace("$", ""));
                 }
                 InputValues = res;
             }
 
             if (!String.IsNullOrEmpty(MappingExpression))
             {
-                for (var i = 0;i < SwitchNames.Count;i++)
+                for (var i = 0; i < SwitchNames.Count; i++)
                 {
                     MappingExpression = MappingExpression.Replace("$" + i, SwitchNames[i]);
-                } 
+                }
                 Mapping = EventSystem.CreateExpression(MappingExpression.Replace("{TAG}", Tag));
             }
         }

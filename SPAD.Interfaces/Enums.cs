@@ -78,6 +78,7 @@ namespace SPAD.neXt.Interfaces
         P3Dv5 = 4096,
         MSFS = 8192,
         FGFS = 16384, // FlightGear
+        P3Dv6 = 32768,
         CUSTOM = 0x1000000,
     }
 

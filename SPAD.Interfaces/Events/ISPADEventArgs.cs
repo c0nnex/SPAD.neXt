@@ -35,6 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Immediate { get; set; }
         bool IsValueEvent { get; set; }
         bool IsCascadedEvent { get; set; }
+        bool NoValueSet { get; set; }
         bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
         bool IsThrottled { get; }
@@ -128,7 +129,7 @@ namespace SPAD.neXt.Interfaces.Events
         public IDeviceProfile DeviceProfile { get; set; }
         public bool Immediate { get; set; }
         public bool IsValueEvent { get; set; }
-
+        public bool NoValueSet { set; get; } = false;
         public bool IsCascadedEvent { get; set; }
         public bool IsAxisEvent { get; set; }
         public object CallbackValue { get; set; }
