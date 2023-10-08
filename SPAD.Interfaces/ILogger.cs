@@ -259,7 +259,7 @@ namespace SPAD.neXt.Interfaces.Logging
         private void Log(SPADLogLevel level, string message, params object[] args) 
         {
             OnLog?.Invoke(level, message);
-            Console.WriteLine($"{Name}|{level}|" + String.Format(message, args));
+            Console.WriteLine(Name +"|" + level+"|"+ (args != null && args.Length>0? String.Format(message, args) : message));
         }
 
         public void Debug(string message, params object[] args)

@@ -1,6 +1,7 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.Profile;
+using SPAD.neXt.Interfaces.SimConnect;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,6 +88,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IValueConnector : ISimulationEventProvider
     {
         bool SupportsDynamicDefinitions { get; }
+        bool SupportsDynamicControls { get; }
         bool IsConnected { get; }
         void ForceUpdate(string dataRef, bool doMonitor);
         void SetValue(string dataRef, double newValue);
@@ -172,6 +174,9 @@ namespace SPAD.neXt.Interfaces.Events
         bool HasConnectionStatusChanged { get; }
 
         SimulationGamestate SimulationGamestate { get; }
+
+        event EventHandler<bool> ConnectionStatusChanged;
+        event EventHandler<SimulationGamestate> SimulationGamestateChanged;
     }
 
     public interface ISimulationController : ISimulationInterface
@@ -191,11 +196,28 @@ namespace SPAD.neXt.Interfaces.Events
         event EventHandler Disconnected;
         event EventHandler AircraftLoaded;
         */
-        event EventHandler<SPADEventArgs> ClientEvent;
-
+        event EventHandler<ISPADEventArgs> ClientEvent;
+        
         void StartMonitoringEvents();
         void StopMonitoringEvents();
+        void CustomSimulationEvent(string name, params object[] args);
+       
     }
+
+    public interface ISimConnectInputEventProvider
+    {
+        event EventHandler<List<ISimConnectInputEvent>> InputEventEnumerationReceived;
+        event EventHandler<ISimConnectInputEventValue> InputEventReceived;
+        void UpdateInputEvents();
+        void SendInputEvent(ISimConnectInputEventValue eventValue);
+        void SubscribeInputEvent(ulong hash);
+        void UnsubscribeInputEvent(ulong hash);
+
+        void RaiseClientEvent(ISPADEventArgs eventArgs);
+    }
+
+    public interface ISimConnectSimulationInterface : ISimulationInterface, ISimulationController, ISimulationEventProvider, ISimConnectInputEventProvider
+    { }
 
     public interface ICacheableValue 
     {

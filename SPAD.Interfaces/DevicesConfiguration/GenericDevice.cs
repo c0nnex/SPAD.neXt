@@ -110,6 +110,9 @@ namespace SPAD.Extensions.Generic
 
         void DeviceWarning(string message);
         void DeviceWarningClear();
+
+
+        void AddDeviceElement(AddonDeviceElement inputItem, bool registerVars = false);
         /*
         void ConfigurationCompleted();
         void ConfigurationFailed(string message);

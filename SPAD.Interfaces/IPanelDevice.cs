@@ -221,8 +221,9 @@ namespace SPAD.neXt.Interfaces
         float NormalizedValue { get; }
         int AxisValue { get; }
         bool AntiJitterActivated { get; set; }
-
+        int LastAxisDirection { get; }
         IAxisCalibration DefaultCalibration { get; }
+        
     }
 
     public interface IInputAxisConfiguration 

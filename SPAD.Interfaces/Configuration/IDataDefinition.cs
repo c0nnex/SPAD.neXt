@@ -146,11 +146,14 @@ namespace SPAD.neXt.Interfaces.Configuration
     }
     public interface IExpandable<T>
     {
-        int ChildCount { get; set; }
+        int ChildCount { get; }
         IEnumerable<T> Expand();
+        void NoChilds();
     }
 
     public interface IControlDefinition : IDataDefinitionProperties, IObjectWithOptions
     {
+        bool HasCustomExecute { get; }
+        void Execute(params IEventActionParameter[] args);
     }
 }

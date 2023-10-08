@@ -60,7 +60,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
     {
         Left,
         Right,
-        Center
+        Center,
+        FullRow
     }
 
     public enum CDU_LED
@@ -469,6 +470,11 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
                 MessageEndDisplayAt = DateTime.MinValue;
                 ApplicationProxy.CurrentAircraft.RenderCDU(CDUNumber);
             });
+        }
+
+        public void CancelMessage()
+        {
+            MessageTokenSource?.Cancel();
         }
 
         public virtual bool RenderScratchPad(ICDURenderer renderCallback)

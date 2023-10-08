@@ -101,6 +101,13 @@ namespace SPAD.neXt.Interfaces
         bool IsEnabled(IApplication app,IUSBDevice device);
     }
 
+    public interface IExtensionDeviceGroup
+    {
+        string DeviceGroupName { get; }
+        string DeviceGroupResouceKey { get; }
+        string DeviceGroupRootPath { get; }
+    }
+
     public interface IExtensionInfo
     {
         string Name { get; }

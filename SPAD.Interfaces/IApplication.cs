@@ -9,6 +9,7 @@ using SPAD.neXt.Interfaces.Gauges;
 using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
 using SPAD.neXt.Interfaces.SimConnect;
+using SPAD.neXt.Interfaces.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -274,7 +275,7 @@ namespace SPAD.neXt.Interfaces
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
         IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
-        void RegisterStartupDialog(string title, string message, System.Windows.MessageBoxButton buttonsAvail, string button_OK_Text = "OK", string button_CANCEL_Text = "Cancel", Action<string> onOpen = null, Action<System.Windows.MessageBoxResult> onClose = null);
+        void RegisterStartupDialog(string title, string message, System.Windows.MessageBoxButton buttonsAvail, string button_OK_Text = "OK", string button_CANCEL_Text = "Cancel", Action<IDialogCallbackProvider,Guid,string> onOpen = null, Action<System.Windows.MessageBoxResult> onClose = null);
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
 
         object GetNamedObject(Guid id);

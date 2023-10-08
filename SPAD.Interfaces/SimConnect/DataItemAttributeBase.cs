@@ -28,4 +28,29 @@ namespace SPAD.neXt.Interfaces.SimConnect
          string UnitsName { get; }
          string ID { get; }
     }
+
+    public enum SIMCONNECT_INPUT_EVENT_TYPE : uint
+    {
+        DOUBLE,
+        STRING
+    }
+
+    public interface ISimConnectInputEvent
+    {
+        string Name { get;} // 64
+        ulong Hash { get; }
+        SIMCONNECT_INPUT_EVENT_TYPE eType { get;  }
+    }
+
+    public interface ISimConnectInputEventValue
+    {
+        ulong Hash { get; set; }
+
+        SIMCONNECT_INPUT_EVENT_TYPE eType { get; set; }
+
+        double ValueDouble { get; set; }
+        string ValueString { get; set; }
+
+        object Value { get; }
+    }
 }

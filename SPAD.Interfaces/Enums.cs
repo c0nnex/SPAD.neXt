@@ -1313,6 +1313,8 @@ namespace SPAD.neXt.Interfaces
         public const string EventUpdate = "__EVENTUPDATE__";
         public const string SystemEvent = "__SYSTEM__";
         public const string GaugeEvent = "__GAUGE__";
+        public const string DialogEvent = "__SPAD_DLG_EVENT__";
+        public const string SystemConfigurationUpdate = "__SYSTEMUPDATE__";
     }
 
     public static class SPADSystemEvents
