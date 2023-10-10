@@ -74,7 +74,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IValueProviderInfomation
+    public interface IValueProviderInformation
     {
         string Name { get; }
         string DisplayName { get; }
@@ -83,6 +83,7 @@ namespace SPAD.neXt.Interfaces.Events
         IValueProvider Provider { get; }
         bool IsVisible { get; }
         bool IsConnected { get; }
+        string Version { get; }
     }
 
     public interface IValueConnector : ISimulationEventProvider
@@ -126,7 +127,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsConnected { get; }
 
         string ExtraStatusInformation { get; }
-
+        string ProviderVersion { get; }
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
 
