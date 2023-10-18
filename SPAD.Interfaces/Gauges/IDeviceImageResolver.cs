@@ -77,6 +77,7 @@ namespace SPAD.neXt.Interfaces
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeImageLayerConfig AddImageLayer(int layerNumber, Guid imageId);
         IGaugeTextLayerConfig AddTextLayer(int layerNumber, string text, ICustomLabel textConfig);
+        ISimpleGaugeLayerConfig DuplicateLayer(ISimpleGaugeLayerConfig sourceLayer, int targetLayerNumber);
         IGaugeRenderer CreateRenderer(string belongsTo, int sizeX, int sizeY, IDeviceImageResolver deviceImageResolver);
     }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.neXt.Interfaces.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         VARIABLE_SCOPE Scope { get; }
         bool IsMonitored { get; }
         bool IsReadOnly { get; }
+        ValueDataTypes ValueDataType { get; }
     }
 
     public interface IVariablesProvider

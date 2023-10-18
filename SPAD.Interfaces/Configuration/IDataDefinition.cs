@@ -38,6 +38,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string UnitsName { get; set; }
         
         string ValueType { get; set; }
+        ValueDataTypes ValueDataType { get; }
         string WriteMode { get; set; }
         string WriteParameters { get; set; }
         int DefinitionKey { get; }
@@ -58,7 +59,7 @@ namespace SPAD.neXt.Interfaces.Configuration
         string CustomNormalizer { get; set; }
         string AvailableDataProviders { get; }
         string DefaultNormalizer { get; set; }
-        string DefaultValue { get; set; }
+        object DefaultValue { get; set; }
         string DisplayName { get; set; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
