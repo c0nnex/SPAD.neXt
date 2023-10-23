@@ -26,6 +26,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Url" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="1" name="ManualURL" type="xs:string" />
+		  <xs:element minOccurs="0" maxOccurs="1" name="AuthorId" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="unbounded" name="Font" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="unbounded" name="Sound" type="xs:string" />
           <xs:element minOccurs="0" maxOccurs="unbounded" name="Category" type="xs:string" />
