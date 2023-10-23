@@ -2,12 +2,24 @@
 using SPAD.neXt.Interfaces.Configuration;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Events
 {
+    public enum GaugeLayerActionType
+    {
+        GaugeToggle,
+        LayerToggle,
+        LayerModeChange,
+        LayerImageChange,
+        LayerImageRotate,
+        LayerChangeText,
+        LayerChangeColor
+    }
+
     public interface IEventActionRangedAxis : IEventAction
     {
         bool InvertAxis { get; set; }
@@ -70,12 +82,13 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventActionSendEvent : IEventAction, IEventActionDoesMonitor
     {
         int NumberOfParameters { get; }
+        bool NoExtendedEvent { get; set; }
         IReadOnlyList<IEventActionParameter> Parameters { get; }
         IEventActionParameter Parameter { get; }
-        IEventActionParameter Parameter1 { get;}
-        IEventActionParameter Parameter2 { get;}
-        IEventActionParameter Parameter3 { get;}
-        IEventActionParameter Parameter4 { get;}
+        IEventActionParameter Parameter1 { get; }
+        IEventActionParameter Parameter2 { get; }
+        IEventActionParameter Parameter3 { get; }
+        IEventActionParameter Parameter4 { get; }
 
         IDataDefinition TargetDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }
@@ -87,6 +100,9 @@ namespace SPAD.neXt.Interfaces.Events
         IDataDefinition TargetDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }
         IReadOnlyList<IDataDefinition> ObservedDataDefinitions { get; }
+
+        int UpdateIntervall { get; set; }
+        double UpdateEpsilon { get; set; }
     }
 
     public interface IEventActionSingleton : IEventAction
@@ -133,23 +149,72 @@ namespace SPAD.neXt.Interfaces.Events
     {
     }
 
+    public interface IHasImageReferences
+    {
+        IEnumerable<Guid> GetImageReferences();
+        int ReplaceImageReferences(IDictionary<Guid, Guid> replaceDict);
+    }
     public interface IEventActionWithImage
     {
         string Image { get; set; }
         Guid ImageId { get; set; }
 
     }
+    public interface IEventActionWithTargetLayer
+    {
+        int TargetLayer { get; set; }
+    }
 
-    public interface IEventActionPlateImage : IEventAction,IEventActionWithImage
+    public interface IEventActionWithTargetMode
+    {
+        int TargetMode { get; set; }
+    }
+
+    public interface IEventActionPlateColor : IEventAction, IEventActionWithTargetLayer
+    {
+        string Color { get; set; }
+        int TargetScope { get; set; }
+    }
+   
+    public interface IEventActionLayerMode : IEventAction, IEventActionWithTargetLayer, IEventActionWithTargetMode
+    {
+    }
+
+    public interface IEventActionPlateImage : IEventAction, IEventActionWithImage, IEventActionWithTargetLayer
     {
         FLASHMODE FlashMode { get; set; }
     }
 
+    public interface ICustomLabel
+    {
+        int Layer { get; set; }
+
+        string Foreground { get; set; }
+        string Background { get; set; }
+        string Font { get; set; }
+        float FontSize { get; set; }
+        int FontStyle { get; set; }
+        int X { get; set; }
+        int Y { get; set; }
+        int Width { get; set; }
+        int Height { get; set; }
+        int HorizontalAlignment { get; set; }
+        int VerticalAlignment { get; set; }            
+        string Text { get; set; }
+
+        bool IsLayerChangeAllowed { get; set; }
+        bool IsStyleChangeAllowed { get; set; }
+    }
+
+
     public interface IEventActionPlateLabel : IEventActionObserve
     {
+        ActionReferenceTypes TextType { get; set; }
+
         string Text { get; set; }
-        string Color { get; set; }
-        ActionReferenceTypes TextType {get;set;}
+
+        int TargetLayer { get; set; }
+
     }
 
     public interface IEventImageData : IXmlAnyObject
@@ -189,7 +254,7 @@ namespace SPAD.neXt.Interfaces.Events
         int Joystick { get; set; }
     }
 
-    public interface IEventActionExternal  : IEventAction, IEventActionMonitor 
+    public interface IEventActionExternal : IEventAction, IEventActionMonitor
     {
         Guid ProviderID { get; set; }
         IActionProvider ActionProvider { get; }

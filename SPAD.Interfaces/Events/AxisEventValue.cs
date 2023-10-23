@@ -101,21 +101,7 @@ namespace SPAD.neXt.Interfaces.Events
                 return InvertAxis ? InvertedNormalizedValue : NormalizedValue;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float Rescale(float value, float sourceMin, float sourceMax, float targetMin, float targetMax)
-        {
-            if (sourceMin > sourceMax)
-            {
-                var tmp = sourceMin;
-                sourceMin = sourceMax;
-                sourceMax = tmp;
-                tmp = targetMin;
-                targetMin = targetMax;
-                targetMax = tmp;
-            }
-            value = Math.Max(sourceMin, Math.Min(value, sourceMax));
-            return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
-        }
+       
 
         public double GetVariableValue()
         {

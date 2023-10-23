@@ -37,10 +37,8 @@ namespace SPAD.neXt.Interfaces
         private static RoutedCommand profileRateCommand = new RoutedCommand("SPAD_neXt.Profile_Rate", typeof(SPADCommands));
         private static RoutedCommand profileUnpublishCommand = new RoutedCommand("SPAD_neXt.Profile_Unpublish", typeof(SPADCommands));
 
-        private static RoutedCommand _CopyThisCommand = new RoutedCommand("SPAD_neXt.CopyThis", typeof(SPADCommands));
         private static RoutedCommand _CopyAllCommand = new RoutedCommand("SPAD_neXt.CopyAll", typeof(SPADCommands));
         private static RoutedCommand _CopyDeviceCommand = new RoutedCommand("SPAD_neXt.CopyDevice", typeof(SPADCommands));
-        private static RoutedCommand _PasteCommand = new RoutedCommand("SPAD_neXt.Paste", typeof(SPADCommands));
         private static RoutedCommand _PublishProfileCommand = new RoutedCommand("SPAD_neXt.PublishProfile", typeof(SPADCommands));
         private static RoutedCommand _PublishSnippetCommand = new RoutedCommand("SPAD_neXt.PublishSnippet", typeof(SPADCommands));
 
@@ -102,6 +100,14 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand PowerConfigurationCommand { get { return powerConfigurationCommand; } }
         public static RoutedCommand DeviceConfigurationCommand { get { return deviceConfigurationCommand; } }
 
+        public static RoutedCommand DeviceSwitchPanelCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceSwitchPanel", typeof(SPADCommands));
+
+        public static RoutedCommand DeviceReconnectCommand { get; } = new RoutedCommand("SPAD_neXt.ReconnectDevice", typeof(SPADCommands));
+        public static RoutedCommand DeviceDisconnectCommand { get; } = new RoutedCommand("SPAD_neXt.DisconnectDevice", typeof(SPADCommands));
+        public static RoutedCommand DeviceCopyCommand { get { return _CopyDeviceCommand; } }
+        public static RoutedCommand DeviceActivateCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceActivate", typeof(SPADCommands));
+        public static RoutedCommand DeviceDeactivateCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceDeactivate", typeof(SPADCommands));
+        public static RoutedCommand DeviceToggleActiveCommand { get; } = new RoutedCommand("SPAD_neXt.DeviceToggleActive", typeof(SPADCommands));
         public static RoutedCommand AddEventCommand { get { return addEventCommand; } }
         public static RoutedCommand EditEventCommand { get { return editEventCommand; } }
         public static RoutedCommand DelEventCommand { get { return delEventCommand; } }
@@ -110,17 +116,14 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ChangeLabelCommand { get { return changeLabelCommand; } }
         public static RoutedCommand DoNothingCommand { get { return doNothingCommand; } }
         public static RoutedCommand SwitchSettingsCommand => switchSettingsCommand;
-        public static RoutedCommand CopyThisCommand { get { return _CopyThisCommand; } }
         public static RoutedCommand CopyAllCommand { get { return _CopyAllCommand; } }
         public static RoutedCommand CopyPageCommand { get; } = new RoutedCommand("SPAD_neXt.CopyPage", typeof(SPADCommands));
         public static RoutedCommand RefreshPageCommand { get; } = new RoutedCommand("SPAD_neXt.RefreshPage", typeof(SPADCommands));
 
-        public static RoutedCommand ReconnectDeviceCommand { get; } = new RoutedCommand("SPAD_neXt.ReconnectDevice", typeof(SPADCommands));
-        public static RoutedCommand CopyDeviceCommand { get { return _CopyDeviceCommand; } }
+        
 
         public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));
         public static RoutedCommand InheritCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Inherit", typeof(SPADCommands));
-        public static RoutedCommand PasteCommand { get { return _PasteCommand; } }
         public static RoutedCommand PublishProfileCommand { get { return _PublishProfileCommand; } }
         public static RoutedCommand PublishSnippetCommand { get { return _PublishSnippetCommand; } }
 

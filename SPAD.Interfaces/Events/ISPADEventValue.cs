@@ -20,9 +20,9 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ISPADComparator
     {
-        Double compareValueLeft { get;  }
-        Double compareValueRight { get; }
-        bool DoesMatch(object testValue);
+        IComparable compareValueLeft { get;  }
+        IComparable compareValueRight { get; }
+        bool DoesMatch(IComparable testValue);
     }
 
 

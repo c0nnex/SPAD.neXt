@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Logging;
+﻿using SPAD.neXt.Interfaces.Extension;
+using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Concurrent;
@@ -12,7 +13,7 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface ISPADEventArgs : IHandledEventArgs
     {
-        ConcurrentDictionary<string, string> EventData { get;}
+        ConcurrentDictionary<string, object> EventData { get; }
         string EventSwitch { get; set; }
         string EventName { get; set; }
         string EventTrigger { get; set; }
@@ -22,9 +23,10 @@ namespace SPAD.neXt.Interfaces.Events
         object OldValue { get; }
         string TargetDevice { get; }
         long EventMarker { get; }
-        EventPriority EventPriority { get; } 
-        EventSeverity EventSeverity { get; } 
-        string this[string key] { get; set; }
+        long Timestamp { get; }
+        EventPriority EventPriority { get; }
+        EventSeverity EventSeverity { get; }
+
 
         IDeviceProfile DeviceProfile { get; set; }
         IMonitorableValue MonitorableValue { get; set; }
@@ -33,8 +35,11 @@ namespace SPAD.neXt.Interfaces.Events
         bool Immediate { get; set; }
         bool IsValueEvent { get; set; }
         bool IsCascadedEvent { get; set; }
+        bool NoValueSet { get; set; }
         bool IsAxisEvent { get; set; }
         bool IsDisplayEvent { get; set; }
+        bool IsThrottled { get; }
+        string ThrottleID { get; }
         bool IsStateEvent { get; set; }
         string FullName { get; }
         string AdditionalInfo { get; set; }
@@ -46,12 +51,15 @@ namespace SPAD.neXt.Interfaces.Events
         bool GetHandled(string eventName);
         void SetCallbackValue(object value);
         void Callback(IValueProvider provider);
-
+        ISPADEventArgs AsThrottled();
         ISPADEventArgs Clone();
         T GetData<T>(string key, T defaultValue = default(T));
         ISPADEventArgs WithData(string key, object data);
-
+        ISPADEventArgs WithDataIfNot<T>(string key, T data, T compareValue) where T: IEquatable<T>;
         bool Is(ISPADEventArgs e);
+
+        ISPADEventArgs WithEventParameter(string name, object value);
+        object GetEventParameter(string name);
     }
 
     public interface IHandledEventArgs
@@ -61,7 +69,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IAcceleratedEncoder
     {
-        
+
         void Reset();
         int GetAcceleration(double threshold, double timeout, double multiplier, double maxAcceleration);
         IAcceleratedEncoder WasPressed(long tick = 0);
@@ -71,14 +79,16 @@ namespace SPAD.neXt.Interfaces.Events
     {
         private ILogger logger = null;
 
-        public ConcurrentDictionary<string, string> EventData { get; private set; } = new ConcurrentDictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, object> EventData { get; private set; } = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         public static new SPADEventArgs Empty = new SPADEventArgs();
         private static long EventMarkerCounter = 0;
         public string EventSwitch { get; set; }
-        public string EventName { get; set; }
+        public string EventName { get => eventName; set { eventName = value; _FullName = null; } }
+        public string EventTrigger { get => eventTrigger; set { eventTrigger = value; _FullName = null; } }
         public IInputElement CommandTarget { get; set; }
         public long EventMarker { get; private set; }
+        public long Timestamp { get; set; }
         public object OldValue
         {
             get
@@ -119,13 +129,14 @@ namespace SPAD.neXt.Interfaces.Events
         public IDeviceProfile DeviceProfile { get; set; }
         public bool Immediate { get; set; }
         public bool IsValueEvent { get; set; }
-        public string EventTrigger { get; set; }
+        public bool NoValueSet { set; get; } = false;
         public bool IsCascadedEvent { get; set; }
         public bool IsAxisEvent { get; set; }
         public object CallbackValue { get; set; }
         public bool IsDisplayEvent { get; set; }
         public bool IsStateEvent { get; set; }
-
+        public bool IsThrottled { get; private set; }
+        public string ThrottleID { get; private set; }
         public string AdditionalInfo { get; set; }
         public string TargetDevice { get; set; }
         public UInt64 CreationTime { get; } = EnvironmentEx.TickCount64;
@@ -140,6 +151,7 @@ namespace SPAD.neXt.Interfaces.Events
         public SPADEventArgs(string eventName)
         {
             EventMarker = Interlocked.Increment(ref EventMarkerCounter);
+            Timestamp = EnvironmentEx.TickCountLong;
             EventName = eventName;
             EventTrigger = String.Empty;
             string[] args = eventName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -193,26 +205,38 @@ namespace SPAD.neXt.Interfaces.Events
             }
         }
 
-        public override string ToString()
+        public ISPADEventArgs AsThrottled()
         {
-            return String.Format("{0} Old={1} New={2} Switch={3} ValueEvent={4} {5}", FullName, Convert.ToString(OldValue, CultureInfo.InvariantCulture), Convert.ToString(NewValue,CultureInfo.InvariantCulture),EventSwitch, IsValueEvent,  ExecutionContext == Guid.Empty ? "" : ExecutionContext.ToString());
+            ThrottleID = FullName + GetData("LAYER", "");
+            IsThrottled = true;
+            return this;
         }
 
+        public override string ToString()
+        {
+            return $"{FullName} {EventMarker} Old={OldValue} New={NewValue} Sw={EventSwitch} VE={IsValueEvent} {Immediate} {ExecutionContext}";
+        }
+        private string _FullName = null;
         public string FullName
         {
             get
             {
-                if (!String.IsNullOrEmpty(EventTrigger))
-                    return String.Format("{0}.{1}", EventName, EventTrigger);
-                return EventName;
+                if (_FullName == null)
+                {
+                    if (!String.IsNullOrEmpty(EventTrigger))
+                        _FullName = String.Format("{0}.{1}", EventName, EventTrigger);
+                    else
+                        _FullName = EventName;
+                }
+                return _FullName;
             }
         }
 
-        public string this[string key]
+        public object this[string key]
         {
             get
             {
-                string val;
+                object val;
                 if (EventData.TryGetValue(key, out val))
                     return val;
                 return null;
@@ -225,10 +249,10 @@ namespace SPAD.neXt.Interfaces.Events
 
         public void AddData(string key, object value)
         {
-            this[key] = Convert.ToString(value, CultureInfo.InvariantCulture);
+            this[key] = value;
         }
 
-        public SPADEventArgs WithData(string key,object value)
+        public SPADEventArgs WithData(string key, object value)
         {
             AddData(key, value);
             return this;
@@ -239,7 +263,12 @@ namespace SPAD.neXt.Interfaces.Events
             AddData(key, value);
             return this;
         }
-
+        ISPADEventArgs ISPADEventArgs.WithDataIfNot<T>(string key, T value, T compareValue) 
+        {
+            if (!compareValue.Equals(value))
+                AddData(key, value);
+            return this;
+        }
         public SPADEventArgs WithLogger(ILogger logger)
         {
             this.logger = logger;
@@ -250,25 +279,31 @@ namespace SPAD.neXt.Interfaces.Events
         {
             try
             {
-                string val = this[key];
+                object val = this[key];
                 if (val == null)
-                    return default(T);
+                    return defaultValue;
+                if (val is T)
+                    return (T)val;
                 if (typeof(T) == typeof(Guid))
-                    return (T)((object)new Guid(this[key]));
+                    return (T)((object)new Guid(Convert.ToString(val, CultureInfo.InvariantCulture)));
                 if (typeof(T) == typeof(Version))
-                    return (T)((object)new Version(this[key]));
+                    return (T)((object)new Version(Convert.ToString(val, CultureInfo.InvariantCulture)));
                 if (typeof(T).IsEnum)
-                    return (T)Enum.Parse(typeof(T), val);
-                return (T) Convert.ChangeType(val, typeof(T));
+                    return (T)Enum.Parse(typeof(T), Convert.ToString(val, CultureInfo.InvariantCulture));
+                return (T)Convert.ChangeType(val, typeof(T), CultureInfo.InvariantCulture);
             }
-            catch 
+            catch (Exception ex)
             {
+                logger?.Warn($"GetData " + typeof(T) + " => " + ex.Message);
                 return defaultValue;
             }
-            
+
         }
 
         private HashSet<string> handledEvents = new HashSet<string>();
+        private string eventName;
+        private string eventTrigger;
+
         public void SetHandled(string eventName)
         {
             handledEvents.Add(eventName);
@@ -335,5 +370,21 @@ namespace SPAD.neXt.Interfaces.Events
         }
 
         public bool Is(ISPADEventArgs e) => FullName == e.EventName;
+
+        private ConcurrentDictionary<string,object> EventParameters;
+        public ISPADEventArgs WithEventParameter(string name, object value)
+        {
+            if (EventParameters == null) { EventParameters = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase); }
+            if (value == null) { EventParameters.TryRemove(name, out var _); return this; }
+            EventParameters[name] = value;
+            return this;
+        }
+        public object GetEventParameter(string name)
+        {
+            if (EventParameters == null) { return null; }
+            if (EventParameters.TryGetValue(name, out var val))
+                return val;
+            return null;
+        }
     }
 }

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceAttack", "VoiceAttack.csproj", "{CE680231-876A-4981-A2F4-2D476E7E5D0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE680231-876A-4981-A2F4-2D476E7E5D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE680231-876A-4981-A2F4-2D476E7E5D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE680231-876A-4981-A2F4-2D476E7E5D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE680231-876A-4981-A2F4-2D476E7E5D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97C470E4-AC8D-494D-A640-A1856C61B5F3}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\..\SharedCode\NetworkComms\NetworkComms.projitems*{ce680231-876a-4981-a2f4-2d476e7e5d0c}*SharedItemsImports = 4
+		..\..\..\SharedCode\NetworkingDataContracts\NetworkingDataContracts.projitems*{ce680231-876a-4981-a2f4-2d476e7e5d0c}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

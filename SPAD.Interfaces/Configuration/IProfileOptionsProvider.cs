@@ -13,11 +13,12 @@ namespace SPAD.neXt.Interfaces.Configuration
 
     public interface IProfileOptionsProvider
     {
-        IProfileOption AddOption(string key, Interfaces.Profile.ProfileOptionTypes type, string defaultValue, bool needrestart = false, bool editable = false, bool hidden = false,string groupName="Other");
+        IProfileOption AddOption(string key, Interfaces.Profile.ProfileOptionTypes type, string defaultValue, bool needrestart = false, bool editable = false, bool hidden = false,string groupName="General");
         IProfileOption GetOption(string key);
         T GetOption<T>(string key);
         T GetOptionWithDefault<T>(string key, T defaultValue);
         void RemoveOption(string key);
+        void MoveOption(string oldKey, string newKey);
         void RemoveOptions(string keyStart);
         List<IProfileOption> GetOptions(string startWith);
         bool HasOption(string key);

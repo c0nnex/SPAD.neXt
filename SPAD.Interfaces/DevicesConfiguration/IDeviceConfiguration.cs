@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace SPAD.neXt.Interfaces.DevicesConfiguration
 {
-    public interface IDeviceConfiguration : IOptionsProvider
+    public interface IDeviceConfiguration : IOptionsProvider, IObjectWithVariables
     {
         IReadOnlyList<IDeviceSwitch> DeviceSwitches { get; }
 

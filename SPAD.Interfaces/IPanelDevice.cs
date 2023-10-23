@@ -1,6 +1,7 @@
 ﻿using SPAD.neXt.Interfaces.DevicesConfiguration;
 using SPAD.neXt.Interfaces.Events;
 using SPAD.neXt.Interfaces.HID;
+using SPAD.neXt.Interfaces.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace SPAD.neXt.Interfaces
     public interface IRemovableDevice
     {
         event EventHandler DeviceAttached;
-        event EventHandler DeviceRemoved;
+        event EventHandler<bool> DeviceRemoved;
     }
 
     public interface IPanelDevice : IRemovableDevice
@@ -41,7 +42,7 @@ namespace SPAD.neXt.Interfaces
 
         void SetDeviceConfiguration(IDeviceConfiguration deviceConfiguration);
 
-
+        void SetLogger(ILogger newLogger);
         bool OpenDevice();
         void OpenHidDevice();
         void CloseDevice();
@@ -220,8 +221,9 @@ namespace SPAD.neXt.Interfaces
         float NormalizedValue { get; }
         int AxisValue { get; }
         bool AntiJitterActivated { get; set; }
-
+        int LastAxisDirection { get; }
         IAxisCalibration DefaultCalibration { get; }
+        
     }
 
     public interface IInputAxisConfiguration 
@@ -258,7 +260,7 @@ namespace SPAD.neXt.Interfaces
     public interface IControllableDevice
     {
         void SetBrightness(int index, int howBright);
-        void SetLEDColor(int index, SPADColors color);
+        void SetLEDColor(int index, int color);
         void SetString(int index, string value);
         void ClearString(int index);
     }

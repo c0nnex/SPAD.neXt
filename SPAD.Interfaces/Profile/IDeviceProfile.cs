@@ -15,7 +15,7 @@ namespace SPAD.neXt.Interfaces.Profile
     
 
 
-    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible, IObservableProvider<ISPADEventArgs>
+    public interface IDeviceProfile : IOptionsProvider, IProfileEventProvider, IDisposable, IExtensible,IObjectWithVariables,IDeviceImageResolver, IObservableProvider<ISPADEventArgs>
     {
         string VendorID { get; }
         string ProductID { get; }
@@ -40,7 +40,7 @@ namespace SPAD.neXt.Interfaces.Profile
 
         event PropertyChangedEventHandler OptionChanged;
 
-        void ActivateDevice(IPanelHost panelHost);
+        bool ActivateDevice(IPanelHost panelHost,bool runEvents = false, bool force = false);
         void DeactivateDevice();
 
         ISPADBaseEvent CreateEvent(string tag);
@@ -56,6 +56,10 @@ namespace SPAD.neXt.Interfaces.Profile
         event EventHandler<IDeviceProfile, IDevicePage> PageActivated;
         event EventHandler<IDeviceProfile, IDevicePage> PageDeactivated;
         event EventHandler<IDeviceProfile, IDevicePage> PageChanged;
+        event EventHandler<IDeviceProfile, bool> DeviceProfileChange;
+        event EventHandler<IDeviceProfile, IEventAction> ActionBeginEdit;
+        event EventHandler<IDeviceProfile, IEventAction> ActionEndEdit;
+        void OnActionEdit(IEventAction eventAction, bool isBeginEdit);
         int CountPages { get; }
         Guid ActivePage { get; }
         IReadOnlyList<IDevicePage> PageList { get; }
@@ -80,7 +84,7 @@ namespace SPAD.neXt.Interfaces.Profile
         IDeviceImage ImportDeviceImage(Guid id, string name, byte[] imageData);
         IDeviceImage ImportLocalDeviceImage(string name, string source);
         void ReplaceDeviceImages(Dictionary<Guid, Guid> toReplace);
-        void AddDeviceImage(IDeviceImage image);
+        bool AddDeviceImage(IDeviceImage image);
 
         // Pages Stuff
         void AddPage(IDevicePage page);
@@ -90,8 +94,10 @@ namespace SPAD.neXt.Interfaces.Profile
         void RemoveAllPages();
 
         // Temp ugly Stuff
-        void SetVariable(string varName, object value);
-        T GetVariable<T>(string varName);
+        void SetPrivateVariable(string varName, object value);
+        T GetPrivateVariable<T>(string varName);
+
+        bool IsDeviceDeactivated { get; }
     }
 
     public interface IImageInfo
@@ -121,6 +127,7 @@ namespace SPAD.neXt.Interfaces.Profile
         void AddReference();
         byte[] GetImage();
         Task<byte[]> GetImageAsync();
+        Task<string> GetImageUrlAsync();
         void Refresh();
     }
 

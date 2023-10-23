@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IIsDeletable
+    {
+        void OnDelete();
+    }
+
+
     public interface IHasErrorInfo
     {
         bool HasError { get; }
@@ -17,11 +23,14 @@ namespace SPAD.neXt.Interfaces
     {
         string Name { get; }
         string Expression { get; }
-        object Evaluate();
+        object Evaluate(ISPADEventArgs e = null);
         bool EvaluateBool();
         bool Compile();
 
         event EventHandler<IMonitorableValue> VariableAdded;
+        void EnableDebug(bool val);
+        void RegisterFunction(string name, Func<object[], object> fun);
+        void RegisterPrivateVariableFunction(Func<string, object> fun);
     }
 
     public interface IExternalExpression : IDisposable, IHasErrorInfo

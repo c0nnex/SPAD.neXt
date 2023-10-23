@@ -17,8 +17,10 @@ namespace SPAD.neXt.Interfaces.Events
         int StateValue { get; set; }
         int StateUIValue { get; set; }
         string StateName { get; set; }
+        string StateLabel { get; set; }
         string EventName { get; set; }
         void SetVisible(bool isVisible);
+        void UpdateLabel(string stateLabel);
     }
 
     public sealed class ProgrammableInputStateChangedArgs : EventArgs
@@ -35,6 +37,7 @@ namespace SPAD.neXt.Interfaces.Events
         public int StateValue { get; set; }
         public string StateName { get; set; }
         public string EventName { get; set; }
+        public Guid EventContext { get; set; } = Guid.Empty;
 
         public int StateIndexToggle { get; set; } = 0;
         public ProgrammableInputStateChangedArgs AsIntermediate()
@@ -42,7 +45,8 @@ namespace SPAD.neXt.Interfaces.Events
             IsIntermediate = true;
             return this;
         }
-        public bool IsIntermediate { get; set; }
+        public bool IsIntermediate { get; set; } = false;
+        
 
         public ProgrammableInputStateChangedArgs AsStateInit()
         {
@@ -57,6 +61,18 @@ namespace SPAD.neXt.Interfaces.Events
         }
     }
 
+    public interface IProgrammableHeld
+    {
+        void StartHeld(string clalledFrom,CancellationToken cancellationToken);
+    }
+
+    public interface IProgrammableValue : INotifyPropertyChanged,IDisposable,IObjectWithOptions
+    {
+        double Value { get; set; }
+        double Offset { get; set; }
+
+        void SetValue(double value);
+    }
 
     public interface IProgrammableInput : INotifyPropertyChanged,IDisposable,IObjectWithOptions
     {
@@ -74,13 +90,20 @@ namespace SPAD.neXt.Interfaces.Events
         string Label { get; }
         bool RefreshContext { get; set; }
         string VariableName { get; set; }
-
+        bool EnablePressAcceleration { get; set; }
+        bool IsImmuneToStateInit { get; set; }
+        int CurrentStateValue { get; set; }
         I GetData<I>() where I : class;
         I GetRoutedToData<I>() where I : class;
         I GetUIRoutedToData<I>() where I : class;
         void Reset();
 
-        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent);
+        INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent, bool force = false, long timeStamp = long.MinValue,Guid? context = null);
+
+        void EnableHeldMode(IProgrammableHeld callback);
+        void DisableHeldMode();
+
+        void SwitchToDynamicLabel(string lblFormat);
     }
 
     public enum INPUT_CHANGE_DIRECTION
@@ -93,6 +116,13 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IProgrammableLabel
     {
         string Label { get; set; }
+        string LabelDefault { get; set; }
+        Guid LabelSource { get; set; }
+    }
+
+    public interface IProgrammableEncoder : IProgrammableStatefulInput
+    {
+
     }
 
     public interface IProgrammableRotary :  IProgrammableStatefulInput
@@ -102,11 +132,11 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IProgrammableStatefulInput : IProgrammableInput
     {
-        IProgrammableInputUIState RegisterPostion(string positionName,string eventName, int value, int uiValue);
+        IProgrammableInputUIState RegisterPostion(string positionName,string eventName,string positionLabel, int value, int uiValue);
         IProgrammableInputUIState GetUIStateByName(string positionName);
         IProgrammableInputUIState GetUIStateByValue(int positionValue);
         IProgrammableInputUIState GetUIStateByNameOrValue(string positionName,int positionValue);
-        INPUT_CHANGE_DIRECTION SetState(IProgrammableInputUIState newState, bool raiseEvent);
+        INPUT_CHANGE_DIRECTION SetState(IProgrammableInputUIState newState, bool raiseEvent,bool force);
         IEnumerable<string> GetStateNames();
         IEnumerable<int> GetStateValues();
         IEnumerable<IProgrammableInputUIState> GetStates();
@@ -169,7 +199,6 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsHeldModeEnabled { get; }
         bool IsSwitch { get; }
         void EnableHeldMode();
-        void DisableHeldMode();
 
         bool HasMode(PROGRAMMABLEBUTTONSTATUS whichMode);
         void ModeOff(PROGRAMMABLEBUTTONSTATUS whichMode);
@@ -185,8 +214,6 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IProgrammableButton : IProgrammableInput
     {
-
-        long LastPressDuration { get; }
         string EventPressName { get; set; }
         string EventShortPressName { get; set; }
         string EventLongPressName { get; set; }
@@ -195,10 +222,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsLongShortEnabled { get; set; }
         void SetLongPressThreshold(int newThreshold);
 
-        bool IsHeldModeEnabled { get; }
-        void EnableHeldMode(int frequency = -1, int threshold = -1, int heldValue = 1, string eventName = "HELD");
-        void DisableHeldMode();
-
+ 
         void UpdateUI();
     }
 }

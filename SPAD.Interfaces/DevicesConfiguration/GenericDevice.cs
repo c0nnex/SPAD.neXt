@@ -23,6 +23,8 @@ namespace SPAD.Extensions.Generic
         public string Protocol { get; set; }
         public string PortName { get; set; }
 
+        private string _serialNumber = null;
+        public string SerialNumber { get => _serialNumber ?? PortName; set => _serialNumber = value; }
         public  IPanelControl PanelBaseControl { get; set; }
         public IPanelDevice   AttachedDevice { get; set; }
         public ITransport Transport { get; set; }
@@ -83,7 +85,7 @@ namespace SPAD.Extensions.Generic
         Task<bool> LearnInput(AddonDeviceElement addonDeviceElement);
     }
 
-    public interface  IGenricCreateInteraction
+    public interface  IGenericCreateInteraction
     {
         FrameworkElement CreateInteraction(AddonDeviceElement addonDeviceElement,bool asInactive = false);
     }
@@ -94,12 +96,47 @@ namespace SPAD.Extensions.Generic
         void RaiseEvent(IGenericCommandDevice device,ISPADEventArgs eventArgs);
         void RaiseEncoderEvent(IGenericCommandDevice device, ISPADEventArgs eventArgs);
         void RaiseAxisEvent(IGenericCommandDevice device, AxisInputEventArgs eventArgs);
+
+        void UpdateLogger(string newname);
+        void UpdateLogger(ILogger newLogger);
+        void OnLog(SPADLogLevel level, string message);
+        
+        void OnCommandReceived(string message);
+        void OnConfigurationCompleted();
+        void OnConfigurationFailed(string message);
+        void OnConnectionStateChanged(bool isConnected);
+
+        void UpdateVariable(string varName, object varValue);
+
+        void DeviceWarning(string message);
+        void DeviceWarningClear();
+
+
+        void AddDeviceElement(AddonDeviceElement inputItem, bool registerVars = false);
+        /*
+        void ConfigurationCompleted();
+        void ConfigurationFailed(string message);
+        void ConnectionStateChanged(bool isConnected);
+        */
     }
 
+    public enum SPAD_DEVICE_EVENT
+    {
+        NONE,
+        INITIALIZE,
+        CONNECT,
+        DISCONNECT,
+        SYNC,
+        INITIALIZE_UI,
+
+        CUSTOM=1000
+    }
+    
 
     public interface IGenericCommandDevice : IDisposable
     {
         event EventHandler<object, string> OnLog;
+        event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnDeviceEvent;
         event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseEvent;
         event EventHandler<IGenericCommandDevice, ISPADEventArgs> OnRaiseTunerEvent;
         event EventHandler<IGenericCommandDevice, string> OnCommandReceived;
@@ -116,7 +153,7 @@ namespace SPAD.Extensions.Generic
         string DeviceSerial { get; }
         string DevicePublishName { get; }
         Version DeviceVersion { get; } // VersionNumber of Device
-
+        Guid DeviceGuid { get; }
         DateTime DeviceLastPing { get; } // Last Packet/Pong from Device
 
         AddonDevice AddonDevice { get; }
@@ -128,14 +165,21 @@ namespace SPAD.Extensions.Generic
         void CreateDevice(IApplication applicationProxy, GenericSettings settings);
 
         // event functions
-        void OnProfileChanged(bool isCompleted);
-        void OnAircraftChanged(string newAircraft);
-        void OnVirtualPowerChanged(bool newPowerState);
+        void ProfileChanged(bool isCompleted);
+        void AircraftChanged(string newAircraft);
+        void VirtualPowerChanged(bool newPowerState);
 
-        void OnLedStatusChanged(string tag, LedStatusEventArgs newState);
-        void OnPageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
+        void LedStatusChanged(string tag, LedStatusEventArgs newState);
+        void PageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
 
         IInput GetAttachedInput(string name);
+
+        void DeviceEnabled();
+        void DeviceDisabled();
+        void DeviceActivated(IDeviceProfile device);
+        void DeviceDeactivated();
+
+        void DeviceExecuteEvent(ISPADEventArgs eventArgs);
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Configuration;
 using SPAD.neXt.Interfaces.Profile;
+using SPAD.neXt.Interfaces.SimConnect;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +38,12 @@ namespace SPAD.neXt.Interfaces.Events
         void HandleEvent(ISPADEventArgs e);
     }
 
-    public interface IObserverTicket : IDisposable
+    public interface ITrackableDisposable : IDisposable
+    { 
+        bool IsDisposed { get; }
+    }
+
+    public interface IObserverTicket : ITrackableDisposable
     {
         Guid ID { get; }
         string EventName { get; }
@@ -47,6 +53,9 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsStatic { get; set; }
         bool NeedNotify { get; }
 
+        void Clear();
+        bool Subscribe(string dataRef);
+        bool Unsubscribe(string dataRef);
         void Subscribe(IMonitorableValue monitorableValue);
         void Unsubscribe(IMonitorableValue monitorableValue);
 
@@ -65,7 +74,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     }
 
-    public interface IValueProviderInfomation
+    public interface IValueProviderInformation
     {
         string Name { get; }
         string DisplayName { get; }
@@ -74,11 +83,13 @@ namespace SPAD.neXt.Interfaces.Events
         IValueProvider Provider { get; }
         bool IsVisible { get; }
         bool IsConnected { get; }
+        string Version { get; }
     }
 
     public interface IValueConnector : ISimulationEventProvider
     {
         bool SupportsDynamicDefinitions { get; }
+        bool SupportsDynamicControls { get; }
         bool IsConnected { get; }
         void ForceUpdate(string dataRef, bool doMonitor);
         void SetValue(string dataRef, double newValue);
@@ -116,11 +127,12 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsConnected { get; }
 
         string ExtraStatusInformation { get; }
-
+        string ProviderVersion { get; }
         object GetValue(IMonitorableValue value);
         void SetValue(IMonitorableValue value, Guid sender, int delay = 0);
 
-        void SendControl(IDataDefinition control, uint parameter);
+        void SendControl(IDataDefinition control, uint parameter0);
+        void SendControlEx(IDataDefinition control, uint parameter0, uint parameter1, uint parameter2, uint parameter3, uint parameter4);
 
         void ForceUpdate(IMonitorableValue value);
         void StartMonitoring(IMonitorableValue value);
@@ -154,6 +166,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetValue(string valueName, double value);
         IEnumerable<string> GetAllValueNames(Func<string, bool> predicate = null);
         void StartUpdates();
+        void Initialize(bool startUpdates=false);
     }
 
     public interface ISimulationInterface
@@ -162,6 +175,9 @@ namespace SPAD.neXt.Interfaces.Events
         bool HasConnectionStatusChanged { get; }
 
         SimulationGamestate SimulationGamestate { get; }
+
+        event EventHandler<bool> ConnectionStatusChanged;
+        event EventHandler<SimulationGamestate> SimulationGamestateChanged;
     }
 
     public interface ISimulationController : ISimulationInterface
@@ -181,11 +197,28 @@ namespace SPAD.neXt.Interfaces.Events
         event EventHandler Disconnected;
         event EventHandler AircraftLoaded;
         */
-        event EventHandler<SPADEventArgs> ClientEvent;
-
+        event EventHandler<ISPADEventArgs> ClientEvent;
+        
         void StartMonitoringEvents();
         void StopMonitoringEvents();
+        void CustomSimulationEvent(string name, params object[] args);
+       
     }
+
+    public interface ISimConnectInputEventProvider
+    {
+        event EventHandler<List<ISimConnectInputEvent>> InputEventEnumerationReceived;
+        event EventHandler<ISimConnectInputEventValue> InputEventReceived;
+        void UpdateInputEvents();
+        void SendInputEvent(ISimConnectInputEventValue eventValue);
+        void SubscribeInputEvent(ulong hash);
+        void UnsubscribeInputEvent(ulong hash);
+
+        void RaiseClientEvent(ISPADEventArgs eventArgs);
+    }
+
+    public interface ISimConnectSimulationInterface : ISimulationInterface, ISimulationController, ISimulationEventProvider, ISimConnectInputEventProvider
+    { }
 
     public interface ICacheableValue 
     {
@@ -247,7 +280,7 @@ namespace SPAD.neXt.Interfaces.Events
         void Unsubscribe(IObserverTicket observerTicket);
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
-        void Raise(string eventName, object sender, ISPADEventArgs eventArgs);
+        bool Raise(string eventName, object sender, ISPADEventArgs eventArgs);
 
         void SetPassive(); // This Monitorable will neever raise an event
         bool IsPassive { get; }

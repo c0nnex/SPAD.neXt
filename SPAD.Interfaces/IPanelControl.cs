@@ -5,7 +5,9 @@ using SPAD.neXt.Interfaces.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +17,7 @@ using System.Windows.Media.Imaging;
 
 namespace SPAD.neXt.Interfaces
 {
-    public interface IPanelHost
+    public interface IPanelHost : IDisposable
     {
         IPanelDevice DeviceAttached { get; }
         IDeviceConfiguration DeviceConfiguration { get; set; }
@@ -25,7 +27,6 @@ namespace SPAD.neXt.Interfaces
         Guid PanelLinkID { get; }
         Guid DeviceGlobalIdentifier { get; }
         bool PanelHasFocus { get; }
-        bool IsVirtualDevice { get; }
         bool HasPageSupport { get;  }
 
         string PanelName { get; }
@@ -42,7 +43,7 @@ namespace SPAD.neXt.Interfaces
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars,string mainCategory = null);
         void UpdatePanelVariable(string name, object value);
         object GetPanelVariable(string name);
-
+        string RegisterDeviceVariable(string varName, object defaultValue, bool overwriteValue = true, bool asReadOnly = true);
         void NavigateToDeviceSettings();
         void DevicePowerChanged(DEVICEPOWER newPowerState);
         void AddPagingSupport();
@@ -60,12 +61,16 @@ namespace SPAD.neXt.Interfaces
         void RemoveThisPanel();
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
-        
+        void UpdateEventContextTargetPoint(Point targetPoint);
+
+
     }
 
     public interface IPublishCustomize
     {
+        bool CanPublish();
         string CustomizePublishname(string defaultName);
+        string CustomizePublishContext(string currentContext,string devicename, string eventName);
     }
 
     public interface IPanelService
@@ -86,7 +91,7 @@ namespace SPAD.neXt.Interfaces
 
         void InitializePanel(IPanelHost hostControl, string panelLabel);
         bool NeedsAsyncInitialize { get; }
-        Task<bool> InitializePanelAsync();
+        Task<bool> InitializePanelAsync(CancellationToken cancelToken);
         void DeinitializePanel();
         void SetExtension(IExtensionPanel ctrl);
         void PanelGotFocus();
@@ -113,14 +118,17 @@ namespace SPAD.neXt.Interfaces
         void ApplicationReady(BooleanEventArgs e);
 
         bool CreateDocumentation(IPanelDocumentation docProxy);
-        bool InterceptCommand(ICommand command);
+        bool InterceptCommand(ICommand command,object parameter);
         bool SavePanelImage(string filename);
 
         T GetService<T>(string id = null) where T : class, IPanelService;
         void RaiseEvent(string switchName, ISPADEventArgs eArgs);
 
         void LoadDeviceCalibration(ICalibrateableDevice calibrateableDevice);
-        
+
+        void OnDeviceEnabled();
+        void OnDeviceDisabled();
+
     }
 
     public interface IPanelDocumentation
@@ -140,12 +148,14 @@ namespace SPAD.neXt.Interfaces
         bool IsValidEvent(string eventName);
         void RemoveAllEvents();
         bool RemoveEvent(string bound);
-        IEnumerable<KeyValuePair<string, string>> GetValidEventChoices(string commandName);
+        IEnumerable<KeyValuePair<object, string>> GetValidEventChoices(string targetSwitch,string commandName);
         bool IsCommandSupported(string commandName);
 
         void PreparePageForExport(IDeviceProfile deviceProfile, IDevicePage devicePage);
         bool PageImported(IDeviceProfile deviceProfile, IDevicePage devicePage);
-        Dictionary<string, string> GetPublishInformation();        
+        Dictionary<string, string> GetPublishInformation();
+
+        bool CanDeleteEvent(IDeviceProfile deviceProfile, string boundTo, IEventDefinition eventDefinition);
     }
 
     public interface IDevicePage : IExtensible
@@ -160,6 +170,7 @@ namespace SPAD.neXt.Interfaces
         bool AddUpgradedEvent(ISPADBaseEvent evtIn);
 
         bool AddImage(IDeviceImage image);
+        bool RemoveImage(Guid id);
         ISPADBaseEvent FindEvent(string bound);
         void RemoveAllEvents(IDeviceProfile profile);
         bool RemoveEvent(IDeviceProfile profile, string bound);

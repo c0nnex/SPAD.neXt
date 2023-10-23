@@ -38,19 +38,28 @@ namespace SPAD.neXt.Interfaces.Configuration
         string UnitsName { get; set; }
         
         string ValueType { get; set; }
+        ValueDataTypes ValueDataType { get; }
         string WriteMode { get; set; }
         string WriteParameters { get; set; }
         int DefinitionKey { get; }
         bool ExcludeKeyFromSearch { get; set; }
+
+        int NumberOfParameters { get; set; }
     }
 
-    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions
+    public interface IObejectWithScopeRestriction
+    {
+        string ScopeRestriction { get; set; }
+        bool ScopeRestrictionMatch(string currentScope, bool defaultVal);
+    }
+
+    public interface IDataDefinition : IIsMonitorable, IDataDefinitionProperties, IExpandable<IDataDefinition>, ICustomCloneable<IDataDefinition>, IObjectWithOptions, IObejectWithScopeRestriction
     {
         string AlternateNormalizer { get; set; }
         string CustomNormalizer { get; set; }
         string AvailableDataProviders { get; }
         string DefaultNormalizer { get; set; }
-        string DefaultValue { get; set; }
+        object DefaultValue { get; set; }
         string DisplayName { get; set; }
         string GlobalName { get; set; }
         bool Disposable { get; set; }
@@ -78,9 +87,11 @@ namespace SPAD.neXt.Interfaces.Configuration
         List<string> AlternateUnits { get; }
         string PrimaryID { get; }
 
-        object GetRawValue();
+        void SetRawValueCallback(Func<ISPADEventArgs, object> callback);
+        object GetRawValue(ISPADEventArgs args = null);
         double GetValue();
         void SetValue(double val);
+        void SetRawValue(object val);
         string GetValueString(string displayFormat);
 
         decimal CheckRange(decimal val);
@@ -136,12 +147,14 @@ namespace SPAD.neXt.Interfaces.Configuration
     }
     public interface IExpandable<T>
     {
-        int ChildCount { get; set; }
+        int ChildCount { get; }
         IEnumerable<T> Expand();
+        void NoChilds();
     }
 
-    public interface IControlDefinition
+    public interface IControlDefinition : IDataDefinitionProperties, IObjectWithOptions
     {
-        int NumberOfParameters { get; set; }
+        bool HasCustomExecute { get; }
+        void Execute(params IEventActionParameter[] args);
     }
 }

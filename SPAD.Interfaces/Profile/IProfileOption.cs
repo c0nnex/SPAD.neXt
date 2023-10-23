@@ -27,7 +27,15 @@ namespace SPAD.neXt.Interfaces.Profile
         IReadOnlyList<string> Choices { get; }
 
         IExtensionProfileOption AddChoice(string choice);
+        IExtensionProfileOption WithDependsOn(string dependsOn);
+        IExtensionProfileOption WithOptionGroup(string group);
+
+        IExtensionProfileOption WithOptionScope(string scope);
+
+        IExtensionProfileOption AsHidden();
         void SetDirty();
+
+        T GetValue<T>();
     }
 
     public class ExtensionConfigurationEvent

@@ -1,4 +1,5 @@
-﻿using SPAD.neXt.Interfaces.Aircraft;
+﻿using SPAD.Extensions.Generic;
+using SPAD.neXt.Interfaces.Aircraft;
 using SPAD.neXt.Interfaces.Base;
 using SPAD.neXt.Interfaces.Callout;
 using SPAD.neXt.Interfaces.Configuration;
@@ -8,6 +9,7 @@ using SPAD.neXt.Interfaces.Gauges;
 using SPAD.neXt.Interfaces.Logging;
 using SPAD.neXt.Interfaces.Profile;
 using SPAD.neXt.Interfaces.SimConnect;
+using SPAD.neXt.Interfaces.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -52,6 +54,7 @@ namespace SPAD.neXt.Interfaces
         void StartService();
         void StartServiceFinal();
         void StopService();
+        void StopServiceFinal();
         bool IsEnabled { get; }
 
         void OnServiceEvent(ISPADEventArgs e);
@@ -120,6 +123,7 @@ namespace SPAD.neXt.Interfaces
         Task<bool> PutImageAsync(Guid id, string name, byte[] data, string category = null, string subCategory = null);
         Task<bool> PutImagesAsync(IEnumerable<ImageServicePayload> payLoad);
         Task<byte[]> GetImageAsync(Guid id,long lastChange = 0);
+        Task<string> GetImageLocalUrlAsync(Guid id, long lastChange = 0);
         bool HasImage(Guid id, string hash = null);
         
         IImageInfo GetImageInformation(Guid id);
@@ -197,7 +201,7 @@ namespace SPAD.neXt.Interfaces
         ISPADBackgroundThread CreateBackgroundThread(string name, ISPADBackgroundWorker worker);
         SPADLogLevel MinLogLevel { get; set; }
         ILogger GetLogger(string name);
-        void SendSimulationControl(string ctrlName, uint paramter);
+        void SendSimulationControl(string ctrlName, params uint[] paramter);
 
         ISettingsProvider Settings { get; }
         void ApplicationBusy();
@@ -221,7 +225,7 @@ namespace SPAD.neXt.Interfaces
         bool RegisterValueProvider(string tag, IValueProvider provider);
         bool RegisterExternalValueProvider(IValueProvider provider);
         bool UnregisterValueProvider(string tag, IValueProvider provider);
-        IEnumerable<IValueProviderInfomation> GetRegisteredValueProviders();
+        IEnumerable<IValueProviderInformation> GetRegisteredValueProviders();
         IValueProvider GetValueProvider(string tag);
 
         IDataDefinition CreateDataDefinition(string provider, string name, string key, string access, string normalizer, string description, string category, string subcategory, bool selectable, double correctionFactor, float espilon);
@@ -271,6 +275,7 @@ namespace SPAD.neXt.Interfaces
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);
         IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
+        void RegisterStartupDialog(string title, string message, System.Windows.MessageBoxButton buttonsAvail, string button_OK_Text = "OK", string button_CANCEL_Text = "Cancel", Action<IDialogCallbackProvider,Guid,string> onOpen = null, Action<System.Windows.MessageBoxResult> onClose = null);
         void RaiseOn(string targetDevice, string targetSwitch, SPADEventArgs eArgs);
 
         object GetNamedObject(Guid id);
@@ -280,6 +285,9 @@ namespace SPAD.neXt.Interfaces
 
         IRuntimeResolver CreateRuntimeResolver(string id);
         IJoystickEmulator CreateVirtualJoystick(int identifier, string name, string vendorId, string productId);
+
+        ISimpleGauge CreateGauge(bool noLayers);
+        bool CheckDeviceLicense(IGenericCommandDevice e);
     }
 
     public interface IActionManager
@@ -317,12 +325,12 @@ namespace SPAD.neXt.Interfaces
         StreamReader GetStreamReader(string filename = null);
         string GetContent(string filename = null);
 
-
+        void Warning(string message);
     }
 
     public interface IResolvesAtRuntime
     {
-        void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver);
+        void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver, Action<double,double> dimensionsCallback = null);
     }
 
     public interface ISupportsActivation
@@ -342,6 +350,7 @@ namespace SPAD.neXt.Interfaces
     public interface IDeviceEmulation
     {
         void EmulateClientConnect(object data);
+        void EmulateEvent(string device, string eventName, string source, string group, int val);
     }
 
     public interface IJoystickEmulator : ICalibrateableDevice, IInputDevice

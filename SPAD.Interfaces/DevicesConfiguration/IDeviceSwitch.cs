@@ -51,6 +51,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool IsConfigEnabled(string id);
         string SubMenuName { get; set; }
 
+        void AddOption(string key, object value);
         T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible;
         string GetTargetControllerName(string boundTo);
     }
@@ -81,6 +82,8 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         bool HasPrivateOption(string optionName);
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
         ISerializableOption SetPrivateOption(string optionName, string defaultValue = null);
+        void AddPrivateListOption(string optionName, string valueToAdd);
+        List<string> GetPrivateListOption(string optionName);
         IDeviceConfigValue FindConfigValue(string trigger);
         IDeviceConfigValue EnsureConfigValueExists(string valuename);
         bool HasConfigValue(string trigger);

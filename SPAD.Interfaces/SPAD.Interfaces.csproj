@@ -83,9 +83,6 @@
   <ItemGroup>
     <Compile Include="Aircraft\AircraftManager.cs" />
     <Compile Include="Aircraft\IAircraft.cs" />
-    <Compile Include="Base\Comparators\ComparatorBase.cs" />
-    <Compile Include="Base\Comparators\ComparatorEqual.cs" />
-    <Compile Include="Base\Comparators\ComparatorLess.cs" />
     <Compile Include="Base\IDataCaching.cs" />
     <Compile Include="Base\IDirectoryModel.cs" />
     <Compile Include="Base\IDynamicExpression.cs" />
@@ -123,6 +120,7 @@
     <Compile Include="Events\ISPADEventValue.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Aircraft\ICDUScreen.cs" />
+    <Compile Include="Gauges\IDeviceImageResolver.cs" />
     <Compile Include="Gauges\IGaugeVersionInformation.cs" />
     <Compile Include="ICommandDevice.cs" />
     <Compile Include="ISpecificOptions.cs" />

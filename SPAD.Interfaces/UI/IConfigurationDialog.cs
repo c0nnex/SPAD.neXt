@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SPAD.neXt.Interfaces.UI
 {
@@ -17,5 +18,14 @@ namespace SPAD.neXt.Interfaces.UI
     {
         string Name { get; }
         Guid ID { get; }
+    }
+
+    public interface IUIProxy
+    { }
+
+    public interface IDialogCallbackProvider
+    {
+        void CloseDialog(MessageBoxResult result, bool executeCallbacks = true);
+
     }
 }

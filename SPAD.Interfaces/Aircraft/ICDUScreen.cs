@@ -60,7 +60,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
     {
         Left,
         Right,
-        Center
+        Center,
+        FullRow
     }
 
     public enum CDU_LED
@@ -200,6 +201,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// </summary>
         public byte Symbol { get; set; }
 
+        public byte SymbolClean => Symbol == 0x0 ? (byte)0x20 : Symbol;
         /// <summary>
         /// Cell color <see cref="CDU_COLOR"/>
         /// </summary>
@@ -224,7 +226,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
 
         public CDU_Cell(int row, int column, byte symbol, CDU_COLOR color, CDU_FLAG flags)
         {
-            Symbol = symbol;
+            Symbol = symbol == 0x0 ? (byte)0x20 : symbol;
             Color = color;
             Flags = flags;
             Row = row;
@@ -275,8 +277,6 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         /// Get content of a CDU row
         /// </summary>
         /// <param name="rowNumber">Row number ( 0 - 13 )</param>
-        /// <param name="startOffset">Starting offset ( 0 - 23 )</param>
-        /// <param name="endOffset">End offset ( 0 - 23 )</param>
         /// <returns>Content of CDU row</returns>
         string GetColorRow(int rowNumber);
         string GetColorRow(int rowNumber, int startOffset);
@@ -331,6 +331,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
     public abstract class GenericCDUScreen : ICDUScreen
     {
         protected List<List<byte>> EmptyScreen;
+        private string EmptyRow = "";
         protected Dictionary<CDU_LED, int> LedStatus = new Dictionary<CDU_LED, int>();
         protected ILogger logger;
         public int RowCount { get; private set; }
@@ -368,6 +369,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             {
                 EmptyScreen.Add(null);
             }
+            EmptyRow = "".PadRight(cols);
             foreach (CDU_LED item in Enum.GetValues(typeof(CDU_LED)))
             {
                 LedStatus[item] = 0;
@@ -470,6 +472,11 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             });
         }
 
+        public void CancelMessage()
+        {
+            MessageTokenSource?.Cancel();
+        }
+
         public virtual bool RenderScratchPad(ICDURenderer renderCallback)
         {
             if (MessageEndDisplayAt < DateTime.Now)
@@ -492,7 +499,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         public string GetRow(int rowNumber, int startOffset, int endOffset)
         {
             if (!IsValid || (rowNumber < 0) || (startOffset < 0) || (startOffset >= ColumnCount) || (rowNumber >= RowCount) || (endOffset < 0) || (endOffset >= ColumnCount))
-                return String.Empty;
+                return EmptyRow;
             String retStr = "";
             for (int i = startOffset; i <= endOffset; i++)
             {

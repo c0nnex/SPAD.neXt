@@ -78,6 +78,7 @@ namespace SPAD.neXt.Interfaces
         P3Dv5 = 4096,
         MSFS = 8192,
         FGFS = 16384, // FlightGear
+        P3Dv6 = 32768,
         CUSTOM = 0x1000000,
     }
 
@@ -124,14 +125,16 @@ namespace SPAD.neXt.Interfaces
         PLATELABEL,
         SWITCHWINDOW,
         EXTERNAL,
-        RESTCALL
+        RESTCALL,
+        LAYERMODE
     }
     public enum DataProviderMapType
     {
         Data,
         Control,
         Toggle,
-        Exec
+        Exec,
+        RPC
     }
     public enum EventPriority
     {
@@ -186,6 +189,10 @@ namespace SPAD.neXt.Interfaces
         Ignore,
         Always,
         Range,
+        StrEquals,
+        StrNotEquals,
+        StrContains,
+        StrNotContains,
         None
     }
 
@@ -331,8 +338,10 @@ namespace SPAD.neXt.Interfaces
         Display,
         Encoder,
         Rotary,
+        RotarySwitch,
         StatefulSwitch,
         Label,
+        UIElement,
         Unkown
     }
 
@@ -484,11 +493,11 @@ namespace SPAD.neXt.Interfaces
 
     }
 
-    
+
 
     public enum REMOTE_SOCKET_COMMAND
     {
-        
+
         PushImage = 1,
         PushImageNonFlipped,
         PushImageRaw,
@@ -1284,6 +1293,7 @@ namespace SPAD.neXt.Interfaces
         public const string UpdateLeftDisplay = "__UPDATELEFTDISPLAY__";
         public const string UpdateRightDisplay = "__UPDATELEFTDISPLAY__";
         public const string ButtonLight = "__BUTTONLIGHT__";
+        public const string LayerMode = "__LAYERMODE__";
         public const string ButtonMode = "__BUTTONMODE__";
         public const string LEDColor = "__LEDCOLOR__";
         public const string PlateColor = "__PLATECOLOR__";
@@ -1302,6 +1312,9 @@ namespace SPAD.neXt.Interfaces
         public const string ModeReport = "__MODEREPORT__";
         public const string EventUpdate = "__EVENTUPDATE__";
         public const string SystemEvent = "__SYSTEM__";
+        public const string GaugeEvent = "__GAUGE__";
+        public const string DialogEvent = "__SPAD_DLG_EVENT__";
+        public const string SystemConfigurationUpdate = "__SYSTEMUPDATE__";
     }
 
     public static class SPADSystemEvents
@@ -1377,21 +1390,21 @@ namespace SPAD.neXt.Interfaces
 
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
         public static readonly Guid GENERIC_EXTENSION = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
-        
+
         public static readonly Guid DEVICE_EXT_MIDI = new Guid("{8DF6E62A-BDFC-432E-A5FA-8BB94BBEFC4D}");
         public static readonly Guid DEVICE_EXT_GENERIC = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
-        
+
         public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
 
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
         public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
 
-        public static readonly Guid IMAGE_SYSTEM_OFF    = new Guid("{0F53D212-5A29-428F-BE62-47DF8CA68F81}");
+        public static readonly Guid IMAGE_SYSTEM_OFF = new Guid("{0F53D212-5A29-428F-BE62-47DF8CA68F81}");
         public static readonly Guid IMAGE_SYSTEM_IGNORE = new Guid("{A944027C-50E3-4F09-B0E3-B44CC8A34D39}");
-        
         public static readonly Guid IMAGE_SYSTEM_EMPTY = new Guid("{E412AB45-9B97-4E80-A0DB-E7D617A73B84}");
 
-    public static readonly Guid FIP_EVENT_ENABLE = new Guid("{6309B2D8-C169-4545-89A2-A7259126BB76}");
+        public static readonly Guid FIP_EVENT_ENABLE = new Guid("{6309B2D8-C169-4545-89A2-A7259126BB76}");
+        public static readonly Guid FIP_DATA_CACHE = new Guid("{CB0C7CB8-D3CB-4B2D-901F-9B3260634C76}");
         public const int FIP_MAX_VARIABLES = 1024;
         public static readonly List<SPADValueOperation> EventValueOperations = new List<SPADValueOperation>()
         {
@@ -1425,6 +1438,7 @@ namespace SPAD.neXt.Interfaces
         public const string Data = "data";
         public const string SPAD = "spad";
         public const string Devices = "devices";
+        public const string Graphics = "gfx";
         public const string Gauges = "gauges";
         public const string Localization = "lang";
         public const string Special = "special";

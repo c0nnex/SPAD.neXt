@@ -8,6 +8,8 @@ namespace SPAD.neXt.Interfaces.Events
 {
     public interface IEventProvider
     {
+        string DeviceEventProviderSerial { get; }
+        Guid DeviceEventProviderID { get; }
         IDisposable SubscribeToClientEvent<T>(string eventName, EventHandler<string,T> eventHandler);
         void IncomingClientEvent(string eventName, ISPADEventArgs e);
         List<ISPADEventArgs> GetStartupEvents();

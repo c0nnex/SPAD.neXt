@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -49,7 +50,7 @@ namespace SPAD.neXt.Interfaces
                     }
                     return "Unknown";
                 }
-                catch 
+                catch
                 { return "Unknown"; }
             }
         }
@@ -58,6 +59,23 @@ namespace SPAD.neXt.Interfaces
         {
             get { return WindowsVersion.ToLowerInvariant().StartsWith("windows 10"); }
         }
+
+        public static Version InterfaceVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
+
+        public static string InterfaceVersionMajor
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            }
+        }
+
     }
 
     public class IntegerValue
@@ -80,5 +98,5 @@ namespace SPAD.neXt.Interfaces
         }
     }
 
-    
+
 }

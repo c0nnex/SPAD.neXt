@@ -10,23 +10,42 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Diagnostics;
+using static System.Windows.Forms.AxHost;
 
 namespace System
 {
     public static class SPADSystemExtensions
     {
+        public static string AsciiBytesToString(this byte[] buffer, int offset, int maxLength)
+        {
+            int maxIndex = offset + maxLength;
+
+            for (int i = offset; i < maxIndex; i++)
+            {
+                /// Skip non-nulls.
+                if (buffer[i] != 0) continue;
+                /// First null we find, return the string.
+                return Encoding.ASCII.GetString(buffer, offset, i - offset);
+            }
+            /// Terminating null not found. Convert the entire section from offset to maxLength.
+            return Encoding.ASCII.GetString(buffer, offset, maxLength);
+        }
+
         public static string Right(this string inStr, int numChars)
         {
             if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
                 return String.Empty;
-            return inStr.Substring(inStr.Length - Math.Min(numChars,inStr.Length), Math.Min(numChars, inStr.Length));
+            return inStr.Substring(inStr.Length - Math.Min(numChars, inStr.Length), Math.Min(numChars, inStr.Length));
         }
 
-        public static string Left(this string inStr, int numChars)
+        public static string Left(this string inStr, int numChars, int startIndex = 0)
         {
             if (String.IsNullOrEmpty(inStr) || (numChars <= 0))
                 return String.Empty;
-            return inStr.Substring(0,Math.Min(numChars,inStr.Length));
+            int ct = Math.Min(numChars, inStr.Length - startIndex);
+            if (ct <= 0)
+                return String.Empty;
+            return inStr.Substring(startIndex, ct);
         }
 
         public static string GetPart(this string s, int part, string splitter, string defaultVal = "")
@@ -89,8 +108,7 @@ namespace System
         {
             return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
         }
-
-        public static string HexDump(this byte[] bytes, int bytesPerLine = 16,int startOffset = 0, int numBytes = -1)
+        public static string HexDump(this byte[] bytes, int bytesPerLine = 16, int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";
             int bytesLength = bytes.Length - startOffset;
@@ -179,6 +197,8 @@ namespace System.Collections.ObjectModel
 
 namespace SPAD.neXt.Interfaces
 {
+    public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e);
+    public delegate Task AsyncEventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArgs>(TEventType sender, TEventArgs e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2>(TEventType sender, TEventArg1 arg1, TEventArg2 e);
     public delegate void EventHandler<TEventType, TEventArg1, TEventArg2, TEventArg3>(TEventType sender, TEventArg1 arg1, TEventArg2 arg2, TEventArg3 e);
@@ -192,7 +212,7 @@ namespace SPAD.neXt.Interfaces
             {
                 return (T)Enum.Parse(value.GetType(), valIn, true);
             }
-            catch 
+            catch
             {
                 return default(T);
             }
@@ -294,6 +314,35 @@ namespace SPAD.neXt.Interfaces
                 // do nothing
             }
         }
+
+        public static void FireAndForget<TEventArgs>(this AsyncEventHandler<TEventArgs> handler, object sender, TEventArgs args)
+        {
+            _ = Task.Factory.StartNew(async state =>
+            {
+                try
+                {
+                    await handler(sender, (TEventArgs)(state ?? default));
+                }
+                catch (Exception ex)
+                {
+                    // handle the exception, notify the app
+                }
+            }, args);
+        }
+        public static void FireAndForget<TEventType, TEventArgs>(this AsyncEventHandler<TEventType, TEventArgs> handler, TEventType sender, TEventArgs args)
+        {
+            _ = Task.Factory.StartNew(async state =>
+            {
+                try
+                {
+                    await handler(sender, (TEventArgs)(state ?? default));
+                }
+                catch (Exception ex)
+                {
+                    // handle the exception, notify the app
+                }
+            }, args);
+        }
     }
 
     public static class TypeHelperExtensions
@@ -364,6 +413,13 @@ namespace SPAD.neXt.Interfaces
 
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Rescale(this int value, float sourceMin, float sourceMax, float targetMin, float targetMax)
+        {
+            float val = Math.Max(sourceMin, Math.Min(value, sourceMax));
+
+            return (int)(((val - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin);
+        }
     }
 
     public static class DictionaryExtensions
@@ -382,7 +438,7 @@ namespace SPAD.neXt.Interfaces
         public static void RemoveWhere<TKey, TValue>(
             this ConcurrentDictionary<TKey, TValue> hashtable, Predicate<TKey, TValue> p)
         {
-            foreach (var value in hashtable.Where(v=> p(v)).Select(v =>v.Key).ToList())
+            foreach (var value in hashtable.Where(v => p(v)).Select(v => v.Key).ToList())
                 hashtable.Remove(value);
         }
 
@@ -405,13 +461,21 @@ namespace SPAD.neXt.Interfaces
             return value;
         }
 
-        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, bool disposeVal = false)
         {
-            int tries = 0;
-            TValue value;
-            if ((key == null) || !dict.ContainsKey(key))
+            if ((key == null))
                 return false;
-            return dict.TryRemove(key, out var _);
+
+            if (dict.TryRemove(key, out var val))
+            {
+                if (disposeVal)
+                {
+                    if (val is IDisposable disposable)
+                        disposable.Dispose();
+                }
+                return true;
+            }
+            return false;
         }
 
         public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, TValue value)
@@ -420,7 +484,6 @@ namespace SPAD.neXt.Interfaces
                 return false;
             if (dict.ContainsKey(key))
                 dict.Remove(key);
-            int tries = 0;
             return dict.TryAdd(key, value);
         }
     }
@@ -507,7 +570,7 @@ namespace SPAD.neXt.Interfaces
             var sb = new StringBuilder(64);
             for (int i = 0; i < Length; i++)
             {
-                sb.Append(( (Bits & ((ulong)(1ul << i))) != 0ul)? "1" : "0");
+                sb.Append(((Bits & ((ulong)(1ul << i))) != 0ul) ? "1" : "0");
             }
             return sb.ToString();
         }
@@ -625,7 +688,7 @@ namespace SPAD.neXt.Interfaces
             return Bits.GetHashCode();
         }
 
-        
+
 
         /// <summary>
         /// Assert if the given index isn't in bounds
@@ -637,9 +700,22 @@ namespace SPAD.neXt.Interfaces
         public void RequireIndexInBounds(int index)
         {
             Debug.Assert(
-                index >= 0 && index < Length ,
+                index >= 0 && index < Length,
                 "Index out of bounds: " + index);
         }
-   }
+    }
 }
+
+namespace System.Threading.Tasks
+{
+    public static class TaskDelay
+    {
+        public static Task<bool> Wait(TimeSpan timeout, CancellationToken token) =>
+            Task.Delay(timeout, token).ContinueWith(tsk => tsk.Exception == default);
+
+        public static Task<bool> Wait(int timeoutMs, CancellationToken token) =>
+            Task.Delay(timeoutMs, token).ContinueWith(tsk => tsk.Exception == default);
+    }
+}
+
 
