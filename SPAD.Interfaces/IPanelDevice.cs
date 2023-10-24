@@ -193,7 +193,7 @@ namespace SPAD.neXt.Interfaces
         bool IsVirtual { get; }
         int ButtonGroup { get; }
         int ButtonGroupIndex { get; }
-
+        ushort LinkCollection { get; }
         float Normalize(int value, int minimum, int maximum);
         float Rescale(float value, float sourceMin, float sourceMax, float targetMin, float targetMax);
         float Sigmoid(float x, int curve);
