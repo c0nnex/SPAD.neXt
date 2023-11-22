@@ -409,6 +409,15 @@ namespace SPAD.neXt.Interfaces
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Rescale(this float value, float sourceMin, float sourceMax, float targetMin, float targetMax)
         {
+            if (sourceMin > sourceMax)
+            {
+                var tmp = sourceMin;
+                sourceMin = sourceMax;
+                sourceMax = tmp;
+                tmp = targetMin;
+                targetMin = targetMax;
+                targetMax = tmp;
+            }
             value = Math.Max(sourceMin, Math.Min(value, sourceMax));
 
             return ((value - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin)) + targetMin;

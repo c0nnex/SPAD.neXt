@@ -170,7 +170,8 @@ namespace SPAD.neXt.Interfaces
         TRIGGER,
         RELEASE,
         PRESSANDRELEASE,
-        RESPONSECURVE
+        RESPONSECURVE,
+        CUSTOM
     }
 
     public enum SPADEventValueComparator
