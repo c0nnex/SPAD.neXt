@@ -243,6 +243,7 @@ namespace SPAD.neXt.Interfaces.Events
         IDataDefinition DataDefinition { get; }
         event EventHandler<BooleanEventArgs> MonitoredChanged;
 
+        void ChangeValueDataType(ValueDataTypes newValueDataType);
         void SetRawValue(object newValue);
         Double ConvertValue(object newValue);
         object GetRawValue(bool secondary = false);
