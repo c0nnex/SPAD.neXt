@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces.Transport
 {
-    /// <summary> Interface for transport layer.  </summary>
-    public interface ITransport : IDisposable
-    {
+
+    public interface ITransportInterface {
         /// <summary>
         /// Connect transport 
         /// </summary>
@@ -26,6 +25,18 @@ namespace SPAD.neXt.Interfaces.Transport
         /// </summary>
         /// <returns>true when connected</returns>
         bool IsConnected();
+    }
+
+    public interface IRemoteTransport : ITransportInterface
+    {
+        event EventHandler<IRemoteTransport, string> RemoteEventReceived;
+
+        void SendRemoteEvent(object eventData);
+    }
+
+    /// <summary> Interface for transport layer.  </summary>
+    public interface ITransport : ITransportInterface,IDisposable
+    {       
 
         /// <summary>
         /// Bytes read over transport

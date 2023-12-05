@@ -11,6 +11,7 @@ namespace SPAD.neXt.Interfaces
     {
         string Key { get; }
         string Value { get;  }
+        T GetValue<T>(T defValue = default) where T : IConvertible;
     }
 
     public interface IObjectWithOptions

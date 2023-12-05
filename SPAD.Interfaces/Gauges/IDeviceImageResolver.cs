@@ -64,7 +64,7 @@ namespace SPAD.neXt.Interfaces
 
     }
 
-    public interface ISimpleGauge : IHasImageReferences,IVersionableObject, IXmlAnyObject, ICloneable<ISimpleGauge>
+    public interface ISimpleGauge : IDisposable,IHasImageReferences,IVersionableObject, IXmlAnyObject, ICloneable<ISimpleGauge>
     {
         bool Disabled { get; set; }
         bool IsConfigured { get; }

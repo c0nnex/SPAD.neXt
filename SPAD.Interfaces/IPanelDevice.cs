@@ -41,7 +41,7 @@ namespace SPAD.neXt.Interfaces
         bool IsListening { get; }
 
         void SetDeviceConfiguration(IDeviceConfiguration deviceConfiguration);
-
+        void SetSerialNumber(string newSerial);
         void SetLogger(ILogger newLogger);
         bool OpenDevice();
         void OpenHidDevice();

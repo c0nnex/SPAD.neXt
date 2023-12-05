@@ -27,7 +27,7 @@ namespace SPAD.Extensions.Generic
         public string SerialNumber { get => _serialNumber ?? PortName; set => _serialNumber = value; }
         public  IPanelControl PanelBaseControl { get; set; }
         public IPanelDevice   AttachedDevice { get; set; }
-        public ITransport Transport { get; set; }
+        public ITransportInterface Transport { get; set; }
         public ILogger Logger { get; set; }
         public GenericSettings() { }
         public GenericSettings(string portName,string protocol)
@@ -113,6 +113,7 @@ namespace SPAD.Extensions.Generic
 
 
         void AddDeviceElement(AddonDeviceElement inputItem, bool registerVars = false);
+
         /*
         void ConfigurationCompleted();
         void ConfigurationFailed(string message);
@@ -171,6 +172,7 @@ namespace SPAD.Extensions.Generic
 
         void LedStatusChanged(string tag, LedStatusEventArgs newState);
         void PageActivated(IDeviceProfile profile,IDevicePage page, bool changeCompleted);
+        void UpdateImage(string tag, byte[] imageData);
 
         IInput GetAttachedInput(string name);
 

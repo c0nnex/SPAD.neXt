@@ -124,6 +124,9 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlElement(ElementName = "Route", Type = typeof(AddonInputRouting))]
         public List<AddonInputRouting> Routing { get; set; } = new List<AddonInputRouting>();
 
+        [XmlIgnore]
+        public GenericOptionObject PrivateOptions { get; set; } = new GenericOptionObject();
+
         public List<AddonInputRouting> GetAllRoutings()
         {
             IEnumerable<AddonInputRouting> ret = new List<AddonInputRouting>();
@@ -891,6 +894,19 @@ namespace SPAD.neXt.Interfaces.Extension
         }
     }
 
+    public class AddonDeviceOutputGauge : AddonDeviceElement
+    {
+        public override void FixUp()
+        {
+            this.Type = "GAUGE";
+            AddInherit("SPAD_GAUGE");
+            AddOption("WIDTH", "72");
+            AddOption("HEIGHT", "72");
+            AddOption("UI_TYPE", "3");
+            AddOption("CUSTOM_TYPE", "GAUGE");
+        }
+    }
+
     public abstract class AddonDeviceOutputBase : AddonDeviceInputBase
     {
         [XmlIgnore]
@@ -1071,6 +1087,7 @@ namespace SPAD.neXt.Interfaces.Extension
     [XmlInclude(typeof(AddonDeviceEncoder))]
     [XmlInclude(typeof(AddonDeviceOutputDisplay))]
     [XmlInclude(typeof(AddonDeviceOutputLED))]
+    [XmlInclude(typeof(AddonDeviceOutputGauge))]
     public class AddonDeviceElement : GenericOptionObject
     {
         [XmlAttribute]
@@ -1146,6 +1163,10 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlIgnore]
         public bool IsDisplay => Type == "DISPLAY";
         [XmlIgnore]
+        public bool IsImage => Type == "IMAGE";
+        [XmlIgnore]
+        public bool IsGauge => Type == "GAUGE";
+        [XmlIgnore]
         public bool IsInput => !IsOutput;
 
         [XmlIgnore]
@@ -1156,7 +1177,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool IsPanelChange { get; set; } = false;
 
         [XmlIgnore]
-        public bool IsOutput => InputType == DeviceInputTypes.Display || InputType == DeviceInputTypes.Led;
+        public bool IsOutput => InputType == DeviceInputTypes.Display || InputType == DeviceInputTypes.Led || InputType == DeviceInputTypes.Image || InputType == DeviceInputTypes.Gauge;
         private static readonly DeviceInputTypes[] _SwitchTypes = new DeviceInputTypes[] { DeviceInputTypes.Switch,DeviceInputTypes.StatefulSwitch,DeviceInputTypes.RotarySwitch };
         [XmlIgnore]
         public bool IsSwitch => _SwitchTypes.Contains(InputType);
@@ -1180,6 +1201,8 @@ namespace SPAD.neXt.Interfaces.Extension
                     case "SWITCH3": return DeviceInputTypes.StatefulSwitch;
                     case "LABEL": return DeviceInputTypes.Label;
                     case "UI": return DeviceInputTypes.UIElement;
+                    case "IMAGE": return DeviceInputTypes.Image;
+                    case "GAUGE": return DeviceInputTypes.Gauge;
                     default:
                         return DeviceInputTypes.Unkown;
                 }
@@ -1506,7 +1529,7 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = value;
         }
 
-        public T GetValue<T>() where T : IConvertible
+        public T GetValue<T>(T defValue = default) where T : IConvertible
         {
             try
             {
@@ -1534,7 +1557,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             catch
             {
-                return default;
+                return defValue;
             }
         }
 

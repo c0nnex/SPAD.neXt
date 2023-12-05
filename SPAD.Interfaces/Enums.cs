@@ -343,6 +343,8 @@ namespace SPAD.neXt.Interfaces
         StatefulSwitch,
         Label,
         UIElement,
+        Image,
+        Gauge,
         Unkown
     }
 
@@ -1394,6 +1396,7 @@ namespace SPAD.neXt.Interfaces
 
         public static readonly Guid DEVICE_EXT_MIDI = new Guid("{8DF6E62A-BDFC-432E-A5FA-8BB94BBEFC4D}");
         public static readonly Guid DEVICE_EXT_GENERIC = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
+        public static readonly Guid DEVICE_EXT_STREAMDECK = new Guid("{938D7095-9145-49F2-9B0E-E4ED645CF644}");
 
         public const string FEATURE_GAUGEDESIGNER = "GaugeDesigner";
 

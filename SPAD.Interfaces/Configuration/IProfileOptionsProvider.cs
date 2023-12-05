@@ -9,7 +9,10 @@ using System.Windows;
 namespace SPAD.neXt.Interfaces.Configuration
 {
     public interface ISettingsProvider : IProfileOptionsProvider, IWindowPlacementProvider
-    { }
+    {
+        IObjectWithVariables SystemVariables { get; }
+        IObjectWithVariables SessionVariables { get; }
+    }
 
     public interface IProfileOptionsProvider
     {
