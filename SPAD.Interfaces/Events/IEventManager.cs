@@ -169,6 +169,11 @@ namespace SPAD.neXt.Interfaces.Events
         void Initialize(bool startUpdates=false);
     }
 
+    public interface INeedInitialze
+    {
+        void InitalizeInstance();
+    }
+
     public interface ISimulationInterface
     {
         bool IsConnected { get; }
@@ -177,7 +182,7 @@ namespace SPAD.neXt.Interfaces.Events
         SimulationGamestate SimulationGamestate { get; }
 
         event EventHandler<bool> ConnectionStatusChanged;
-        event EventHandler<SimulationGamestate> SimulationGamestateChanged;
+        event EventHandler<ISimulationInterface,SimulationGamestate,SimulationGamestate> SimulationGamestateChanged;
     }
 
     public interface ISimulationController : ISimulationInterface

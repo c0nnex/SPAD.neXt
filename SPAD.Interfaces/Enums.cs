@@ -194,6 +194,7 @@ namespace SPAD.neXt.Interfaces
         StrNotEquals,
         StrContains,
         StrNotContains,
+        NotRange,
         None
     }
 

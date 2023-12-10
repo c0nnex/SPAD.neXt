@@ -214,7 +214,17 @@ namespace SPAD.neXt.Interfaces.Events
 
         public override string ToString()
         {
-            return $"{FullName} {EventMarker} Old={OldValue} New={NewValue} Sw={EventSwitch} VE={IsValueEvent} {Immediate} {ExecutionContext}";
+            var s = $"{FullName} {EventMarker} Old={OldValue} New={NewValue} Sw={EventSwitch} VE={IsValueEvent} {Immediate} {ExecutionContext}";
+            if (EventParameters != null && EventParameters.Count > 0)
+            {
+                s += " [";
+                foreach (var item in EventParameters)
+                {
+                    s += $"{item.Key}={item.Value},";
+                }
+                s += "]";
+            }
+            return s;
         }
         private string _FullName = null;
         public string FullName

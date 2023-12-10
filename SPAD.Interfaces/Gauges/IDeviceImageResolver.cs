@@ -79,6 +79,7 @@ namespace SPAD.neXt.Interfaces
         IGaugeTextLayerConfig AddTextLayer(int layerNumber, string text, ICustomLabel textConfig);
         ISimpleGaugeLayerConfig DuplicateLayer(ISimpleGaugeLayerConfig sourceLayer, int targetLayerNumber);
         IGaugeRenderer CreateRenderer(string belongsTo, int sizeX, int sizeY, IDeviceImageResolver deviceImageResolver);
+        int FindLayerByCoordinates(int x, int y);
     }
 
     public interface ISimpleGaugeLayerConfig : ICloneable

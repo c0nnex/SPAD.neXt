@@ -226,7 +226,7 @@ namespace SPAD.neXt.Interfaces
         bool RegisterExternalValueProvider(IValueProvider provider);
         bool UnregisterValueProvider(string tag, IValueProvider provider);
         IEnumerable<IValueProviderInformation> GetRegisteredValueProviders();
-        IValueProvider GetValueProvider(string tag);
+        IValueProvider GetValueProvider(string tag, bool create = false);
 
         IDataDefinition CreateDataDefinition(string provider, string name, string key, string access, string normalizer, string description, string category, string subcategory, bool selectable, double correctionFactor, float espilon);
         IDataDefinition CreateDataDefinition(IValueProvider provider, string name, string globalName);
