@@ -351,7 +351,7 @@ namespace SPAD.neXt.Interfaces.Extension
             return input;
         }
 
-        public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag);
+        public bool HasInput(string tag) => Inputs.Any(x => x.Tag == tag) || Inputs.Any(x => x.Routing.Any(y => y.From == tag));
         public AddonDeviceElement GetInput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag);
         public AddonDeviceElement GetOutput(string tag) => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput);
         public T GetOutput<T>(string tag) where T : class => Inputs.FirstOrDefault(x => x.Tag == tag && x.IsOutput) as T;

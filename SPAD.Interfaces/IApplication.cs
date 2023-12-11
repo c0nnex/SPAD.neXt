@@ -320,6 +320,7 @@ namespace SPAD.neXt.Interfaces
 
     public interface IRuntimeResolver
     {
+        void AddPath(string localPath, bool asFirst = false);
         bool HasFile(string filename);
         Stream GetStream(string filename = null);
         StreamReader GetStreamReader(string filename = null);
