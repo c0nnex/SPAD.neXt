@@ -203,7 +203,7 @@ namespace SPAD.neXt.Interfaces.Events
         event EventHandler AircraftLoaded;
         */
         event EventHandler<ISPADEventArgs> ClientEvent;
-        
+        event EventHandler<bool> EventMonitoringChanged;
         void StartMonitoringEvents();
         void StopMonitoringEvents();
         void CustomSimulationEvent(string name, params object[] args);

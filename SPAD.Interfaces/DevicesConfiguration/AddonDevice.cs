@@ -246,6 +246,17 @@ namespace SPAD.neXt.Interfaces.Extension
             foreach (var item in Outputs)
             {
                 item.FixUp();
+                foreach (var m in item.Mappings)
+                {
+                    m.Tag = item.Tag;
+                    m.FixUp();
+                    DeviceCommandMappingDict[m.In] = m;
+                    if (doStateStore && String.IsNullOrEmpty(m.StateStore))
+                    {
+                        if (item.InputType != DeviceInputTypes.Encoder)
+                            m.StateStore = item.Tag;
+                    }
+                }
                 if (item.IsDisplay)
                 {
                     for (int r = 0; r < item.Display.Rows; r++)
@@ -340,11 +351,17 @@ namespace SPAD.neXt.Interfaces.Extension
             return new AddonDeviceElement() { Tag = newTag };
         }
 
-        public AddonDeviceElement AddInput(AddonDeviceElement addonDeviceElement)
+        public bool HasRouting(string inputName) => Inputs.Any(x => x.Routing.Any(y => y.From == inputName));
+
+        public AddonDeviceElement AddInput(AddonDeviceElement addonDeviceElement, bool ignoreIfRouted = true)
         {
             var input = Inputs.FirstOrDefault(x => x.Tag == addonDeviceElement.Tag);
             if (input == null)
             {
+                if (HasRouting(addonDeviceElement.Tag))
+                {
+                    return null; // Routed input. Ignore it
+                }
                 Inputs.Add(addonDeviceElement);
                 return addonDeviceElement;
             }
@@ -1865,10 +1882,10 @@ namespace SPAD.neXt.Interfaces.Extension
                 StateValue = 1;
                 if (Out.StartsWith("TUNER_"))
                 {
-                    if (Out.Contains("CLOCKWISE"))
-                        StateValue = 1;
-                    else
+                    if (Out.Contains("COUNTERCLOCKWISE"))
                         StateValue = -1;
+                    else
+                        StateValue = 1;
                 }
                 else
                 {
