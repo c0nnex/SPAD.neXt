@@ -19,6 +19,14 @@ namespace SPAD.neXt.Interfaces
         string ErrorMessage { get; }
     }
 
+    public sealed class ExpressionEvaluationResult
+    {
+        public bool HasError => !String.IsNullOrEmpty(ErrorMessage);
+        public string ErrorMessage { get; set; } = null;
+        public object Result { get; set; } = null;
+        public bool HasResult => Result != null;
+    }
+
     public interface IDynamicExpression : IDisposable, IHasErrorInfo, IExternalExpression
     {
         string Name { get; }
@@ -30,7 +38,7 @@ namespace SPAD.neXt.Interfaces
         event EventHandler<IMonitorableValue> VariableAdded;
         void EnableDebug(bool val);
         void RegisterFunction(string name, Func<object[], object> fun);
-        void RegisterPrivateVariableFunction(Func<string, object> fun);
+        void RegisterPrivateVariableFunction(Action<string, ExpressionEvaluationResult> fun);
     }
 
     public interface IExternalExpression : IDisposable, IHasErrorInfo

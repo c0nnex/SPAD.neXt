@@ -257,6 +257,11 @@ namespace SPAD.neXt.Interfaces
         IControllableDevice GetControllableDevice();
     }
 
+    public interface IOutputDevice
+    {
+
+    }
+
     public interface IControllableDevice
     {
         void SetBrightness(int index, int howBright);

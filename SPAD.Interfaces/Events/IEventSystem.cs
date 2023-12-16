@@ -39,6 +39,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         long GetDataDefinitionsIteration();
         IDataDefinition GetDataDefinition(string id);
+        IDataDefinition GetExistingDataDefinition(string id);
         IDataDefinition GetControlDefinition(string id);
         IReadOnlyList<IDataDefinition> GetDataDefinitions(SPADDefinitionTypes definitionType = SPADDefinitionTypes.OFFSET, Predicate<IDataDefinition> predicate = null);
         IDataDefinition CreateNewLocal(string name, string displaynormalizer, VARIABLE_SCOPE scope = VARIABLE_SCOPE.SESSION, object defaultValue = null);
@@ -109,6 +110,10 @@ namespace SPAD.neXt.Interfaces.Events
         public static IDataDefinition GetDataDefinition(string id)
         {
             return EventSystemHandler.GetDataDefinition(id);
+        }
+        public static IDataDefinition GetExistingDataDefinition(string id)
+        {
+            return EventSystemHandler.GetExistingDataDefinition(id);
         }
         public static IDataDefinition GetControlDefinition(string id)
         {
