@@ -32,7 +32,7 @@ namespace SPAD.neXt.Interfaces
         string Name { get; }
         string Expression { get; }
         object Evaluate(ISPADEventArgs e = null);
-        bool EvaluateBool();
+        bool EvaluateBool(object value = null);
         bool Compile();
 
         event EventHandler<IMonitorableValue> VariableAdded;

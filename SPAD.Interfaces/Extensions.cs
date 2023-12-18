@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
+using System.Globalization;
 
 namespace System
 {
@@ -169,6 +170,40 @@ namespace System
                 result.Append(line);
             }
             return result.ToString();
+        }
+        public static T GetValue<T>(this object obj,T defValue = default) 
+        {
+            try
+            {
+                if (obj == null)
+                    return defValue;
+                var Value = Convert.ToString(obj, CultureInfo.InvariantCulture);
+                object res;
+                if (typeof(T) == typeof(Guid))
+                {
+                    res = Guid.Parse(Value);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(bool))
+                {
+                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    return (T)res;
+                }
+                if (typeof(T) == typeof(char))
+                {
+                    res = Value.FirstOrDefault();
+                    return (T)res;
+                }
+                if (typeof(T).IsEnum)
+                    return (T)Enum.Parse(typeof(T), Value, true);
+
+                res = Convert.ChangeType(Value, typeof(T), CultureInfo.InvariantCulture);
+                return (T)res;
+            }
+            catch
+            {
+                return defValue;
+            }
         }
     }
 }
