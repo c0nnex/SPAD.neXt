@@ -171,7 +171,7 @@ namespace System
             }
             return result.ToString();
         }
-        public static T GetValue<T>(this object obj,T defValue = default) 
+        public static T GetValueAs<T>(this object obj,T defValue = default) 
         {
             try
             {

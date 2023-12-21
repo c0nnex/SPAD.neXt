@@ -267,8 +267,8 @@ namespace SPAD.neXt.Interfaces.Extension
                 }
                 foreach (var m in item.OutputMappings)
                 {
-                    m.Condition?.RegisterPrivateVariableFunction(GetDeviceSessionValue);
-                    m.Compute?.RegisterPrivateVariableFunction(GetDeviceSessionValue);
+                    m.Condition?.RegisterPrivateVariableFunction(GetDeviceSessionValueCallback);
+                    m.Compute?.RegisterPrivateVariableFunction(GetDeviceSessionValueCallback);
                 }
                 SetDeviceSessionValue(item.Tag, 0);
                 if (item.IsDisplay)
@@ -313,8 +313,8 @@ namespace SPAD.neXt.Interfaces.Extension
             foreach (var item in OutputMappings)
             {
                 item.FixUp("DEVICEGLOBAL");
-                item.Condition?.RegisterPrivateVariableFunction(GetDeviceSessionValue);
-                item.Compute?.RegisterPrivateVariableFunction(GetDeviceSessionValue);
+                item.Condition?.RegisterPrivateVariableFunction(GetDeviceSessionValueCallback);
+                item.Compute?.RegisterPrivateVariableFunction(GetDeviceSessionValueCallback);
             }
             var baseVarkey = "";
             if (HasOption("VARIABLE_KEY"))
@@ -341,7 +341,7 @@ namespace SPAD.neXt.Interfaces.Extension
             variableBaseKey = baseVarkey;
         }
 
-        public T GetDeviceSessionValue<T>(string name, T defValue = default)
+        public T GetDeviceSessionValue<T>(string name, T defValue = default) 
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
             {
@@ -350,21 +350,20 @@ namespace SPAD.neXt.Interfaces.Extension
             return defValue;
         }
         public void SetDeviceSessionValue(string name, object value) => DeviceSessionVariables[name] = value;
-        private void GetDeviceSessionValue(string name, ExpressionEvaluationResult result)
+        private ExpressionEvaluationResult GetDeviceSessionValueCallback(string name)
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
             {
                 logger.Debug("GetDeviceSessionValue('{0}') => {1}", name, value);
-                result.Result = value;
-                return;
+                return ExpressionEvaluationResult.CreateResult(value);
             }
             if (!name.Contains(':') && (name != "value"))
             {
                 logger.Debug("GetDeviceSessionValue('{0}') => not known yet", name);
                 // Not yet set, but a local session var
-                result.Result = 0;
-                return;
+                return ExpressionEvaluationResult.CreateResult( 0 );
             }
+            return ExpressionEvaluationResult.Empty;
             // Fall through. We do not know about any simvar stuff
         }
 
