@@ -160,7 +160,22 @@ namespace SPAD.neXt.Interfaces
         void UpdateData(string dataTag, object data, bool notifyClients = true);
         void UpdateImage(string imageTag, byte[] image, string imageType = "image/bmp", bool notifyClients = true);
     }
-    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager
+
+    public interface ITemplateContainer
+    {
+        string Name { get; }
+        void AddTemplate(ITemplateClass template);
+        bool ApplyTemplate(string templateName, IEventDefinition targetEventDefinition);
+        IList<string> GetTemplateNames();
+        void Save();
+    }
+
+    public interface ITemplateManager
+    {
+        ITemplateContainer GetTemplateContainer(string name);
+    }
+
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager, ITemplateManager
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }

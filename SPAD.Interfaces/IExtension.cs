@@ -85,10 +85,10 @@ namespace SPAD.neXt.Interfaces
         string DevicePath { get; }
         string DevicePublishName { get; }
     }
-
+    
     public interface IExtensionDynamic 
     {
-      
+        bool IsExclusive { get; }
         bool HasDeviceConfiguration { get; }
         
         bool WillHandle(IUSBDevice device);

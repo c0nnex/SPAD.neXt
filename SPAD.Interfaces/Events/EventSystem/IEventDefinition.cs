@@ -134,7 +134,18 @@ namespace SPAD.neXt.Interfaces.Events
         void UpdateSelfProperty();
     }
 
-    public interface IEventConditions : IObservableList<IEventCondition>
+    public interface ITemplateClass 
+    { 
+        string Name { get; set; }
+        bool ApplyTemplate(object target);
+    }
+
+    public interface ITemplateable
+    {
+        ITemplateClass CreateTemplate(string templateName);
+    }
+
+    public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>,ITemplateable
     {
         string ConfigString { get; }
         bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);

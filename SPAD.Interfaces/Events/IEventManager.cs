@@ -176,6 +176,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ISimulationInterface
     {
+        string SimulationInterfaceName { get; }
         bool IsConnected { get; }
         bool HasConnectionStatusChanged { get; }
 

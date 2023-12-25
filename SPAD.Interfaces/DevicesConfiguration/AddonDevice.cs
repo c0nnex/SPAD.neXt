@@ -341,6 +341,7 @@ namespace SPAD.neXt.Interfaces.Extension
             variableBaseKey = baseVarkey;
         }
 
+        public bool HasDeviceSessionValue(string name) => DeviceSessionVariables.ContainsKey(name);
         public T GetDeviceSessionValue<T>(string name, T defValue = default) 
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
@@ -349,7 +350,11 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return defValue;
         }
-        public void SetDeviceSessionValue(string name, object value) => DeviceSessionVariables[name] = value;
+        public void SetDeviceSessionValue(string name, object value)
+        {
+            logger.Debug("SetDeviceSessionValue {0} => {1}", name, value);
+            DeviceSessionVariables[name] = value;
+        }
         private ExpressionEvaluationResult GetDeviceSessionValueCallback(string name)
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
@@ -1928,7 +1933,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public string ComputeOutput(object value)
         {
             if (Compute != null)
-                return Convert.ToString(Compute.Evaluate(new SPADEventArgs(null, value, value)), CultureInfo.InvariantCulture);
+                return Convert.ToString(Compute.Evaluate(new SPADEventArgs("dummy", value, value)), CultureInfo.InvariantCulture);
             else return Convert.ToString(value,CultureInfo.InvariantCulture);
         }
         public bool IsOffName(string inputName)
