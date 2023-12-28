@@ -23,6 +23,7 @@ namespace SPAD.neXt.Interfaces
         int RemoveOption(string key);
         void SetOption<I>(string key, I value) where I : IConvertible;
         bool MergeOptions(IObjectWithOptions src);
+        IObjectWithOptions WithInitialOption<T>(string key, T value) where T : IConvertible;
     }
 
     public sealed class VariableChangedEventArgs : EventArgs

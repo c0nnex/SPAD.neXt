@@ -79,16 +79,25 @@ namespace SPAD.neXt.Interfaces.Events
         IDataDefinition ParameterDataDefinition { get; }
         void SetData(ActionReferenceTypes referenceType, string value);
     }
-    public interface IEventActionSendEvent : IEventAction, IEventActionDoesMonitor
+
+    public interface IEventActionLED : IEventAction, IEventActionWithParameters, IEventActionObserve
+    {
+
+    }
+
+    public interface IEventActionWithParameters
     {
         int NumberOfParameters { get; }
-        bool NoExtendedEvent { get; set; }
         IReadOnlyList<IEventActionParameter> Parameters { get; }
         IEventActionParameter Parameter { get; }
         IEventActionParameter Parameter1 { get; }
         IEventActionParameter Parameter2 { get; }
         IEventActionParameter Parameter3 { get; }
         IEventActionParameter Parameter4 { get; }
+    }
+    public interface IEventActionSendEvent : IEventAction, IEventActionDoesMonitor, IEventActionWithParameters
+    {
+        bool NoExtendedEvent { get; set; }
 
         IDataDefinition TargetDataDefinition { get; set; }
         string TargetDataDefinitionID { get; set; }

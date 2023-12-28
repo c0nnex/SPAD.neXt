@@ -346,7 +346,7 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
             {
-                return (T)Convert.ChangeType(value, typeof(T));
+                return value.GetValueAs<T>(defValue);
             }
             return defValue;
         }
@@ -1723,6 +1723,12 @@ namespace SPAD.neXt.Interfaces.Extension
 
         IEnumerable<IGenericOption> IObjectWithOptions.Options => Options;
 
+        public IObjectWithOptions WithInitialOption<T>(string key, T value) where T : IConvertible
+        {
+            SetOption<T>(key, value);
+            return this;
+        }
+
         public bool TryGetOptionIf<T>(string key, out T outVar, T defaultValue = default(T)) where T : IConvertible, IComparable<T>
         {
             outVar = defaultValue;
@@ -1826,6 +1832,16 @@ namespace SPAD.neXt.Interfaces.Extension
             return string.Join(",", Options.Select(o => o.ToString()));
         }
 
+        public static IObjectWithOptions Create(string initData)
+        {
+            var obj = new GenericOptionObject();
+            var parts = initData.Split(new char[] { ';' });
+            foreach (var part in parts)
+            {
+                obj.SetOption(part.GetPart(0,"="),part.GetPart(1,"="));
+            }
+            return obj;
+        }
     }
 
     [Serializable]

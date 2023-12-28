@@ -43,6 +43,12 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsDisposed { get; }
     }
 
+    public interface IIsObservable : IHasID
+    {
+        void Subscribe(IObserverTicket observerTicket);
+        void Unsubscribe(IObserverTicket observerTicket);
+    }
+
     public interface IObserverTicket : ITrackableDisposable
     {
         Guid ID { get; }
@@ -56,8 +62,8 @@ namespace SPAD.neXt.Interfaces.Events
         void Clear();
         bool Subscribe(string dataRef);
         bool Unsubscribe(string dataRef);
-        void Subscribe(IMonitorableValue monitorableValue);
-        void Unsubscribe(IMonitorableValue monitorableValue);
+        void Subscribe(IIsObservable observableValue);
+        void Unsubscribe(IIsObservable observableValue);
 
         IObserverTicket AsStatic();
     }
@@ -232,9 +238,8 @@ namespace SPAD.neXt.Interfaces.Events
         void SetCacheIndex(int idx);
     }
 
-    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>, ICacheableValue
+    public interface IMonitorableValue : IDisposable, IComparer<IMonitorableValue>, ICacheableValue, IIsObservable
     {
-        Guid ID { get; }
         Guid Owner { get; set; }
         string Name { get; }
         string InternalName { get; set; }
@@ -283,8 +288,6 @@ namespace SPAD.neXt.Interfaces.Events
         bool IsUndefined();
         bool HasObservers { get; }
 
-        void Subscribe(IObserverTicket observerTicket);
-        void Unsubscribe(IObserverTicket observerTicket);
         IObserverTicket Subscribe(string subscriptionID, string eventName, ISPADEventDelegate eventDelegate, int priority = 0);
 
         bool Raise(string eventName, object sender, ISPADEventArgs eventArgs);

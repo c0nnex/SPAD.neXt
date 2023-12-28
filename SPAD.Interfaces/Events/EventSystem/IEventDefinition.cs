@@ -101,6 +101,7 @@ namespace SPAD.neXt.Interfaces.Events
         void SetDirty();
         void Activate();
         void Deactivate();
+        void Update();
         bool CheckConfiguration(List<string> tmpError);
         bool Evaluate(ISPADEventArgs e);
     }
@@ -147,6 +148,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>,ITemplateable
     {
+        bool LastEvalResult { get; }
         string ConfigString { get; }
         bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);
     }

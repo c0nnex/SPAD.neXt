@@ -68,7 +68,7 @@ namespace SPAD.neXt.Interfaces
     {
         private static long eventNumber;
 
-        public uint CustomIndex { get; }
+        public uint CustomIndex { get; set; }
         public IInput Input { get; private set; }
         public float Value { get; }
         public bool IsTriggered { get; }
