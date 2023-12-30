@@ -47,6 +47,7 @@ namespace SPAD.neXt.Interfaces.Events
         EventOperations EventOperation { get; set; }
         IInputElement CommandTarget { get; set; }
         void UpdateEventName(string eventName);
+        void UpdateSender(Guid newSender);
         void SetHandled(string eventName);
         bool GetHandled(string eventName);
         void SetCallbackValue(object value);
@@ -204,7 +205,7 @@ namespace SPAD.neXt.Interfaces.Events
                 EventTrigger = args[1];
             }
         }
-
+        public void UpdateSender(Guid newSender) {  Sender = newSender; }
         public ISPADEventArgs AsThrottled()
         {
             ThrottleID = FullName + GetData("LAYER", "");

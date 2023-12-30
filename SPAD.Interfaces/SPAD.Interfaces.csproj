@@ -156,6 +156,7 @@
     <Compile Include="Transport\ITransport.cs" />
     <Compile Include="UI\IConfigurationDialog.cs" />
     <Compile Include="UI\IDialConfigurationDialog.cs" />
+    <Compile Include="UI\ITreeableItem.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

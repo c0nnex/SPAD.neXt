@@ -11,7 +11,15 @@ namespace SPAD.neXt.Interfaces
     {
         void OnDelete();
     }
-
+    public interface IIsEditable
+    {
+        /*
+        void OnBeginEdit();
+        void OnEndEdit();
+        */
+        bool CanEdit();
+        bool CanDelete();
+    }
 
     public interface IHasErrorInfo
     {

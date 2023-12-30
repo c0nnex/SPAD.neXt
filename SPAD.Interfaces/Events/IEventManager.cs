@@ -64,7 +64,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Unsubscribe(string dataRef);
         void Subscribe(IIsObservable observableValue);
         void Unsubscribe(IIsObservable observableValue);
-
+        void RaiseTicket(ISPADEventArgs args);
         IObserverTicket AsStatic();
     }
 

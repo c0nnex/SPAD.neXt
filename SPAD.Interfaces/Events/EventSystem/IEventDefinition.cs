@@ -11,7 +11,7 @@ using System.Linq;
 namespace SPAD.neXt.Interfaces.Events
 {
 
-    public interface IEventBaseObject : IIsDeletable
+    public interface IEventBaseObject : IIsDeletable, IIsEditable
     {
         IEventDefinition GetParentEventDefinition();
         IDataDefinition GetDataDefinition(string definitionID);
@@ -35,7 +35,7 @@ namespace SPAD.neXt.Interfaces.Events
     }
     public interface IEncoderAcceleration
     {
-        
+
         Double Threshold { get; set; }
         Double Timeout { get; set; }
         Double Multiplier { get; set; }
@@ -135,22 +135,53 @@ namespace SPAD.neXt.Interfaces.Events
         void UpdateSelfProperty();
     }
 
-    public interface ITemplateClass 
-    { 
+    public interface ITemplateImplementation
+    {
+        string ConfigString { get; }
+        IExecutionCounter ExecutionCounter { get; }
+    }
+
+    public interface ITemplateClass : ISupportsActivation,ICloneableWithID<ITemplateClass>, IIsObservable
+    {      
         string Name { get; set; }
+        string Category { get; set; }
         bool ApplyTemplate(object target);
+        void FixUp();
+        void UpdateTemplate(ITemplateClass newTemplate);
+        ITemplateImplementation Implementation { get; }
+        int NumberOfReferences { get; }
+       // void AddReference();
     }
 
     public interface ITemplateable
     {
-        ITemplateClass CreateTemplate(string templateName);
+        bool CanCreateTemplate();
+        ITemplateClass CreateTemplate(string templateName,string category = null);
     }
 
-    public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>,ITemplateable
+    public interface ISupportsActivation
     {
-        bool LastEvalResult { get; }
-        string ConfigString { get; }
+        void Activate();
+        void Deactivate();
+
+    }
+
+    public interface IExecutionCounter
+    {
+        int Failure { get; }
+        int Success { get; }
+        int Total { get; }
+        bool LastResult { get; }
+        void RegisterResult(bool success);
+    }
+
+    
+
+    public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>, ITemplateable, ITemplateImplementation //, IIsObservable
+    {
+        SPADConditionBinding ConditionBinding { get; set; }
         bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);
+        void SetConfiguration(SPADConditionBinding conditionBinding, bool conditionRepeat);
     }
 
     public interface IEventActions : IObservableList<IEventAction>
@@ -160,7 +191,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool Execute(IEventDefinition definition, ISPADEventArgs e);
 
         IEventAction GetBySingleton(Guid id);
-       
+
     }
 
     public interface IEditableObjectEx

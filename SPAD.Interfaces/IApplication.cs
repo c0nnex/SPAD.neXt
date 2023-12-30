@@ -161,12 +161,18 @@ namespace SPAD.neXt.Interfaces
         void UpdateImage(string imageTag, byte[] image, string imageType = "image/bmp", bool notifyClients = true);
     }
 
-    public interface ITemplateContainer
+    public interface ITemplateContainer : ISupportsActivation
     {
         string Name { get; }
         void AddTemplate(ITemplateClass template);
-        bool ApplyTemplate(string templateName, IEventDefinition targetEventDefinition);
+        void RemoveTemplate(Guid templateId);
+        bool ApplyTemplate(Guid templateId, IEventDefinition targetEventDefinition);
+
+        IList<ITemplateClass> GetTemplates();
         IList<string> GetTemplateNames();
+        IList<string> GetCategories();
+        IList<ITreeNodeItem> GetTemplateTreeNodes();
+        ITemplateClass GetTemplate(Guid templateId);
         void Save();
     }
 
@@ -349,7 +355,7 @@ namespace SPAD.neXt.Interfaces
         void RuntimeResolve(IApplication proxy, IRuntimeResolver resolver, Action<double,double> dimensionsCallback = null);
     }
 
-    public interface ISupportsActivation
+    public interface ISupportsCustomUIActivation
     {
         void Activate(string source, object additionalInfo);
         void Deactivate(string source, object additionalInfo);

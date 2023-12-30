@@ -121,8 +121,13 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand RefreshPageCommand { get; } = new RoutedCommand("SPAD_neXt.RefreshPage", typeof(SPADCommands));
 
         public static RoutedCommand ConditionAddCommand { get; } = new RoutedCommand("SPAD_next.ConditionAdd", typeof(SPADCommands));
+        public static RoutedCommand ConditionEditCommand { get; } = new RoutedCommand("SPAD_next.ConditionEdit", typeof(SPADCommands));
+        public static RoutedCommand ConditionDeleteCommand { get; } = new RoutedCommand("SPAD_next.ConditionDelete", typeof(SPADCommands));
         public static RoutedCommand ConditionSaveCommand { get; } = new RoutedCommand("SPAD_next.ConditionSave", typeof(SPADCommands));
         public static RoutedCommand ConditionPasteCommand { get; } = new RoutedCommand("SPAD_next.ConditionPaste", typeof(SPADCommands));
+
+        public static RoutedCommand CategoryAddCommand { get; } = new RoutedCommand("SPAD_next.CategoryAdd", typeof(SPADCommands));
+        public static RoutedCommand CategoryEditCommand { get; } = new RoutedCommand("SPAD_next.CategoryEdit", typeof(SPADCommands));
         public static RoutedCommand ImportCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Import", typeof(SPADCommands));
         public static RoutedCommand InheritCommand { get; } = new RoutedCommand("SPAD_neXt.Commands.Inherit", typeof(SPADCommands));
         public static RoutedCommand PublishProfileCommand { get { return _PublishProfileCommand; } }

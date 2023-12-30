@@ -13,4 +13,5 @@ namespace SPAD.neXt.Interfaces.UI
         void DisableDialConfig(int dialNumber);
         void SetDialMinMax(int dialNumber, Double min, Double max, bool reverse);
     }
+
 }

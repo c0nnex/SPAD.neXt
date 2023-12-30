@@ -109,6 +109,13 @@ namespace System
         {
             return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
         }
+
+        public static Guid ToGuid(this object obj)
+        {
+            if (obj == null) return Guid.Empty;
+            if (Guid.TryParse(obj.ToString(), out Guid guid)) return guid;
+            return Guid.Empty;
+        }
         public static string HexDump(this byte[] bytes, int bytesPerLine = 16, int startOffset = 0, int numBytes = -1)
         {
             if (bytes == null) return "<null>";

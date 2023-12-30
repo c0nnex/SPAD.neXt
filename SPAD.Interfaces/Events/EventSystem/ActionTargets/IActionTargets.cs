@@ -82,7 +82,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface IEventActionLED : IEventAction, IEventActionWithParameters, IEventActionObserve
     {
-
+        bool AutoOff { get; set; }
     }
 
     public interface IEventActionWithParameters
