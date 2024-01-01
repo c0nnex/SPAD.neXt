@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,12 +47,15 @@ namespace SPAD.neXt.Interfaces
         string Expression { get; }
         object Evaluate(ISPADEventArgs e = null);
         bool EvaluateBool(object value = null);
+        void ExecuteWithValue(object value);
         bool Compile();
 
         event EventHandler<IMonitorableValue> VariableAdded;
         void EnableDebug(bool val);
         void RegisterFunction(string name, Func<object[], object> fun);
         void RegisterPrivateVariableFunction(Func<string, ExpressionEvaluationResult> fun);
+        IDynamicExpression WithFunction(string name, Func<object[], object> fun);
+        IDynamicExpression WithVariableFunction(Func<string, ExpressionEvaluationResult> fun);
     }
 
     public interface IExternalExpression : IDisposable, IHasErrorInfo

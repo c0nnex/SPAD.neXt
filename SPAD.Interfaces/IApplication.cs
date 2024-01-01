@@ -181,7 +181,13 @@ namespace SPAD.neXt.Interfaces
         ITemplateContainer GetTemplateContainer(string name);
     }
 
-    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager, ITemplateManager
+    public interface ISPADSerialization
+    {
+        T DeserializeObject<T>(string toDeserialize, Type[] extraTypes = null);
+        string SerializeObject(object toSerialize, XmlSerilizationPurpose purpose);
+        string SerializeObject<T>(object toSerialize, XmlSerilizationPurpose purpose);
+    }
+    public interface IApplication : ILocalizable, IProfileManager, IEventManager, ICalloutManager, IActionManager, ICacheManager, ITemplateManager, ISPADSerialization
     {
         Guid ConsumerID { get; }
         bool DebugMode { get; }
@@ -291,7 +297,7 @@ namespace SPAD.neXt.Interfaces
         HashSet<string> GetConfigurationSet(string name);
         T GetApplicationOption<T>(string optionKey, T defaultVal = default);
 
-        IExternalExpression CreateExpression(string name, string expression);
+        IDynamicExpression CreateExpression(string name, string expression);
 
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
         bool IsBuild(string buildName);

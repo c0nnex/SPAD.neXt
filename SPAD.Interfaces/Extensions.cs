@@ -12,11 +12,55 @@ using System.Windows.Data;
 using System.Diagnostics;
 using static System.Windows.Forms.AxHost;
 using System.Globalization;
+using SPAD.neXt.Interfaces;
+using System.Security.Cryptography;
+using System.IO;
+using System.Windows.Controls;
 
 namespace System
 {
     public static class SPADSystemExtensions
     {
+        public static string GetMD5(this string s)
+        {
+            var data = Encoding.UTF8.GetBytes(s);
+            using (var md5 = MD5.Create())
+            {
+                return BitConverter.ToString(md5.ComputeHash(data)).Replace("-", "").ToLower();
+            }
+        }
+
+        public static string GetMD5(this byte[] data)
+        {
+            using (var md5 = MD5.Create())
+            {
+                return BitConverter.ToString(md5.ComputeHash(data)).Replace("-", "").ToLower();
+            }
+        }
+
+        public static string GetFileMD5(this string filename)
+        {
+            try
+            {
+                using (var md5 = MD5.Create())
+                {
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        string s = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToUpper();                        
+                        return s;
+                    }
+                }
+            }
+            catch
+            {
+                return String.Empty;
+            }
+        }
+
+        public static bool IsEmpty(this Guid g)
+        {
+            return ((g == null) || g == Guid.Empty);
+        }
         public static string AsciiBytesToString(this byte[] buffer, int offset, int maxLength)
         {
             int maxIndex = offset + maxLength;
@@ -104,7 +148,116 @@ namespace System
                 return String.Empty;
             return String.Join(splitter, parts);
         }
+        public static string ToUTF8String(this byte[] buffer)
+        {
+            if ((buffer == null) || (buffer.Length == 0))
+                return string.Empty;
+            var value = Encoding.UTF8.GetString(buffer);
+            return value.Remove(value.IndexOf((char)0));
+        }
 
+        public static string ToUTF16String(this byte[] buffer)
+        {
+            if ((buffer == null) || (buffer.Length == 0))
+                return string.Empty;
+            var value = Encoding.Unicode.GetString(buffer);
+            return value.Remove(value.IndexOf((char)0));
+        }
+        public static String ToHumanReadableSize(this object value)
+        {
+            if (value == null)
+                return String.Empty;
+            string[] suf = { "b", "kb", "mb", "gb", "tb", "pb", "eb" }; //Longs run out around EB
+            long byteCount = Convert.ToInt64(value);
+            if (byteCount == 0)
+                return "0" + suf[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
+        public static string NomalizeHexNumber(this string input)
+        {
+            if (input == null)
+                return "FFFF";
+            if (input.StartsWith("0x"))
+            {
+                try
+                {
+                    return Int32.Parse(input.Substring(2), System.Globalization.NumberStyles.HexNumber).ToString("X4");
+                }
+                catch
+                {
+                    return input.Substring(2);
+                }
+            }
+            return input.ToUpperInvariant();
+        }
+
+        public static string ToTitleCase(this string str)
+        {
+            return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(str.ToLower());
+        }
+
+        public static string ReplaceCaseInsensitive(this string str, string oldValue, string newValue)
+        {
+            int prevPos = 0;
+            string retval = str;
+            // find the first occurence of oldValue
+            int pos = retval.IndexOf(oldValue, StringComparison.InvariantCultureIgnoreCase);
+
+            while (pos > -1)
+            {
+                // remove oldValue from the string
+                retval = retval.Remove(pos, oldValue.Length);
+
+                // insert newValue in it's place
+                retval = retval.Insert(pos, newValue);
+
+                // check if oldValue is found further down
+                prevPos = pos + newValue.Length;
+                pos = retval.IndexOf(oldValue, prevPos, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            return retval;
+        }
+
+        public static bool CompareNoCase(this string s, string other)
+        {
+            return !string.IsNullOrEmpty(s) && (string.Compare(s, other, true) == 0);
+        }
+
+        public static bool CaseInsensitiveCompare(this string s, string other)
+        {
+            return !string.IsNullOrEmpty(s) && (string.Compare(s, other, true) == 0);
+        }
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
+
+        public static bool IsNull(this object o)
+        {
+            return (o == null);
+        }
+
+        public static bool ContainsNoCase(this IEnumerable<string> list, string value)
+        {
+            return list.FirstOrDefault(t => string.Compare(t, value, true) == 0) != null;
+        }
+
+       
+        public static string ToShortDateTimeString(this DateTime dt)
+        {
+            return $"{dt.ToShortDateString()} {dt.ToShortTimeString()}";
+        }
+
+        public static string ToTimeSpanString(this DateTime dt)
+        {
+            return new TimeSpan(0, dt.Hour, dt.Minute, dt.Second, dt.Millisecond).ToString();
+        }
         public static String[] Split(this string inStr, String separator)
         {
             return inStr.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
@@ -213,11 +366,182 @@ namespace System
             }
         }
     }
+
+    public static class StringExtensions
+    {
+
+        public static bool IsValidNumeric(this string str, bool allowWhitespace = false)
+        {
+            if (String.IsNullOrEmpty(str))
+                return false;
+            if (allowWhitespace)
+                str = str.Trim(); // trims the white spaces.
+
+            if (str.Length == 0)
+                return false;
+
+            // if string is of length 1 and the only
+            // character is not a digit
+            if (str.Length == 1 && !char.IsDigit(str[0]))
+                return false;
+
+            // If the 1st char is not '+', '-', '.' or digit
+            if (str[0] != '+' && str[0] != '-'
+                && !char.IsDigit(str[0]) && str[0] != '.')
+                return false;
+
+            // To check if a '.' or 'e' is found in given
+            // string. We use this flag to make sure that
+            // either of them appear only once.
+            Boolean flagDotOrE = false;
+
+            for (int i = 1; i < str.Length; i++)
+            {
+                // If any of the char does not belong to
+                // {digit, +, -, ., e}
+                if (!char.IsDigit(str[i]) && str[i] != 'e'
+                    && str[i] != '.' && str[i] != '+'
+                    && str[i] != '-')
+                    return false;
+
+                if (str[i] == '.')
+                {
+
+                    // checks if the char 'e' has already
+                    // occurred before '.' If yes, return 0.
+                    if (flagDotOrE == true)
+                        return false;
+
+                    // If '.' is the last character.
+                    if (i + 1 >= str.Length)
+                        return false;
+
+                    // if '.' is not followed by a digit.
+                    if (!char.IsDigit(str[i + 1]))
+                        return false;
+                }
+
+                else if (str[i] == 'e')
+                {
+                    // set flagDotOrE = 1 when e is encountered.
+                    flagDotOrE = true;
+
+                    // if there is no digit before 'e'.
+                    if (!char.IsDigit(str[i - 1]))
+                        return false;
+
+                    // If 'e' is the last Character
+                    if (i + 1 >= str.Length)
+                        return false;
+
+                    // if e is not followed either by
+                    // '+', '-' or a digit
+                    if (!char.IsDigit(str[i + 1]) && str[i + 1] != '+'
+                        && str[i + 1] != '-')
+                        return false;
+                }
+            }
+
+            /* If the string skips all above cases, 
+            then it is numeric*/
+            return true;
+        }
+
+        public static bool ContainsNoCase(this string source, string toCheck)
+        {
+            return source?.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+        /// <summary>
+        /// Remove all but Digits and Letters from string
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string CleanupString(this string s, bool allowWhiteSpace = true)
+        {
+            if (String.IsNullOrEmpty(s))
+                return String.Empty;
+            var arr = s.ToCharArray();
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var c = arr[i];
+                if (!Char.IsLetterOrDigit(c) || (Char.IsWhiteSpace(c) && !allowWhiteSpace))
+                    arr[i] = '_';
+            }
+            return new string(arr);
+        }
+
+        public static string FirstLetterToUpper(this string str)
+        {
+            if (str == null)
+                return null;
+
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+
+            return str.ToUpper();
+        }
+        public static string RemoveXmlNamespaces(this string s)
+        {
+            if (String.IsNullOrEmpty(s))
+                return s;
+            return s.Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+        }
+        public static String ToHexString(this ulong num)
+        {
+            if (num <= uint.MaxValue)
+                return String.Format("{0}:{1}", ((num & 0xFFFF0000) >> 16).ToString("X4"), (num & 0x0000ffff).ToString("X4"));
+            return num.ToString("X");
+        }
+
+        public static String ToHexString(this UInt32 num)
+        {
+            return String.Format("{0}:{1}", ((num & 0xFFFF0000) >> 16).ToString("X4"), (num & 0x0000ffff).ToString("X4"));
+        }
+        public static String ToHexString(this Int32 num)
+        {
+            return String.Format("{0}:{1}", ((num & 0xFFFF0000) >> 16).ToString("X4"), (num & 0x0000ffff).ToString("X4"));
+        }
+        public static String ToHexString(this ushort num)
+        {
+            return String.Format("{0}", (num & 0x0000ffff).ToString("X4"));
+        }
+
+        public static string Base64Encode(this string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(this string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+    }
 }
 
+namespace System.Collections.Generic
+{
+    public class ClonableList<T> : List<T>, ICloneable<ClonableList<T>> where T : class, ICloneable<T>
+    {
+        public ClonableList()
+        {
+        }
+
+        public ClonableList(IEnumerable<T> collection) : base(collection)
+        {
+        }
+
+        public ClonableList<T> Clone()
+        {
+            var outVal = new ClonableList<T>();
+            this.ForEach(item => outVal.Add(item.Clone()));
+            return outVal;
+        }
+    }
+}
 namespace System.Collections.ObjectModel
 {
-
+    
     public class ObservableCollectionAsync<T> : ObservableCollection<T>
     {
         private readonly object _lockObject = new object();
