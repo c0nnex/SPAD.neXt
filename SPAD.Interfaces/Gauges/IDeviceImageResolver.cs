@@ -146,8 +146,8 @@ namespace SPAD.neXt.Interfaces
         void Reconfigure(IEnumerable<ISimpleGaugeLayerConfig> layers);
         IGaugeRenderLayer AddLayer(ISimpleGaugeLayerConfig config);
         IGaugeRenderLayer GetLayer(int layerNumber);
-        bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None);
-        bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None);
+        bool RenderAsPixels(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None, Action<object> customizeRenderResult = null);
+        bool RenderAsImage(Action<byte[]> renderCompletedCallback, Func<object, IGaugeRenderLayer, bool> renderLayerCallback = null, GaugeRenderFlipType flip = GaugeRenderFlipType.None, Action<object> customizeRenderResult = null);
 
         void UpdateColorLayer(int layerNumber, int layerScope, string newColor);
         void UpdateImageLayer(int layerNumber, Guid newImage);
@@ -155,7 +155,7 @@ namespace SPAD.neXt.Interfaces
         void DisableLayer(int layerNumber);
         void EnableLayer(int layerNumber);
         bool HasLayer(int layerNumber);
-
+        void SetLayerMode(int layerNumber, FLASHMODE mode);
         void SetDirty();
     }
 
@@ -166,10 +166,16 @@ namespace SPAD.neXt.Interfaces
         bool IsDisabled { get; }
         void Disable();
         void Enable();
+        bool ShouldRenderThisFrame();
+
         bool Render(object renderTarget);
         bool RenderDesign(object renderTarget, object renderObject, object renderParameter);
         void RenderBorder(object renderTarget);
         void Initialize(IObserverTicket observerTicket, ISimpleGaugeLayerConfig config, int defaultWidth, int defaultHeight);
+
+        FLASHMODE LayerMode { get; }
+        void SetLayerMode(FLASHMODE layerMode);
+        bool LayerModeTick(ulong currentTick);
     }
 
     public interface IGaugeImageLayer : IGaugeRenderLayer

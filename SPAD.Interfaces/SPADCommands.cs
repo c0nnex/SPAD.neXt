@@ -156,6 +156,13 @@ namespace SPAD.neXt.Interfaces
 
         public static RoutedCommand EventMoveUpCommand { get; } = new RoutedCommand("SPAD_neXt.EventMoveUp", typeof(SPADCommands));
         public static RoutedCommand EventMoveDownCommand { get; } = new RoutedCommand("SPAD_neXt.EventMoveDown", typeof(SPADCommands));
+
+
+        public static RoutedCommand ItemMoveDownCommand { get; } = new RoutedCommand("SPAD_neXt.ItemMoveDown", typeof(SPADCommands));
+        public static RoutedCommand ItemMoveUpCommand { get; } = new RoutedCommand("SPAD_neXt.ItemMoveUp", typeof(SPADCommands));
+        public static RoutedCommand ItemMoveToTopCommand { get; } = new RoutedCommand("SPAD_neXt.ItemMoveToTop", typeof(SPADCommands));
+        public static RoutedCommand ItemMoveToBottomCommand { get; } = new RoutedCommand("SPAD_neXt.ItemMoveToBottom", typeof(SPADCommands));
+        public static RoutedCommand ItemMoveRemoveCommand { get; } = new RoutedCommand("SPAD_neXt.ItemMoveRemove", typeof(SPADCommands));
         /*
         public static RoutedCommand EditActionCommand { get { return editActionCommand; } }
         public static RoutedCommand DelActionCommand { get { return delActionCommand; } }

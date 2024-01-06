@@ -83,6 +83,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface IEventActionLED : IEventAction, IEventActionWithParameters, IEventActionObserve
     {
         bool AutoOff { get; set; }
+        bool Invert { get; set; }
     }
 
     public interface IEventActionWithParameters
@@ -119,11 +120,13 @@ namespace SPAD.neXt.Interfaces.Events
         Guid SingletonID { get; set; }
     }
 
-    public interface IEventActionCommand : IEventAction
+    public interface IEventActionCommand : IEventAction, IEventActionWithParameters
     {
+        
         string CommandParameter { get; set; }
         string CommandName { get; set; }
         bool CommandRunAsAdmin { get; set; }
+        
     }
 
     public interface IEventActionPlaySound : IEventAction

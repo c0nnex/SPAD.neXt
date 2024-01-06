@@ -59,6 +59,13 @@ namespace SPAD.neXt.Interfaces
         NotConnected = 5
     }
 
+    public enum ACTIONRESULT
+    {
+        CONTINUE = 0,
+        CONTINUE_FINAL = 1,
+        FINAL = 2,
+        FAILURE = 3
+    }
 
     [Flags]
     public enum SimulationTypes

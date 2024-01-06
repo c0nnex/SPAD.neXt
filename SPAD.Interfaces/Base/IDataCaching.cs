@@ -49,7 +49,8 @@ namespace SPAD.neXt.Interfaces
         
         int AddToCache(string variableName, IDataCacheConsumer notifyObject, ICacheScopeProvider scopeObject);
         double GetMasterValue(int dataIndex);
-        IDataMonitorValue GetCacheItem(int dataIndex);  
+        IDataMonitorValue GetCacheItem(int dataIndex);
+        string DumpStatistics();
     }
 
     public interface IDataCacheValueProvider : IDisposable

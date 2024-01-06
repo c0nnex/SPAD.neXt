@@ -48,8 +48,8 @@ namespace SPAD.neXt.Interfaces
         void DevicePowerChanged(DEVICEPOWER newPowerState);
         void AddPagingSupport();
         void HidePagingSupport();
-        void AddPanelButton(UserControl button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
-        UserControl AddDropDownCommand(string buttonName, string buttonTag, ICommand command,string mainbuttonLabel = null);
+        void AddPanelButton(FrameworkElement button, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
+        FrameworkElement AddDropDownCommand(string buttonName, string buttonTag, ICommand command,string mainbuttonLabel = null);
         Button AddPanelButton(string buttonName, string buttonTag, ICommand command, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST, string visibilityProperty = null);
         void AddPanelCheckbox(string buttonName, string buttonTag, ICommand command, bool bIsChecked, PANEL_BUTTONPOSITION position = PANEL_BUTTONPOSITION.LAST);
         void SetEventContext(string eventName, Point targetPoint, IInput input);
@@ -162,6 +162,7 @@ namespace SPAD.neXt.Interfaces
     {
         Guid ID { get;  }
         bool IsDefaultPage { get; set; }
+        bool IsActivated { get; }
         string PageName { get; }
         IReadOnlyList<ISPADBaseEvent> Events { get; }
         IReadOnlyList<IDeviceImage> Images { get; }

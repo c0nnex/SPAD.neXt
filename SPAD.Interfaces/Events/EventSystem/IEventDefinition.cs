@@ -138,6 +138,7 @@ namespace SPAD.neXt.Interfaces.Events
     public interface ITemplateImplementation
     {
         string ConfigString { get; }
+        string ConfigTooltip { get; }
         IExecutionCounter ExecutionCounter { get; }
     }
 

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace SPAD.neXt.Interfaces
 {
+    public interface IGetValueOverride
+    {
+        object GetValueTarget();
+    }
     public interface ISpecificOptions
     {
         Guid ID { get; }

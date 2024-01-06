@@ -1555,7 +1555,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 }
                 if (typeof(T) == typeof(bool))
                 {
-                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    res = !(Value == "0" || String.IsNullOrEmpty(Value) || String.Compare(Value, "false", true) == 0);
                     return (T)res;
                 }
                 if (typeof(T) == typeof(char))
@@ -1616,7 +1616,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 }
                 if (typeof(T) == typeof(bool))
                 {
-                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    res = !(Value == "0" || String.IsNullOrEmpty(Value) || String.Compare(Value, "false", true) == 0);
                     return (T)res;
                 }
                 if (typeof(T) == typeof(char))

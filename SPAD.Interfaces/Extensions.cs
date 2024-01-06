@@ -118,7 +118,7 @@ namespace System
                 }
                 if (typeof(T) == typeof(bool))
                 {
-                    res = parts[part] == "1" || String.Compare(parts[part], "true", true) == 0;
+                    res = !(String.IsNullOrEmpty(parts[part]) || parts[part] == "0" || String.Compare(parts[part], "false", true) == 0);
                     return (T)res;
                 }
                 res = Convert.ChangeType(parts[part], typeof(T));
@@ -337,7 +337,12 @@ namespace System
             {
                 if (obj == null)
                     return defValue;
-                var Value = Convert.ToString(obj, CultureInfo.InvariantCulture);
+                object tObj = obj;
+                if (obj is IGetValueOverride tOverride)
+                {
+                    tObj = tOverride.GetValueTarget();
+                }
+                var Value = Convert.ToString(tObj, CultureInfo.InvariantCulture);
                 object res;
                 if (typeof(T) == typeof(Guid))
                 {
@@ -346,7 +351,7 @@ namespace System
                 }
                 if (typeof(T) == typeof(bool))
                 {
-                    res = !(Value == "0" || String.Compare(Value, "false", true) == 0);
+                    res = !(Value == "0" || String.IsNullOrEmpty(Value) || String.Compare(Value, "false", true) == 0);
                     return (T)res;
                 }
                 if (typeof(T) == typeof(char))
