@@ -153,13 +153,15 @@ namespace SPAD.neXt.Interfaces.Extension
         private string variableBaseKey;
 
         [XmlIgnore]
-        public ConcurrentDictionary<string, AddonDeviceCommandMapping> DeviceCommandMappingDict = new ConcurrentDictionary<string, AddonDeviceCommandMapping>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, AddonDeviceCommandMapping> DeviceCommandMappingDict = new ConcurrentDictionary<string, AddonDeviceCommandMapping>();
         [XmlIgnore]
-        public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, AddonDeviceDisplayData> DeviceDisplayDict = new ConcurrentDictionary<string, AddonDeviceDisplayData>();
         [XmlIgnore]
-        public ConcurrentDictionary<string, IDynamicExpression> DeviceInputMappingDict = new ConcurrentDictionary<string, IDynamicExpression>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, IDynamicExpression> DeviceInputMappingDict = new ConcurrentDictionary<string, IDynamicExpression>();
         [XmlIgnore]
-        public ConcurrentDictionary<string, object> DeviceSessionVariables = new ConcurrentDictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        public ConcurrentDictionary<string, object> DeviceSessionVariables = new ConcurrentDictionary<string, object>();
+        [XmlIgnore]
+        public ConcurrentDictionary<string, object> DeviceSessionState = new ConcurrentDictionary<string, object>();
 
         public AddonDevice GetSubPanelDevice(string subPanel, bool remove = false)
         {
@@ -339,6 +341,11 @@ namespace SPAD.neXt.Interfaces.Extension
                     baseVarkey = VendorID + "_" + ProductID + "_";
             }
             variableBaseKey = baseVarkey;
+        }
+
+        public void SessionStateStore()
+        {
+            DeviceSessionState = new ConcurrentDictionary<string, object>(DeviceSessionVariables);
         }
 
         public bool HasDeviceSessionValue(string name) => DeviceSessionVariables.ContainsKey(name);
@@ -1769,6 +1776,10 @@ namespace SPAD.neXt.Interfaces.Extension
             return defaultValue;
         }
 
+        public T GetOption<T>(AddonDeviceElement mainProvider,string key, T defaultValue = default(T)) where T : IConvertible
+        {
+            return mainProvider.GetOption<T>(key, GetOption<T>(key,defaultValue));
+        }
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
             var opt = Options.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
@@ -1952,6 +1963,17 @@ namespace SPAD.neXt.Interfaces.Extension
                 return Convert.ToString(Compute.Evaluate(new SPADEventArgs("dummy", value, value)), CultureInfo.InvariantCulture);
             else return Convert.ToString(value,CultureInfo.InvariantCulture);
         }
+
+        public bool ProcessInput(Guid deviceRegistrationId)
+        {
+            if (Compute != null)
+            {
+                Compute.Evaluate(new SPADEventArgs("dummy", Tag, Tag) {  ExecutionContext = deviceRegistrationId });
+                return true;
+            }
+            return false;
+        }
+
         public bool IsOffName(string inputName)
         {
             switch (inputName)
@@ -1987,11 +2009,11 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             if (!String.IsNullOrEmpty(ConditionExpression))
             {
-                Condition = EventSystem.CreateExpression(ConditionExpression);
+                Condition = EventSystem.CreateExpression(ConditionExpression.Replace("{TAG}", Tag));
             }
             if (!String.IsNullOrEmpty(ComputeExpression))
             {
-                Compute = EventSystem.CreateExpression(ComputeExpression);
+                Compute = EventSystem.CreateExpression(ComputeExpression.Replace("{TAG}",Tag));
             }
             if (!String.IsNullOrEmpty(Tag))
             {

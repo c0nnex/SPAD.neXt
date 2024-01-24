@@ -107,7 +107,7 @@ namespace SPAD.Extensions.Generic
         void OnConnectionStateChanged(bool isConnected);
 
         void UpdateVariable(string varName, object varValue);
-
+        void ChangeLed(string ledName, int newValue);
         void DeviceWarning(string message);
         void DeviceWarningClear();
 

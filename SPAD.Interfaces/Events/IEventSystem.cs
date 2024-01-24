@@ -22,9 +22,19 @@ namespace SPAD.neXt
 
 namespace SPAD.neXt.Interfaces.Events
 {
+    public interface IObserverManager
+    {
+        List<IObserverTicket> GetObserversOf(Guid clientId);
+        void RaiseTicketsFor(Guid clientId, ISPADEventArgs args);
+        void RemoveAllObserversOf(Guid clientId);
+        void Subscribe(Guid clientId, IObserverTicket ticket);
+        int Unsubscribe(Guid clientId, IObserverTicket ticket);
+    }
 
     public interface IEventSystemHandler
-    {       
+    {
+        IObserverManager GetObserverManager();
+        IObserverTicket CreateObserverTicket(string subscriptionID, string eventName, ISPADEventDelegate observer, int priority = 0);
         IEventDefinition CreateEvent(string boundTo,string trigger);
         IEventAction CreateAction(SPADEventActions action);
         IEventAction CreateAction(string action);
@@ -63,6 +73,7 @@ namespace SPAD.neXt.Interfaces.Events
             EventSystemHandler = handler;
         }
 
+        public static IObserverManager GetObserverManager() => EventSystemHandler.GetObserverManager();
         public static IEventConditionSimple CreateCondition(IDataDefinition dataSource, SPADEventValueComparator comparator, string targetValue)
         {
             return EventSystemHandler.CreateCondition(dataSource, comparator, targetValue);
@@ -86,6 +97,11 @@ namespace SPAD.neXt.Interfaces.Events
         public static T CreateAction<T>(SPADEventActions action)
         {
             return (T)EventSystemHandler.CreateAction(action);
+        }
+
+        public static IObserverTicket CreateObserverTicket(string subscriptionID, string eventName, ISPADEventDelegate observer, int priority = 0)
+        {
+            return EventSystemHandler.CreateObserverTicket(subscriptionID, eventName, observer, priority);
         }
         public static IEventDefinition CreateEvent(string boundTo, string trigger)
         {

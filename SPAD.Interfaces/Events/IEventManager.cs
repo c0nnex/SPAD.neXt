@@ -49,6 +49,18 @@ namespace SPAD.neXt.Interfaces.Events
         void Unsubscribe(IObserverTicket observerTicket);
     }
 
+    public sealed class ObserverTicketArgs : HandledEventArgs
+    {
+        public string Name { get; private set; }
+        public ISPADEventArgs SPADEventArgs { get; private set; }
+
+        public ObserverTicketArgs(string name, ISPADEventArgs sPADEventArgs)
+        {
+            Name = name;
+            SPADEventArgs = sPADEventArgs;
+        }
+    }
+
     public interface IObserverTicket : ITrackableDisposable
     {
         Guid ID { get; }
@@ -58,9 +70,10 @@ namespace SPAD.neXt.Interfaces.Events
         object UserData { get; set; }
         bool IsStatic { get; set; }
         bool NeedNotify { get; }
-
+        event EventHandler<ObserverTicketArgs> ObservedValueChanged;
+        void SetNeedNotify(bool needNotify);
         void Clear();
-        bool Subscribe(string dataRef);
+        IMonitorableValue Subscribe(string dataRef);
         bool Unsubscribe(string dataRef);
         void Subscribe(IIsObservable observableValue);
         void Unsubscribe(IIsObservable observableValue);
@@ -97,7 +110,7 @@ namespace SPAD.neXt.Interfaces.Events
         bool SupportsDynamicDefinitions { get; }
         bool SupportsDynamicControls { get; }
         bool IsConnected { get; }
-        void ForceUpdate(string dataRef, bool doMonitor);
+        void ForceUpdate(string dataRef, bool doMonitor, int dataTypeId = 0);
         void SetValue(string dataRef, double newValue);
         void ExecuteCommand(string commandRef, uint parameter);
         void SendMessage(string message);
@@ -211,6 +224,7 @@ namespace SPAD.neXt.Interfaces.Events
         */
         event EventHandler<ISPADEventArgs> ClientEvent;
         event EventHandler<bool> EventMonitoringChanged;
+
         void StartMonitoringEvents();
         void StopMonitoringEvents();
         void CustomSimulationEvent(string name, params object[] args);

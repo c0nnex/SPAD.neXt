@@ -43,6 +43,11 @@ namespace SPAD.neXt.Interfaces
         SIZE
     }
 
+    public enum GaugerRenderMode
+    {
+        PIXELS,
+        PNG
+    }
     public sealed class GaugeImageDistortion : GenericOptionObject
     {
         [XmlAttribute("DistortionType")]
@@ -136,8 +141,7 @@ namespace SPAD.neXt.Interfaces
         Rotate270,
     }
     public interface IGaugeRenderer : IDisposable
-    {
-        bool IsDirty { get; }
+    {        
         bool IsInDesignMode { get; set; }
         GaugeSize Size { get; }
 

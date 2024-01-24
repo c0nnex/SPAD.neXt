@@ -22,6 +22,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         RED = 5,
         BLUE = 6,
         DARKGREEN = 7,
+        NONE = 8,
     }
 
     /// <summary>
@@ -262,6 +263,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         int RowCount { get; }
         int ColumnCount { get; }
         List<List<byte>> ToArray();
+        List<string> ToParsable();
 
         /// <summary>
         /// Identifier of this CDU
@@ -328,7 +330,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
 
         void RenderText(int row, string text, CDU_COLOR color, CDU_FLAG flags = CDU_FLAG.NONE, CDU_ROW_JUSTIFY justify = CDU_ROW_JUSTIFY.Center);
     }
-    public abstract class GenericCDUScreen : ICDUScreen
+    public abstract class GenericCDUScreen : ICDUScreen, IDisposable
     {
         protected List<List<byte>> EmptyScreen;
         private string EmptyRow = "";
@@ -351,6 +353,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
         CancellationTokenSource MessageTokenSource = null;
         private Task messageTask = null;
         CDU_FLAG MessageFLags = CDU_FLAG.NONE;
+        private bool disposedValue;
 
         public abstract void ImportData();
         public GenericCDUScreen(CDU_NUMBER cduNum, int rows, int cols, IApplication appProxy)
@@ -376,6 +379,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             }
             CDUNumber = cduNum;
         }
+
+       
 
         public override string ToString()
         {
@@ -410,7 +415,15 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             }
             return rval;
         }
-
+        public List<string> ToParsable()
+        {
+            var res = new List<string>();
+            for (int i = 0; i < RowCount; i++)
+            {
+                res.Add(GetParserRow(i));
+            }
+            return res;
+        }
         public void GetCDUContent(ICDURenderer renderCallback)
         {
             for (int row = 0; row < Math.Min(RowCount, renderCallback.RowCount); row++)
@@ -558,7 +571,7 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
             if (rowNumber % 2 == 1)
                 retStr = "{small}";
             retStr += curColor.StartTag;
-            retStr += (char)cell.Symbol;
+            retStr += (char)(cell.Symbol == 0 ? 0x20 : cell.Symbol);
 
             for (int i = 1; i < ColumnCount; i++)
             {
@@ -569,7 +582,8 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
                     curColor = new cduColorStack { _color = cell.Color, _flag = cell.Flags };
                     retStr += curColor.StartTag;
                 }
-                retStr += (char)Cells[rowNumber * ColumnCount + i].Symbol;
+                var c = Cells[rowNumber * ColumnCount + i].Symbol;
+                retStr += (char)(c == 0 ? 0x20 : c);
             }
             retStr += curColor.EndTag;
             if (rowNumber % 2 == 1)
@@ -589,6 +603,35 @@ namespace SPAD.neXt.Interfaces.Aircraft.CDU
                 retStr += (char)Cells[rowNumber * ColumnCount + i].Color;
             }
             return retStr;
+        }
+        protected virtual void OnDispose() { }
+        private void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    OnDispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~GenericCDUScreen()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

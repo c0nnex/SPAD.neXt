@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPAD.Interfaces.Remote;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace SPAD.neXt.Interfaces.Transport
 
     public interface IRemoteTransport : ITransportInterface
     {
-        event EventHandler<IRemoteTransport, string> RemoteEventReceived;
+        event EventHandler<IRemoteTransport, RemoteAction> RemoteEventReceived;
 
         void SendRemoteEvent(object eventData);
     }

@@ -118,6 +118,7 @@
     <Compile Include="Events\ISPADBaseEvent.cs" />
     <Compile Include="Events\ISPADEventArgs.cs" />
     <Compile Include="Events\ISPADEventValue.cs" />
+    <Compile Include="Events\ThrottledCustomEventHandler.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Aircraft\ICDUScreen.cs" />
     <Compile Include="Gauges\IDeviceImageResolver.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Profile\IProfileManager.cs" />
     <Compile Include="Profile\IProfileOption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remote\RemoteAction.cs" />
     <Compile Include="Scripting\IScriptManager.cs" />
     <Compile Include="Scripting\IScriptValueProvider.cs" />
     <Compile Include="SimConnect\DataItemAttributeBase.cs" />

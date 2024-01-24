@@ -1410,7 +1410,7 @@ namespace SPAD.neXt.Interfaces
 
         public static readonly Guid Controller_FSUIPC = new Guid("{31F5957E-5A22-4470-B133-B457C8893323}");
         public static readonly Guid Controller_SIMCONNECT = new Guid("{74E84133-7FAD-413A-B06B-C300947905D5}");
-
+        public static readonly Guid SIMPLEGAUGE_DEFAULTS_ID = new Guid("{91FB60B2-DE15-4877-9E09-7C0C84F9BF72}");
         public static readonly Guid IMAGE_SYSTEM_OFF = new Guid("{0F53D212-5A29-428F-BE62-47DF8CA68F81}");
         public static readonly Guid IMAGE_SYSTEM_IGNORE = new Guid("{A944027C-50E3-4F09-B0E3-B44CC8A34D39}");
         public static readonly Guid IMAGE_SYSTEM_EMPTY = new Guid("{E412AB45-9B97-4E80-A0DB-E7D617A73B84}");

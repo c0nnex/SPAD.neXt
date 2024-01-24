@@ -137,6 +137,7 @@ namespace SPAD.neXt.Interfaces.Events
 
     public interface ITemplateImplementation
     {
+        string IdentityString { get; }
         string ConfigString { get; }
         string ConfigTooltip { get; }
         IExecutionCounter ExecutionCounter { get; }
@@ -147,6 +148,7 @@ namespace SPAD.neXt.Interfaces.Events
         string Name { get; set; }
         string Category { get; set; }
         bool ApplyTemplate(object target);
+        int ApplyTemplateToProfile(IProfile profile);
         void FixUp();
         void UpdateTemplate(ITemplateClass newTemplate);
         ITemplateImplementation Implementation { get; }
@@ -176,9 +178,12 @@ namespace SPAD.neXt.Interfaces.Events
         void RegisterResult(bool success);
     }
 
-    
+    public interface IIsEquatable
+    {
+        bool IsEqualTo(string otherIdentity);
+    }
 
-    public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>, ITemplateable, ITemplateImplementation //, IIsObservable
+    public interface IEventConditions : IObservableList<IEventCondition>, ICloneable<IEventConditions>,IIsEquatable,ITemplateable, ITemplateImplementation //, IIsObservable
     {
         SPADConditionBinding ConditionBinding { get; set; }
         bool Evaluate(ISPADEventArgs e, SPADConditionBinding binding, bool debugMode);

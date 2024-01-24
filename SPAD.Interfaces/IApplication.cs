@@ -174,6 +174,7 @@ namespace SPAD.neXt.Interfaces
         IList<ITreeNodeItem> GetTemplateTreeNodes();
         ITemplateClass GetTemplate(Guid templateId);
         void Save();
+        bool HasTemplate(Guid iD);
     }
 
     public interface ITemplateManager
@@ -239,7 +240,7 @@ namespace SPAD.neXt.Interfaces
         IOnlineGaugeData DownloadGauge(Guid id);
         IGaugeVersionInformation GetGaugeVersionInformation(Guid gaugeId);
         GaugeVersionStatus GetGaugeVersionStatus(Guid gaugeId, Version localVersion);
-
+        bool HasResource(string key);
         void AddResource(string key, string value);
         IDeviceSwitchConfiguration GetSwitchConfiguration(string key);
         string GetFilename(APPLICATION_DIRECTORY scope, string filename);
@@ -247,6 +248,7 @@ namespace SPAD.neXt.Interfaces
         IDirectoryModel DirectoryModel { get; }
 
         void WarnWithNotification(string LoggerName, string message, params object[] args);
+        void WarnWithNotificationIgnorable(string LoggerName,string tag, string message, params object[] args);
         void ErrorWithNotification(string LoggerName, string message, params object[] args);
 
         bool RegisterValueProvider(string tag, IValueProvider provider);
@@ -354,6 +356,12 @@ namespace SPAD.neXt.Interfaces
         string GetContent(string filename = null);
 
         void Warning(string message);
+    }
+
+    public interface ISupportsDynamicUI
+    {
+        string SubPanelTag { get; set; }
+        void LoadRuntimeData(IApplication proxy, IRuntimeResolver resolver, string subPaneltag = "");
     }
 
     public interface IResolvesAtRuntime

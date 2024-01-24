@@ -102,7 +102,7 @@ namespace SPAD.neXt.Interfaces.Logging
 
         string Name { get; }
         string LoggerName { get; set; }
-
+        void StatusInfo(string msg);
         void Trace(string message, params object[] args);
         void Debug(string message, params object[] args);
         void Info(string message, params object[] args);
@@ -111,6 +111,7 @@ namespace SPAD.neXt.Interfaces.Logging
 
 
         void WarnWithNotification(string message, params object[] args);
+        void WarnWithNotificationIgnoreable(string tag, string message, params object[] args);
         void WarnWithNotificationIf(bool doNotify, Func<string> p);
         void WarnWithNotificationIf(bool doNotify, string message, params object[] args);
         void WarnWithNotificationIfOnce(bool doNotify,string tag, Func<string> p);
@@ -209,7 +210,7 @@ namespace SPAD.neXt.Interfaces.Logging
         public void Warn(Func<string> p)
         {
         }
-
+        public void StatusInfo(string msg) { }
         public void WarnWithNotification(string message, params object[] args)
         {
         }
@@ -228,6 +229,11 @@ namespace SPAD.neXt.Interfaces.Logging
 
         public void WarnWithNotificationIfOnce(bool doNotify, string tag, string message, params object[] args)
         {
+        }
+
+        public void WarnWithNotificationIgnoreable(string tag, string message, params object[] args)
+        {
+         
         }
     }
     public sealed class ConsoleLogger : ILogger
@@ -326,7 +332,7 @@ namespace SPAD.neXt.Interfaces.Logging
             if (!IsWarnEnabled) return;
             Log(SPADLogLevel.Warn, p());
         }
-
+        public void StatusInfo(string msg) => Info(msg);
         public void WarnWithNotification(string message, params object[] args)
         {
             if (!IsWarnEnabled) return;
@@ -359,6 +365,11 @@ namespace SPAD.neXt.Interfaces.Logging
             if (!IsWarnEnabled || !doNotify) return;
             Log(SPADLogLevel.Warn, message, args);
 
+        }
+
+        public void WarnWithNotificationIgnoreable(string tag, string message, params object[] args)
+        {
+            Log(SPADLogLevel.Warn, message, args);
         }
     }
 }

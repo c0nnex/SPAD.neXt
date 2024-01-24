@@ -76,6 +76,17 @@ namespace SPAD.neXt.Interfaces.Events
         IAcceleratedEncoder WasPressed(long tick = 0);
     }
 
+    public sealed class DataEventArgs<T> : HandledEventArgs, IHandledEventArgs
+    {
+        public T Data { get; private set; }
+
+        public DataEventArgs(T data) : base()
+        {
+            Data = data;
+        }
+    }
+
+
     public sealed class SPADEventArgs : HandledEventArgs, ISPADEventArgs
     {
         private ILogger logger = null;

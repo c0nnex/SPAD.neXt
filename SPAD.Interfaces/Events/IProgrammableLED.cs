@@ -100,7 +100,7 @@ namespace SPAD.neXt.Interfaces.Events
 
         INPUT_CHANGE_DIRECTION SetState(string newState, int newValue, bool raiseEvent, bool force = false, long timeStamp = long.MinValue,Guid? context = null);
 
-        void EnableHeldMode(IProgrammableHeld callback);
+        void EnableHeldMode(IProgrammableHeld callback,int heldValue);
         void DisableHeldMode();
 
         void SwitchToDynamicLabel(string lblFormat);

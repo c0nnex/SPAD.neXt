@@ -343,6 +343,8 @@ namespace System
                     tObj = tOverride.GetValueTarget();
                 }
                 var Value = Convert.ToString(tObj, CultureInfo.InvariantCulture);
+                if (String.IsNullOrEmpty(Value))
+                    return defValue;
                 object res;
                 if (typeof(T) == typeof(Guid))
                 {
