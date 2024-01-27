@@ -480,7 +480,7 @@ namespace SPAD.neXt.Interfaces.Extension
         }
 
         #region Variables
-        IEnumerable<IGenericOption> IObjectWithVariables.Variables => Variables;
+        IEnumerable<IGenericVariable> IObjectWithVariables.Variables => Variables;
 
         public T GetVariable<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
@@ -1508,7 +1508,16 @@ namespace SPAD.neXt.Interfaces.Extension
         String
     }
 
-    public class GenericVariable : GenericOptionObject, IGenericOption
+    public interface IGenericVariable : IGenericOption
+    {
+        VariableValueTypes ValueType { get; set; }
+        VARIABLE_SCOPE Scope { get; set; }
+        string DefaultValue { get; set; }
+        string SettingName { get; set; }
+        object GetTypedValue();
+    }
+
+    public class GenericVariable : GenericOptionObject, IGenericOption, IGenericVariable
     {
         [XmlAttribute]
         public string Key { get; set; }
@@ -1653,14 +1662,14 @@ namespace SPAD.neXt.Interfaces.Extension
     public class GenericVariablesObject : IObjectWithVariables
     {
         [XmlElement(ElementName = "Variable")]
-        public List<GenericOption> Variables { get; set; } = new List<GenericOption>();
+        public List<GenericVariable> Variables { get; set; } = new List<GenericVariable>();
 
         public event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
 
         public virtual bool ShouldSerializeVariables() => Variables != null && Variables.Count > 0;
         public int CountVariables => (Variables == null ? 0 : Variables.Count);
 
-        IEnumerable<IGenericOption> IObjectWithVariables.Variables => Variables;
+        IEnumerable<IGenericVariable> IObjectWithVariables.Variables => Variables;
 
         public T GetVariable<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
@@ -1688,9 +1697,9 @@ namespace SPAD.neXt.Interfaces.Extension
             if (!HasVariable(key))
             {
                 if (pos == -1)
-                    Variables.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                    Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
                 else
-                    Variables.Insert(pos, new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                    Variables.Insert(pos, new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
                 return true;
             }
             return false;
@@ -1699,7 +1708,7 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             Variables.RemoveAll(o => String.Compare(key, o.Key, true) == 0);
             if (value != null)
-                Variables.Add(new GenericOption(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
+                Variables.Add(new GenericVariable(key, Convert.ToString(value, CultureInfo.InvariantCulture)));
             VariableChanged?.FireAndForget(this, new VariableChangedEventArgs(key, value));
         }
 

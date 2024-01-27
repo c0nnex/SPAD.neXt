@@ -1,4 +1,5 @@
 ﻿using SPAD.neXt.Interfaces.Events;
+using SPAD.neXt.Interfaces.Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace SPAD.neXt.Interfaces
     public interface IObjectWithVariables
     {
         event AsyncEventHandler<VariableChangedEventArgs> VariableChanged;
-        IEnumerable<IGenericOption> Variables { get; }
+        IEnumerable<IGenericVariable> Variables { get; }
         bool AddVariable(string key, object value, int pos = -1);
         I GetVariable<I>(string key, I defaultValue = default) where I:IConvertible;
         bool HasVariable(string key);
