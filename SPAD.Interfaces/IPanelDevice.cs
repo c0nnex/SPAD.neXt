@@ -199,7 +199,7 @@ namespace SPAD.neXt.Interfaces
         float Sigmoid(float x, int curve);
         void Update(float value, int rawValue = 0);
         void SetCustomIndex(uint index);
-
+        void SetGamePadMode(ulong pollItervall);
         void EnableInputEvents();
         void DisableInputEvents();
 

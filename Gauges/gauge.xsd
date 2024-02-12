@@ -178,6 +178,7 @@
     <xs:attribute name="Name" type="xs:string" />
     <xs:attribute name="Value" type="xs:string"  />
 	<xs:attribute name="Scope" type="VariableScope" />
+    <xs:attribute name="Shared" type="xs:int" />
   </xs:complexType>
   <xs:simpleType name="GaugePowerMode">
     <xs:restriction base="xs:string">

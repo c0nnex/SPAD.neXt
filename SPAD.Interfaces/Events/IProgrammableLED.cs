@@ -140,6 +140,11 @@ namespace SPAD.neXt.Interfaces.Events
         IEnumerable<string> GetStateNames();
         IEnumerable<int> GetStateValues();
         IEnumerable<IProgrammableInputUIState> GetStates();
+
+        int StateUIValueOffset { get; }
+        int StateUIValueStep { get; }
+        void SetUIValueOffset(int newOffset);
+        void SetUIValueStep(int newStepOffset);
     }
 
 

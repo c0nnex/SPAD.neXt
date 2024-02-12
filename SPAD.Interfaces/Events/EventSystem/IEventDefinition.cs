@@ -76,10 +76,8 @@ namespace SPAD.neXt.Interfaces.Events
         IDeviceProfile DeviceProfile { get; }
 
         void Configure(IEventDefinitions eventDefinitions, ISPADBaseEvent baseEvent, IDeviceProfile deviceProfile);
-        bool Activate(ISPADBaseEvent baseEvent);
         void Deactivate(ISPADBaseEvent baseEvent);
         void Execute(ISPADEventArgs e, bool force = false);
-        void SetBinding(string boundTo);
         void SetDisplayName(string displayNameResource);
         void SetVariableNameTransformFunc(Func<IEventDefinition, string, string> transformFunc);
         string TransformVariableName(string varName);

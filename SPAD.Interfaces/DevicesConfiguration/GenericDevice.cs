@@ -21,7 +21,7 @@ namespace SPAD.Extensions.Generic
     {
         public Guid ID { get; set; } = Guid.Empty;
         public string Protocol { get; set; }
-        public string PortName { get; set; }
+        public string PortName { get; set; }       
 
         private string _serialNumber = null;
         public string SerialNumber { get => _serialNumber ?? PortName; set => _serialNumber = value; }
@@ -55,9 +55,15 @@ namespace SPAD.Extensions.Generic
             return defValue;
         }
         public void SetOption(string key,object value) => Options[key] = value;
-
+        public void RemoveOption(string key) => Options.Remove(key);    
         public int PortNumber { get => GetOption("PortNumber", 0); set => SetOption("PortNumber", value); }
         public IntPtr PortInterface { get => GetOption("PortInterface", IntPtr.Zero); set => SetOption("PortInterface", value); }
+
+        public string DevicePath { get; set; }
+        public string VendorId { get; set; }
+        public string ProductId { get; set; }
+        public int InstanceId { get; set; }
+        public string Name { get; set; }
     }
 
     public class GenericCommand

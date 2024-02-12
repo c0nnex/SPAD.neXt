@@ -130,12 +130,17 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlIgnore]
         public GenericOptionObject PrivateOptions { get; set; } = new GenericOptionObject();
 
-        public List<AddonInputRouting> GetAllRoutings()
+        public List<AddonInputRouting> GetAllRoutings(string tag = null)
         {
             IEnumerable<AddonInputRouting> ret = new List<AddonInputRouting>();
+
             ret = ret.Concat(Routing);
             InputsOnly.ForEach(ii => ret = ret.Concat(ii.Routing));
-            return ret.ToList();
+            if (String.IsNullOrEmpty(tag))
+            {
+                return ret.ToList();
+            }
+            return ret.Where(x => x.To == tag).ToList();
         }
 
         [XmlElement(ElementName = "Import")]
@@ -197,7 +202,7 @@ namespace SPAD.neXt.Interfaces.Extension
                     importDevice.Variables.ForEach(v => Variables.Add(v));
                     importDevice.Inputs.ForEach(input => AddInput(input));
                     importDevice.Routing.ForEach(rt => AddRouting(rt));
-                    importDevice.OutputMappings.ForEach( m => OutputMappings.Add(m));
+                    importDevice.OutputMappings.ForEach(m => OutputMappings.Add(m));
                     importDevice.CommandMappings.ForEach(m => CommandMappings.Add(m));
                     importDevice.EventMappings.ForEach(m => EventMappings.Add(m));
                     importDevice.Colorsets.ForEach(m => Colorsets.Add(m));
@@ -349,7 +354,7 @@ namespace SPAD.neXt.Interfaces.Extension
         }
 
         public bool HasDeviceSessionValue(string name) => DeviceSessionVariables.ContainsKey(name);
-        public T GetDeviceSessionValue<T>(string name, T defValue = default) 
+        public T GetDeviceSessionValue<T>(string name, T defValue = default)
         {
             if (DeviceSessionVariables.TryGetValue(name, out var value))
             {
@@ -357,10 +362,16 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return defValue;
         }
-        public void SetDeviceSessionValue(string name, object value)
+        public bool SetDeviceSessionValue(string name, object value)
         {
+            if (DeviceSessionVariables.TryGetValue(name, out var val))
+            {
+                if (value == val)
+                    return false;
+            }
             logger.Debug("SetDeviceSessionValue {0} => {1}", name, value);
             DeviceSessionVariables[name] = value;
+            return true;
         }
         private ExpressionEvaluationResult GetDeviceSessionValueCallback(string name)
         {
@@ -373,7 +384,7 @@ namespace SPAD.neXt.Interfaces.Extension
             {
                 logger.Debug("GetDeviceSessionValue('{0}') => not known yet", name);
                 // Not yet set, but a local session var
-                return ExpressionEvaluationResult.CreateResult( 0 );
+                return ExpressionEvaluationResult.CreateResult(0);
             }
             return ExpressionEvaluationResult.Empty;
             // Fall through. We do not know about any simvar stuff
@@ -412,17 +423,21 @@ namespace SPAD.neXt.Interfaces.Extension
 
         public bool HasRouting(string inputName) => Inputs.Any(x => x.Routing.Any(y => y.From == inputName));
 
-        public AddonDeviceElement AddInput(AddonDeviceElement addonDeviceElement, bool ignoreIfRouted = true)
+        public AddonDeviceElement AddInput(AddonDeviceElement addonDeviceElement, bool ignoreIfRouted = true, bool mergeExisting = false)
         {
             var input = Inputs.FirstOrDefault(x => x.Tag == addonDeviceElement.Tag);
             if (input == null)
             {
-                if (HasRouting(addonDeviceElement.Tag))
+                if (HasRouting(addonDeviceElement.Tag) && ignoreIfRouted)
                 {
                     return null; // Routed input. Ignore it
                 }
                 Inputs.Add(addonDeviceElement);
                 return addonDeviceElement;
+            }
+            if (mergeExisting)
+            {
+                input.Merge(addonDeviceElement);
             }
             return input;
         }
@@ -467,7 +482,11 @@ namespace SPAD.neXt.Interfaces.Extension
             if (DeviceDisplayDict.TryGetValue(displayTag, out var display))
                 display.UpdateValue(value, sendToDevice);
         }
-
+        public void UpdateDisplayRow(string displayTag, int row, string value, bool sendToDevice)
+        {
+            if (DeviceDisplayDict.TryGetValue(displayTag + "_ROW_" + row, out var display))
+                display.UpdateValue(value, sendToDevice);
+        }
         public void RegisterColorSet(string cIndex, GenericOptionObject cList)
         {
             Colorsets.RemoveAll(c => String.Compare(c.Key, cIndex, true) == 0);
@@ -503,6 +522,11 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             return Variables.Any(o => String.Compare(o.Key, key, true) == 0);
         }
+        public GenericVariable GetVariable(string key)
+        {
+            return Variables.FirstOrDefault(o => String.Compare(o.Key, key, true) == 0);
+        }
+
         public bool AddVariable(string key, object value, int pos = -1)
         {
             if (!HasVariable(key))
@@ -515,6 +539,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             return false;
         }
+
         public void SetVariable<T>(string key, T value)
         {
             if (value == null)
@@ -1184,7 +1209,7 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Data")]
         public int SortOrder { get; set; } = 0;
-
+        public bool ShouldSerializeSortOrder() => SortOrder != 0;
 
         [XmlElement(ElementName = "Mapping")]
         [Category("Data")]
@@ -1218,16 +1243,19 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute(AttributeName = "Col")]
         [Category("Position")]
         public int Col { get; set; }
+        public bool ShouldSerializeCol() => Col != 0;
         [XmlAttribute(AttributeName = "Row")]
         [Category("Position")]
         public int Row { get; set; }
+        public bool ShouldSerializeRow() => Row != 0;
         [XmlAttribute(AttributeName = "ColSpan")]
         [Category("Position")]
         public int ColSpan { get; set; }
+        public bool ShouldSerializeColSpan() => ColSpan != 0;
         [XmlAttribute(AttributeName = "RowSpan")]
         [Category("Position")]
         public int RowSpan { get; set; }
-
+        public bool ShouldSerializeRowSpan() => RowSpan != 0;
         [XmlAttribute(AttributeName = "Canvas.Left")]
         [Category("Obsolete")]
         public double _LeftOld { get => Left; set => Left = value; }
@@ -1327,7 +1355,15 @@ namespace SPAD.neXt.Interfaces.Extension
             Routing.Add(routingBase);
             return true;
         }
-
+        public void MergeRouting(IEnumerable<AddonInputRouting> routing)
+        {
+            if (routing == null || routing.Count() == 0)
+                return;
+            foreach (var item in routing)
+            {
+                AddRouting(item);
+            }
+        }
         public virtual void FixUp()
         {
             if (String.IsNullOrEmpty(Inherit))
@@ -1500,6 +1536,16 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             return $"{this.GetType()} {Type} {Tag} Options {Options.Count}";
         }
+
+        public void Merge(AddonDeviceElement otherElement)
+        {
+            MergeOptions(otherElement);
+            MergeRouting(otherElement.Routing);
+            if (otherElement.Mappings.Count > 0)
+                otherElement.Mappings.ForEach(m => CreateMapping(m.In, m.Out));
+            if (otherElement.ShouldSerializeDeviceCommandIndex())
+                DeviceCommandIndex = otherElement.DeviceCommandIndex;
+        }
     }
 
     public enum VariableValueTypes
@@ -1508,7 +1554,7 @@ namespace SPAD.neXt.Interfaces.Extension
         String
     }
 
-    public interface IGenericVariable : IGenericOption
+    public interface IGenericVariable : IGenericOption, IObjectWithOptions
     {
         VariableValueTypes ValueType { get; set; }
         VARIABLE_SCOPE Scope { get; set; }
@@ -1517,7 +1563,7 @@ namespace SPAD.neXt.Interfaces.Extension
         object GetTypedValue();
     }
 
-    public class GenericVariable : GenericOptionObject, IGenericOption, IGenericVariable
+    public class GenericVariable : GenericOptionObject, IGenericVariable
     {
         [XmlAttribute]
         public string Key { get; set; }
@@ -1785,9 +1831,9 @@ namespace SPAD.neXt.Interfaces.Extension
             return defaultValue;
         }
 
-        public T GetOption<T>(AddonDeviceElement mainProvider,string key, T defaultValue = default(T)) where T : IConvertible
+        public T GetOption<T>(AddonDeviceElement mainProvider, string key, T defaultValue = default(T)) where T : IConvertible
         {
-            return mainProvider.GetOption<T>(key, GetOption<T>(key,defaultValue));
+            return mainProvider.GetOption<T>(key, GetOption<T>(key, defaultValue));
         }
         public T GetOption<T>(string key, T defaultValue = default(T)) where T : IConvertible
         {
@@ -1858,7 +1904,7 @@ namespace SPAD.neXt.Interfaces.Extension
             var parts = initData.Split(new char[] { ';' });
             foreach (var part in parts)
             {
-                obj.SetOption(part.GetPart(0,"="),part.GetPart(1,"="));
+                obj.SetOption(part.GetPart(0, "="), part.GetPart(1, "="));
             }
             return obj;
         }
@@ -1970,14 +2016,19 @@ namespace SPAD.neXt.Interfaces.Extension
         {
             if (Compute != null)
                 return Convert.ToString(Compute.Evaluate(new SPADEventArgs("dummy", value, value)), CultureInfo.InvariantCulture);
-            else return Convert.ToString(value,CultureInfo.InvariantCulture);
+            else return Convert.ToString(value, CultureInfo.InvariantCulture);
         }
-
+        public decimal ComputeOutputDouble(object value)
+        {
+            if (Compute != null)
+                return Convert.ToDecimal(Compute.Evaluate(new SPADEventArgs("dummy", value, value)), CultureInfo.InvariantCulture);
+            else return Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+        }
         public bool ProcessInput(Guid deviceRegistrationId)
         {
             if (Compute != null)
             {
-                Compute.Evaluate(new SPADEventArgs("dummy", Tag, Tag) {  ExecutionContext = deviceRegistrationId });
+                Compute.Evaluate(new SPADEventArgs("dummy", Tag, Tag) { ExecutionContext = deviceRegistrationId });
                 return true;
             }
             return false;
@@ -2022,7 +2073,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             if (!String.IsNullOrEmpty(ComputeExpression))
             {
-                Compute = EventSystem.CreateExpression(ComputeExpression.Replace("{TAG}",Tag));
+                Compute = EventSystem.CreateExpression(ComputeExpression.Replace("{TAG}", Tag));
             }
             if (!String.IsNullOrEmpty(Tag))
             {

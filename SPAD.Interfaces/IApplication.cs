@@ -302,6 +302,7 @@ namespace SPAD.neXt.Interfaces
         IDynamicExpression CreateExpression(string name, string expression);
 
         IDynamicNCalcExpression CreateDynamicCalcExpression(string expression);
+        IValueNormalizer GetNormalizer(string name);
         bool IsBuild(string buildName);
         IApplicationConfiguration GetApplicationConfiguration(Guid id, string className);
         void RegisterStartupDialog(string title, string message, System.Windows.MessageBoxButton buttonsAvail, string button_OK_Text = "OK", string button_CANCEL_Text = "Cancel", Action<IDialogCallbackProvider,Guid,string> onOpen = null, Action<System.Windows.MessageBoxResult> onClose = null);

@@ -42,7 +42,6 @@ namespace SPAD.Interfaces.Remote
 
     public class RemoteQuery<T> : RemoteAction 
     {
-        public int Id { get; set; }
         public List<T> QueryResults { get; set; } = null;
     }
 

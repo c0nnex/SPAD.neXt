@@ -303,14 +303,14 @@ namespace SPAD.neXt.Interfaces.Events
         string Password { get; set; }
     }
 
-    public interface IEventActionText2Speech : IEventAction
+    public interface IEventActionText2Speech : IEventAction,IEventActionWithParameters
     {
         string Text { get; set; }
         string Voice { get; set; }
         bool StopAll { get; set; }
         bool WaitForFinish { get; set; }
         bool UseSSML { get; set; }
-        int Volume { get; set; }
+        int Volume { get;  }
         int Rate { get; set; }
     }
 

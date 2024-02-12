@@ -23,8 +23,10 @@ namespace SPAD.neXt.Interfaces.Base
         string FormatValue(object value);
 
         UInt16 SetBCDValue(object value, bool fractional);
+        UInt32 SetBCD32Value(object value, bool fractional);
         Double GetBCDValue(object value);
-
+        Double GetBCD32Value(object value);
+        
         void SetExpressionFrom(string expression);
         void SetExpressionTo(string expression);
     }
