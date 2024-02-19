@@ -28,11 +28,17 @@ namespace SPAD.neXt.Interfaces.Transport
         bool IsConnected();
     }
 
-    public interface IRemoteTransport : ITransportInterface
+    public interface IRemoteTransport : ITransportInterface, IRemoteSettings
     {
         event EventHandler<IRemoteTransport, RemoteAction> RemoteEventReceived;
 
         void SendRemoteEvent(object eventData);
+    }
+
+    public interface IRemoteSettings
+    {
+        T GetSetting<T>(string key, T defaultValue = default);
+        void SetSetting(string key, object  value);
     }
 
     /// <summary> Interface for transport layer.  </summary>

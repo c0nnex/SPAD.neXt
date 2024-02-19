@@ -140,6 +140,7 @@ namespace SPAD.neXt.Interfaces
         IEnumerable<IInput> Inputs { get; }
         IEnumerable<IInput> AllInputs { get; }
         event InputEventhandler AxisChanged;
+        event InputEventhandler EncoderChanged;
         event InputEventhandler ButtonDown;
         event InputEventhandler ButtonUp;
         event EventHandler<IInputDevice, ulong> InputUpdateCompleted;
@@ -211,7 +212,7 @@ namespace SPAD.neXt.Interfaces
         float[] Curve { get; set; }
         
         void SetCalibrationMode(bool bEnable);
-
+        bool IsAbsoluteAxis { get; }
         bool AxisNeedsUpdate { get; set; }
         int MinimumValue { get; set; }
         int MaximumValue { get; set; }

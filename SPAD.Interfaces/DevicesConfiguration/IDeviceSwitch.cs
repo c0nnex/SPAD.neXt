@@ -81,6 +81,7 @@ namespace SPAD.neXt.Interfaces.DevicesConfiguration
         IReadOnlyList<IDeviceSwitchConfiguration> SwitchConfigurations { get; }
         bool HasPrivateOption(string optionName);
         ISerializableOption GetPrivateOption(string optionName, string defaultValue = null);
+        T GetPrivateOptionAs<T>(string optionName, T defaultValue = default);
         ISerializableOption SetPrivateOption(string optionName, string defaultValue = null);
         void AddPrivateListOption(string optionName, string valueToAdd);
         List<string> GetPrivateListOption(string optionName);

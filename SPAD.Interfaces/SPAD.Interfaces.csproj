@@ -123,6 +123,7 @@
     <Compile Include="Aircraft\ICDUScreen.cs" />
     <Compile Include="Gauges\IDeviceImageResolver.cs" />
     <Compile Include="Gauges\IGaugeVersionInformation.cs" />
+    <Compile Include="HID\BitStream.cs" />
     <Compile Include="ICommandDevice.cs" />
     <Compile Include="ISpecificOptions.cs" />
     <Compile Include="Gauges\IOnlineGaugeData.cs" />

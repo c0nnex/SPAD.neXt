@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -482,10 +483,11 @@ namespace SPAD.neXt.Interfaces.Extension
             if (DeviceDisplayDict.TryGetValue(displayTag, out var display))
                 display.UpdateValue(value, sendToDevice);
         }
-        public void UpdateDisplayRow(string displayTag, int row, string value, bool sendToDevice)
+        public AddonDeviceDisplayData UpdateDisplayRow(string displayTag, int row, string value, bool sendToDevice)
         {
             if (DeviceDisplayDict.TryGetValue(displayTag + "_ROW_" + row, out var display))
                 display.UpdateValue(value, sendToDevice);
+            return display;
         }
         public void RegisterColorSet(string cIndex, GenericOptionObject cList)
         {
@@ -606,6 +608,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public int DeviceDisplayIndex = 0;
         public bool NoPadding = false;
         public bool NoSegmentRowEvents = false;
+        public long NoUpdates = 0;
+
         public Func<string, int, string> PadMe = (input, len) => input == null ? "".PadRight(len).Left(len) : input.PadRight(len).Left(len);
         public Func<string, int, string> FillMe = (input, len) => input == null ? "".PadRight(len) : input.PadRight(len);
         protected AddonDeviceDisplayData(string tag, string eventID, int rowIndex, int index, int length, TextAlignment alignment)
@@ -624,6 +628,12 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = "".PadRight(Length);
         }
 
+        public void DisableUpdatesFor(TimeSpan timeSpan)
+        {
+            Interlocked.Increment(ref NoUpdates);
+            Task.Delay(timeSpan).ContinueWith((t) =>  { Interlocked.Decrement(ref NoUpdates); });
+        }
+
         protected void RaiseOnValueUpdated(bool sendToDevice = true)
         {
             logger?.Debug($"DisplayOnValueUpdated {this} {sendToDevice}");
@@ -631,7 +641,19 @@ namespace SPAD.neXt.Interfaces.Extension
                 OnDeviceUpdate?.Invoke(this, Value);
             OnValueUpdated?.Invoke(this, Value);
         }
-        public abstract void UpdateValue(string newValue, bool sendToDevice = true);
+
+        public void UpdateValue(string newValue, bool sendToDevice = true)
+        {
+            var noUpdatesCt = Interlocked.Read(ref NoUpdates);
+            if (noUpdatesCt > 0 && sendToDevice)
+            {
+                logger.Debug($"Display UpdateValue {Tag} val {newValue} ignored. NoUpdates ({noUpdatesCt}) Set");
+                return;
+            }
+            UpdateDisplayValue(newValue, sendToDevice);
+        }
+        
+        public abstract void UpdateDisplayValue(string newValue, bool sendToDevice = true);
 
         public void SetLogger(ILogger logger)
         {
@@ -677,7 +699,7 @@ namespace SPAD.neXt.Interfaces.Extension
             Segments.Add(segment);
         }
 
-        public override void UpdateValue(string newValue, bool sendToDevice)
+        public override void UpdateDisplayValue(string newValue, bool sendToDevice)
         {
             logger?.Debug($"UpdateRow {EventID} old '{Value}' new '{newValue}' {sendToDevice}");
             if (!NoPadding)
@@ -716,7 +738,7 @@ namespace SPAD.neXt.Interfaces.Extension
             Value = "".PadRight(length);
         }
 
-        public override void UpdateValue(string newValue, bool sendToDevice)
+        public override void UpdateDisplayValue(string newValue, bool sendToDevice)
         {
             var nVal = newValue;
             if (!NoPadding)
@@ -1274,6 +1296,8 @@ namespace SPAD.neXt.Interfaces.Extension
         public bool IsGauge => Type == "GAUGE";
         [XmlIgnore]
         public bool IsInput => !IsOutput;
+        [XmlIgnore]
+        public bool IsEnabled { get; private set; } = true;
 
         [XmlIgnore]
         public AddonDeviceDisplay Display { get; private set; } = null;
@@ -2081,8 +2105,7 @@ namespace SPAD.neXt.Interfaces.Extension
                 Out = Out.Replace("{TAG}", Tag);
             }
         }
-
-        public bool CanExecute(object value = null)
+        public bool CanExecute(object value = null, ulong execTick = 0)
         {
             if (Condition != null)
                 return Condition.EvaluateBool(value);
