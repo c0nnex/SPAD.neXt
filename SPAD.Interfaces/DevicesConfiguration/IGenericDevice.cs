@@ -151,8 +151,7 @@ namespace SPAD.Extensions.Generic
         event EventHandler<IGenericCommandDevice, string> OnConfigurationFailed;
         event EventHandler<IGenericCommandDevice, bool> OnConnectionStateChanged;
 
-        IRuntimeResolver RuntimeResolver { get; }
-        string[] GetLogBuffer();
+        IRuntimeResolver RuntimeResolver { get; set; }
 
         string DeviceVendor { get; } // GUID of Vendor (e.g. ShakePrint / RealSimGear , mapped to realname via ressource)
         string DeviceName { get; } // Readable Name of Device

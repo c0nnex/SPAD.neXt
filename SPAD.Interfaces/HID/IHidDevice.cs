@@ -85,9 +85,9 @@ namespace SPAD.neXt.Interfaces.HID
         IHidReport ReadReport();
 
         bool ReadFeatureData(out byte[] data, byte reportId = 0);
-        
 
-       
+
+        byte[] GetInitialReportData(byte reportID);
 
         void Write(byte[] data, WriteCallback callback);
 

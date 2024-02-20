@@ -631,7 +631,7 @@ namespace SPAD.neXt.Interfaces.Extension
         public void DisableUpdatesFor(TimeSpan timeSpan)
         {
             Interlocked.Increment(ref NoUpdates);
-            Task.Delay(timeSpan).ContinueWith((t) =>  { Interlocked.Decrement(ref NoUpdates); });
+            Task.Delay(timeSpan).ContinueWith((t) => { Interlocked.Decrement(ref NoUpdates); });
         }
 
         protected void RaiseOnValueUpdated(bool sendToDevice = true)
@@ -652,7 +652,7 @@ namespace SPAD.neXt.Interfaces.Extension
             }
             UpdateDisplayValue(newValue, sendToDevice);
         }
-        
+
         public abstract void UpdateDisplayValue(string newValue, bool sendToDevice = true);
 
         public void SetLogger(ILogger logger)
@@ -1227,7 +1227,24 @@ namespace SPAD.neXt.Interfaces.Extension
         [Category("Data")]
         public int DeviceCommandIndex { get; set; } = -1;
         public bool ShouldSerializeDeviceCommandIndex() => DeviceCommandIndex != -1;
-
+        [XmlIgnore]
+        public uint InputID { get; set; } = uint.MaxValue;
+        [XmlAttribute(AttributeName ="InputID")]
+        [Category("Data")]
+        public string InputIdStr
+        {
+            get => InputID.ToHexString(); 
+            set
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(value))
+                        InputID = uint.Parse(value.Replace(":", ""), System.Globalization.NumberStyles.HexNumber);
+                }
+                catch { }
+            }
+        }
+        public bool ShouldSerializeInputIdStr() => InputID != uint.MaxValue;
         [XmlAttribute]
         [Category("Data")]
         public int SortOrder { get; set; } = 0;
@@ -1252,16 +1269,19 @@ namespace SPAD.neXt.Interfaces.Extension
         [XmlAttribute]
         [Category("Position")]
         public double Width { get; set; }
+        public bool ShouldSerializeWidth() => Width != 0;
         [XmlAttribute]
         [Category("Position")]
         public double Height { get; set; }
+        public bool ShouldSerializeHeight() => Height != 0;
         [XmlAttribute(AttributeName = "Left")]
         [Category("Position")]
         public double Left { get; set; }
+        public bool ShouldSerializeLeft() => Left != 0;
         [XmlAttribute(AttributeName = "Top")]
         [Category("Position")]
         public double Top { get; set; }
-
+        public bool ShouldSerializeTop() => Top != 0;
         [XmlAttribute(AttributeName = "Col")]
         [Category("Position")]
         public int Col { get; set; }

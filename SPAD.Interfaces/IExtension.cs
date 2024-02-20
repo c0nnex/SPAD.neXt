@@ -110,13 +110,7 @@ namespace SPAD.neXt.Interfaces
 
     public interface IExtensionInfo
     {
-        string Name { get; }
-        string Author { get; }
-        string Url { get; }
-        string Email { get;  }
-        string License { get; }
-        string Version { get; }
-        string UpdateUrl { get; }
+        string Name { get; }        
 
         string ProfileOptionsRootPath { get; }
         string ResourceKeyRoot { get;  }

@@ -1400,7 +1400,7 @@ namespace SPAD.neXt.Interfaces
         public static readonly Guid EVENTACTION_DISPLAY_GUID = new Guid("{F3BD2794-9EB4-4016-ABE2-052989F775A9}");
 
         public static readonly Guid DEVICE_NOTREGISTERED = new Guid("{A6C592BD-69A8-4F8B-8541-FBF9FB717A7E}");
-        public static readonly Guid GENERIC_EXTENSION = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");
+        public static readonly Guid GENERIC_PANEL = new Guid("{7E9200A7-AC4E-4077-9AF5-F3F849565D6C}");
 
         public static readonly Guid DEVICE_EXT_MIDI = new Guid("{8DF6E62A-BDFC-432E-A5FA-8BB94BBEFC4D}");
         public static readonly Guid DEVICE_EXT_GENERIC = new Guid("{B7953E99-A5D9-4D01-9E9C-DDA67292FB00}");

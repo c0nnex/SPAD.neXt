@@ -95,7 +95,8 @@ namespace SPAD.neXt.Interfaces.Events
 
         public static new SPADEventArgs Empty = new SPADEventArgs();
         private static long EventMarkerCounter = 0;
-        public string EventSwitch { get; set; }
+        private string _EventSwitch = null;
+        public string EventSwitch { get => _EventSwitch ?? EventName; set => _EventSwitch = value; }
         public string EventName { get => eventName; set { eventName = value; _FullName = null; } }
         public string EventTrigger { get => eventTrigger; set { eventTrigger = value; _FullName = null; } }
         public IInputElement CommandTarget { get; set; }

@@ -48,6 +48,7 @@ namespace SPAD.neXt.Interfaces
         object Evaluate(ISPADEventArgs e = null);
         bool EvaluateBool(object value = null);
         void ExecuteWithValue(object value);
+        T EvaluateAs<T>(ISPADEventArgs e = null);
         bool Compile();
 
         event EventHandler<IMonitorableValue> VariableAdded;
