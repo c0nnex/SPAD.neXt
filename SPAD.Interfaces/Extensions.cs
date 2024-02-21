@@ -269,7 +269,7 @@ namespace System
             if (Guid.TryParse(obj.ToString(), out Guid guid)) return guid;
             return Guid.Empty;
         }
-        public static string HexDump(this byte[] bytes, int bytesPerLine = 16, int startOffset = 0, int numBytes = -1)
+        public static string HexDump(this byte[] bytes, int bytesPerLine = 16, int startOffset = 0, int numBytes = -1, bool noAscii = false)
         {
             if (bytes == null) return "<null>";
             int bytesLength = bytes.Length - startOffset;
@@ -315,14 +315,16 @@ namespace System
                     {
                         line[hexColumn] = ' ';
                         line[hexColumn + 1] = ' ';
-                        line[charColumn] = ' ';
+                        if (!noAscii)
+                            line[charColumn] = ' ';
                     }
                     else
                     {
                         byte b = bytes[i + j];
                         line[hexColumn] = HexChars[(b >> 4) & 0xF];
                         line[hexColumn + 1] = HexChars[b & 0xF];
-                        line[charColumn] = (b < 32 ? '·' : (char)b);
+                        if (!noAscii)
+                            line[charColumn] = (b < 32 ? '·' : (char)b);
                     }
                     hexColumn += 3;
                     charColumn++;
