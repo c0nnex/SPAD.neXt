@@ -48,6 +48,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand CommandGaugePrev { get; } = new RoutedCommand("SPAD_neXt.Gauge_Prev", typeof(SPADCommands));
 //        public static RoutedCommand CommandGaugeSet { get; } = new RoutedCommand("SPAD_neXt.Gauge_Set", typeof(SPADCommands));
         public static RoutedCommand CommandGaugeSwitch { get; } = new RoutedCommand("SPAD_neXt.Gauge_Switch", typeof(SPADCommands));
+        public static RoutedCommand CommandPageRefresh { get; } = new RoutedCommand("SPAD_neXt.Page_Refresh", typeof(SPADCommands));
         public static RoutedCommand CommandDeviceStop { get; } = new RoutedCommand("SPAD_neXt.Device_STOP", typeof(SPADCommands));
         public static RoutedCommand CommandDeviceStart { get; } = new RoutedCommand("SPAD_neXt.Device_START", typeof(SPADCommands));
         public static RoutedCommand CommandChangeDigitmark { get; } = new RoutedCommand("DIGITMARK", typeof(SPADCommands));
@@ -68,7 +69,7 @@ namespace SPAD.neXt.Interfaces
 
         public static List<string> DeviceCommands = new List<string>()
         {
-            CommandGaugeSwitch.Name,CommandGaugeNext.Name,CommandGaugePrev.Name,CommandDevicePowerOFF.Name,CommandDevicePowerON.Name
+            CommandGaugeSwitch.Name,CommandGaugeNext.Name,CommandGaugePrev.Name,CommandDevicePowerOFF.Name,CommandDevicePowerON.Name,CommandPageRefresh.Name
         };
 
         static SPADCommands()
@@ -79,6 +80,7 @@ namespace SPAD.neXt.Interfaces
             //_ExposedCommands.Add(CommandDeviceStop);
             _ExposedCommands.Add(CommandGaugeNext);
             _ExposedCommands.Add(CommandGaugePrev);
+            _ExposedCommands.Add(CommandPageRefresh);
             //_ExposedCommands.Add(CommandGaugeSet);
             _ExposedCommands.Add(CommandGaugeSwitch);
             _ExposedCommands.Add(CommandChangeDigitmark);
@@ -147,6 +149,7 @@ namespace SPAD.neXt.Interfaces
         public static RoutedCommand ProfileUpgradeCommand { get; } = new RoutedCommand("SPAD_neXt.Profile_Upgrade", typeof(SPADCommands));
         public static RoutedCommand ShowNotificationsCommand { get; } = new RoutedCommand("SPAD_neXt._ShowNotificationsCommand", typeof(SPADCommands));
         public static RoutedCommand ShowStatusMessageCommand { get; } = new RoutedCommand("SPAD_neXt._ShowStatusMessageCommand", typeof(SPADCommands));
+        public static RoutedCommand ShowStatusInfoCommand { get; } = new RoutedCommand("SPAD_neXt._ShowStatusInfoCommand", typeof(SPADCommands));
         public static RoutedCommand DebugModeCommand { get; } = new RoutedCommand("SPAD_neXt._DebugModeCommand", typeof(SPADCommands));
         public static RoutedCommand ProgrammingCommand { get; } = new RoutedCommand("SPAD_neXt.ProgrammingCommand", typeof(SPADCommands));
         public static RoutedCommand NotImplemented { get { return notImplementedCommand; } }
