@@ -247,6 +247,7 @@ namespace SPAD.neXt.Interfaces
         string GetDirectory(APPLICATION_DIRECTORY scope, string subDir = null);
         IDirectoryModel DirectoryModel { get; }
 
+        void InfoWithNotification(string LoggerName, string message, params object[] args);
         void WarnWithNotification(string LoggerName, string message, params object[] args);
         void WarnWithNotificationIgnorable(string LoggerName,string tag, string message, params object[] args);
         void ErrorWithNotification(string LoggerName, string message, params object[] args);

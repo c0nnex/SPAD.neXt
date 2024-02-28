@@ -11,7 +11,7 @@ using System.Windows.Markup;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SPAD.neXt.Interfaces")]
-[assembly: AssemblyCopyright("Copyright © 2014-2022 Ulrich Strauss")]
+[assembly: AssemblyCopyright("Copyright © 2014- Ulrich Strauss")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -40,5 +40,5 @@ using System.Windows.Markup;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.16.0")]
-[assembly: AssemblyFileVersion("0.9.16.0")]
+[assembly: AssemblyVersion("0.9.16.4")]
+[assembly: AssemblyFileVersion("0.9.16.4")]

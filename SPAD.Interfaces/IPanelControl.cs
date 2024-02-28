@@ -39,7 +39,7 @@ namespace SPAD.neXt.Interfaces
         string PanelNavigationFragment { get; }
         bool ShowDialog(string dialogName, ISPADBaseEvent evt, EventHandler configHandler = null);
 
-        string RegisterPanelVariable(string subCategory, string varBaseName, string mainCategory);
+        void RegisterPanelVariable(string varName, object varValue = null, string category = null);
         void RegisterPanelVariables(string subCategory, IReadOnlyList<string> vars,string mainCategory = null);
         void UpdatePanelVariable(string name, object value);
         object GetPanelVariable(string name);

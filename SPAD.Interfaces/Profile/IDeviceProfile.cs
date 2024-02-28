@@ -108,7 +108,8 @@ namespace SPAD.neXt.Interfaces.Profile
         long LastChangedTimeStamp { get; }
         DateTime LastChanged { get; }
         string Category { get ; }        
-        string Author { get; } 
+        string Author { get; }
+        ulong AuthorId { get; }
         string Hash { get; }
         int Status { get; }
     }
